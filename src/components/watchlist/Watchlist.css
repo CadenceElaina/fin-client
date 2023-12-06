@@ -1,0 +1,63 @@
+.custom-list {
+  list-style-type: none;
+  padding: 0;
+  width: 75%;
+  margin: 15px auto 0 auto;
+}
+
+.list-item {
+  border-top: 1px solid #dddddd;
+  margin-bottom: 10px;
+  padding: 8px;
+  display: flex;
+  justify-content: space-around;
+  cursor: pointer;
+}
+
+.item-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.item-field {
+  flex: 1;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.field-value {
+  margin-top: 5px;
+}
+
+.negative,
+.positive,
+.no-change,
+.percent-change {
+  padding: 3px;
+}
+.positive {
+  color: rgb(19, 115, 51);
+}
+.negative {
+  color: rgb(217, 48, 37);
+}
+.percent-change {
+  border-radius: 4px;
+  padding: 6px;
+}
+.symbol {
+  border-radius: 4px;
+  padding: 6px;
+}
+.positive-percent {
+  background-color: #4caf50; /* Green background for positive percent change */
+  color: #006400;
+}
+
+.negative-percent {
+  background-color: #f44336; /* Red background for negative percent change */
+  color: #660000;
+}

@@ -1,0 +1,253 @@
+.sidebarItem {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.icon {
+  width: 50px;
+  height: 50px;
+  background-color: rgb(0, 0, 0);
+  color: rgb(0, 255, 255);
+}
+
+.label {
+  flex-grow: 1;
+}
+
+body {
+  background-color: #262626;
+  color: #ffffff;
+  font-family: "Arial", sans-serif;
+  background: linear-gradient(to right, #262626, #1a1a1a);
+  transition: background-color 0.3s ease;
+}
+.content-wrapper {
+  padding: 20px; /* Add padding for spacing */
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+}
+.auth {
+  visibility: hidden;
+}
+.button {
+  text-size-adjust: 100%;
+  width: 5%;
+  line-height: inherit;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+  font-family: "Google Sans", Roboto, Arial, sans-serif;
+  font-size: 16px; /* You can adjust the font size */
+  letter-spacing: 0.25px;
+  font-weight: 500;
+  text-transform: none;
+  white-space: nowrap;
+  cursor: pointer;
+  color: var(--gm-fillbutton-ink-color, #fff);
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: content-box;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+  background: #1a73e8;
+  border: 1px solid transparent;
+  text-decoration: none;
+  transition: background-color 0.3s ease; /* Add a smooth transition for hover effect */
+}
+
+.button:hover {
+  background-color: #1565c0; /* Adjust the hover background color as needed */
+}
+
+.full-width {
+  width: 100%;
+}
+
+.secondary {
+  background: #fff;
+  color: #1a73e8;
+  border: 1px solid #1a73e8;
+}
+
+.large {
+  padding: 12px 26px; /* You can adjust the padding for a larger button */
+}
+
+.button-outline {
+  background: transparent;
+  border: 1px solid #1a73e8;
+  color: #1a73e8;
+}
+
+.button-outline:hover {
+  background-color: #1a73e8;
+  color: #fff;
+}
+.cardcontent {
+  padding: 10px !important;
+}
+/* Markets */
+.compareMarkets {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff; /* Set the color to white for contrast with a black background */
+}
+
+.divider {
+  height: 5vh;
+  background-color: rgba(
+    189,
+    193,
+    198,
+    0.87
+  ); /* Adjust the color to match the existing style */
+  margin: 10px 16px; /* Adjust the margin as needed */
+  overflow: hidden;
+  border-left: 2px solid rgba(189, 193, 198, 0.87); /* Match the border color */
+}
+
+.linkToArticle {
+  color: rgb(24, 90, 188);
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.linkToArticle:hover {
+  color: rgba(28, 116, 233, 0.8);
+}
+.chip {
+  color: white !important;
+}
+
+/*main layout */
+.app-container {
+  max-width: 800px;
+  margin: 50px auto;
+  background: linear-gradient(
+    to bottom,
+    #1c1c1c,
+    #2d2d2d
+  ); /* Adjust outer background gradient */
+  padding: 30px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.header {
+  background-color: #2d2d2d;
+  padding: 20px;
+  border-radius: 12px 12px 0 0; /* Rounded top corners for the header */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-content {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff !important;
+}
+
+.search-container {
+  position: relative; /* Add relative positioning to the container */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.search-input {
+  flex: 1;
+  padding: 15px;
+  font-size: 18px;
+  box-sizing: border-box;
+  border: 2px solid #555;
+  border-radius: 6px 0 0 6px; /* Rounded corners only on the left side */
+  background-color: #444;
+  color: #fff;
+}
+
+.search-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  padding: 15px;
+  height: 100%;
+  font-size: 18px;
+  background-color: #2ecc64; /* Original color, you can update this */
+  color: #fff;
+  border: 2px solid #555;
+  border-radius: 0 6px 6px 0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #27ae60; /* Slightly darker green on hover */
+}
+
+.data {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.quote-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 2px solid #555;
+  background: linear-gradient(to right, #3e424e, #313540);
+  margin-bottom: -2px;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.quote-row:not(:first-child) {
+  border-radius: 0; /* No rounded corners for top of middle rows */
+}
+
+.quote-row:last-child {
+  border-radius: 0 0 8px 8px; /* Rounded on bottom corners only for the last row */
+}
+
+.quote-row:hover {
+  background: linear-gradient(to right, #454a56, #3e424e);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.left-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.stock-name {
+  font-weight: bold;
+  font-size: 20px;
+  color: #61dafb;
+}
+
+.stock-details,
+.price-change,
+.percent-change,
+.price {
+  color: #fff;
+  font-size: 16px;
+}
+
+.right-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.price-change,
+.percent-change {
+  color: #00ff00;
+}
