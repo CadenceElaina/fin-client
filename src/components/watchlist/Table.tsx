@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FaPlus } from "react-icons/fa";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 import "./Watchlist.css";
 
 interface Data {
@@ -53,7 +53,13 @@ const Table: React.FC<TableProps> = ({ data }) => {
                   : "no-change"
               }`}
             >
-              <span className="field-value">{item.priceChange}</span>
+              <span className="field-value">
+                {item.priceChange !== 0 && (item.priceChange > 0 ? "+$" : "-$")}
+
+                {item.priceChange < 0
+                  ? item.priceChange.toString().split("-")
+                  : item.priceChange}
+              </span>
             </div>
             <div
               className={`item-field ${
@@ -73,12 +79,27 @@ const Table: React.FC<TableProps> = ({ data }) => {
                     : ""
                 }`}
               >
-                {item.percentChange}%
-              </span>
-            </div>
-            <div className="item-field">
-              <span className="field-value">
-                <FaPlus />
+                {item.percentChange !== 0 &&
+                  (item.percentChange > 0 ? (
+                    <>
+                      <FaArrowUp
+                        style={{ color: "green", marginRight: "5px" }}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <FaArrowDown
+                        style={{
+                          color: "rgb(217, 48, 37)",
+                          marginRight: "5px",
+                        }}
+                      />
+                    </>
+                  ))}
+                {item.percentChange < 0
+                  ? item.percentChange.toString().split("-")
+                  : item.percentChange}
+                %
               </span>
             </div>
           </div>

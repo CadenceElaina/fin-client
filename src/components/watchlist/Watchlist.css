@@ -1,3 +1,14 @@
+.table-container {
+  margin-top: 25px;
+  margin-bottom: 25px;
+  padding: 10px;
+  border: 1px solid white;
+  border-radius: 8px;
+}
+.watchlist-heading {
+  font-size: 1.125rem;
+  text-align: center;
+}
 .custom-list {
   list-style-type: none;
   padding: 0;
@@ -29,7 +40,6 @@
 }
 
 .field-value {
-  margin-top: 5px;
 }
 
 .negative,
@@ -49,15 +59,18 @@
   padding: 6px;
 }
 .symbol {
+  max-width: 47px;
+  max-height: 20px;
   border-radius: 4px;
   padding: 6px;
 }
+
 .positive-percent {
   background-color: #4caf50; /* Green background for positive percent change */
   color: #006400;
 }
 
 .negative-percent {
-  background-color: #f44336; /* Red background for negative percent change */
-  color: #660000;
+  background-color: #660000; /* Red background for negative percent change */
+  color: rgb(217, 48, 37);
 }

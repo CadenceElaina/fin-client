@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaBars, FaChevronLeft } from "react-icons/fa";
 import Sidebar from "./Sidebar";
 import "./Layout.css";
+import CustomButton from "../CustomButton";
 /* import ThemeToggle from "../../ThemeToggle"; */
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -29,10 +30,12 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </button>
           <span>Your Logo</span>
         </div>
-        {/*         <ThemeToggle /> */}
-        <button className="button" onClick={() => console.log("Sign in")}>
-          Sign in
-        </button>
+
+        <CustomButton
+          label={"Sign in"}
+          onClick={() => console.log("sign in")}
+          auth={false}
+        />
       </div>
 
       <div className="container">

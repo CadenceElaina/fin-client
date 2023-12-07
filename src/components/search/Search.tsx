@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-
+import "./search.css";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import cleanseData, { quoteType, suggestionType, utils } from "./types";
@@ -371,14 +371,6 @@ const Search = () => {
   return (
     <>
       <div className="app-container">
-        <div className="header">
-          <div className="header-content">
-            <h1 className="app-title">Stock Finder App</h1>
-            <p className="app-subtitle">
-              Your source for real-time stock information
-            </p>
-          </div>
-        </div>
         <div className="search-container">
           <input
             className="search-input"

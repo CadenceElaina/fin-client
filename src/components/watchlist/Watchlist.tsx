@@ -57,6 +57,9 @@ const Watchlist = () => {
   return (
     <div className="table-container">
       {" "}
+      <div role="heading" className="watchlist-heading">
+        Top movers in your list
+      </div>
       <Table data={data} />
     </div>
   );

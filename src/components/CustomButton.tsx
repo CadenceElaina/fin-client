@@ -1,4 +1,5 @@
 interface ButtonProps {
+  active?: boolean;
   label: string;
   secondary?: boolean;
   fullWidth?: boolean;
@@ -6,12 +7,13 @@ interface ButtonProps {
   onClick: () => void;
   disabled?: boolean;
   outline?: boolean;
-  auth: boolean;
+  auth?: boolean;
 }
 
 import React from "react";
 
 const CustomButton: React.FC<ButtonProps> = ({
+  active,
   label,
   secondary,
   fullWidth,
@@ -26,10 +28,11 @@ const CustomButton: React.FC<ButtonProps> = ({
       disabled={auth || disabled}
       onClick={onClick}
       className={`
+      ${active ? "active" : ""}
       ${auth ? "auth" : ""}
-      button
+
       ${fullWidth ? "full-width" : ""}
-      ${secondary ? "secondary" : ""}
+      ${secondary ? "secondary" : "button"}
       ${large ? "large" : ""}
       ${outline ? "button-outline" : ""}
       `}

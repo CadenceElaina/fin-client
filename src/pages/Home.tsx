@@ -2,9 +2,12 @@ import * as React from "react";
 import LoginModal from "../components/modals/LoginModal";
 import RegisterModal from "../components/modals/RegisterModal";
 import Layout from "../components/layout/Layout";
-import Markets from "../components/Markets";
+import Markets from "../components/markets/Markets";
 import Search from "../components/search/Search";
 import Watchlist from "../components/watchlist/Watchlist";
+import News from "../components/news/News";
+import AddPortfolio from "../components/portfolio/AddPortfolio";
+import MarketTrends from "../components/MarketTrends";
 
 interface HomeProps {
   portfolios: [];
@@ -16,8 +19,17 @@ const Home: React.FC<HomeProps> = () => {
       <Layout>
         <div className="content-wrapper">
           <Markets />
-          <Watchlist />
           <Search />
+          <div className="main-content-container">
+            <div className="main-content-left">
+              <Watchlist />
+              <News />
+            </div>
+            <div className="main-content-right">
+              <AddPortfolio />
+              <MarketTrends />
+            </div>
+          </div>
           <LoginModal />
           <RegisterModal />
           <div>Home</div>
