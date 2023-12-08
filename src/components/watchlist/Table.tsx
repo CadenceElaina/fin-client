@@ -11,12 +11,28 @@ interface Data {
   priceChange: number;
   percentChange: number;
   article?: string;
+  followers?: number;
 }
+
+// Define a union type for allowed field names
+type AllowedFields =
+  | "id"
+  | "symbol"
+  | "name"
+  | "price"
+  | "priceChange"
+  | "percentChange"
+  | "followers";
 
 interface TableProps {
   data: Data[];
+  config: RowConfig;
   full: boolean;
-  news: boolean;
+}
+
+interface RowConfig {
+  fields: string[]; // Fields to display in each row
+  addIcon?: boolean; // Whether to display the add icon
 }
 
 const getRandomColor = (): string => {
@@ -28,92 +44,122 @@ const getRandomColor = (): string => {
   return color;
 };
 
-const Table: React.FC<TableProps> = ({ data, full, news }) => {
+const getChangeStyle = (change: number): string => {
+  if (change > 0) {
+    return "positive";
+  } else if (change < 0) {
+    return "negative";
+  } else {
+    return "";
+  }
+};
+
+const getPriceChangePrefix = (change: number): string => {
+  return change !== 0 ? (change > 0 ? "+$" : "-$") : "";
+};
+
+const getPriceChangeColor = (change: number): string => {
+  return change > 0 ? "#00ff00" : "rgb(217, 48, 37)";
+};
+
+const Table: React.FC<TableProps> = ({ data, config, full }) => {
   return (
-    <ul className={`custom-list${full ? "-full" : ""} ${news ? "news" : ""}`}>
+    <ul className={`custom-list${full ? "-full" : ""}`}>
       {data.map((item) => (
         <li key={item.id} className="list-item">
           <div className="item-content">
-            <div
-              className={"item-field symbol"}
-              // Apply the random color to item.symbol
-            >
-              <div>
-                <div
-                  className="field-value-symbol"
-                  style={{
-                    backgroundColor: getRandomColor(),
-                  }}
-                >
-                  {" "}
-                  {item.symbol}
+            {(config.fields as AllowedFields[]).map((field) =>
+              config.fields.includes(field) ? (
+                <div key={field} className={`item-field ${field}`}>
+                  {field === "symbol" && (
+                    <div
+                      className="field-value-symbol"
+                      style={{
+                        backgroundColor: getRandomColor(),
+                      }}
+                    >
+                      {item[field]}
+                    </div>
+                  )}
+                  {field !== "symbol" &&
+                    field !== "price" &&
+                    field !== "percentChange" &&
+                    field !== "priceChange" && (
+                      <div className="field-value">{item[field]}</div>
+                    )}
+                  {field === "price" && (
+                    <div className="field-value">${item.price}</div>
+                  )}
+                  {field === "percentChange" && (
+                    <div className={`item-field percent-change`}>
+                      <div
+                        className={`${getChangeStyle(
+                          item.percentChange
+                        )}-percent`}
+                      >
+                        <div className={`field-value percent-change`}>
+                          {item.percentChange !== 0 && (
+                            <>
+                              {item.percentChange > 0 ? (
+                                <FaArrowUp
+                                  style={{
+                                    color: getPriceChangeColor(
+                                      item.percentChange
+                                    ),
+                                    marginRight: "5px",
+                                  }}
+                                />
+                              ) : (
+                                <FaArrowDown
+                                  style={{
+                                    color: getPriceChangeColor(
+                                      item.percentChange
+                                    ),
+                                    marginRight: "5px",
+                                  }}
+                                />
+                              )}
+                              <span
+                                className={getChangeStyle(item.percentChange)}
+                              >
+                                {" "}
+                                {item.percentChange < 0
+                                  ? item.percentChange.toString().split("-")
+                                  : item.percentChange}
+                                %
+                              </span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {field === "priceChange" && (
+                    <div className={`item-field price-change`}>
+                      <div
+                        className={`field-value price-change ${getChangeStyle(
+                          item.priceChange
+                        )}`}
+                      >
+                        {getPriceChangePrefix(item.priceChange)}
+                        {item.priceChange !== 0 && (
+                          <>
+                            {item.priceChange < 0
+                              ? item.priceChange.toString().split("-")
+                              : item.priceChange}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </div>
-              <div className="field-value">{item.name}</div>
-            </div>
-
-            {item?.article && (
-              <div className={"item-field article"}>
-                <div className="field-value">{item.article}</div>
+              ) : null
+            )}
+            {config.addIcon && (
+              <div className="field-value-icon">
+                <IoMdAddCircleOutline size={24} />
               </div>
             )}
-            <div className={"item-field price"}>
-              <div className="field-value">${item.price}</div>
-            </div>
-            <div className={`item-field price-change`}>
-              <div className="field-value">
-                {item.priceChange !== 0 && (item.priceChange > 0 ? "+$" : "-$")}
-
-                {item.priceChange < 0
-                  ? item.priceChange.toString().split("-")
-                  : item.priceChange}
-              </div>
-            </div>
-            <div className={`item-field percent-change`}>
-              <div
-                className={`${
-                  item.percentChange < 0
-                    ? "negative-percent"
-                    : item.percentChange > 0
-                    ? "positive-percent"
-                    : ""
-                }`}
-              >
-                <div className={`field-value percent-change`}>
-                  {item.percentChange !== 0 &&
-                    (item.percentChange > 0 ? (
-                      <>
-                        <FaArrowUp
-                          style={{ color: "#00ff00", marginRight: "5px" }}
-                        />
-                      </>
-                    ) : (
-                      <>
-                        <FaArrowDown
-                          style={{
-                            color: "rgb(217, 48, 37)",
-                            marginRight: "5px",
-                          }}
-                        />
-                      </>
-                    ))}
-                  <span
-                    className={`${
-                      item.percentChange > 0 ? "positive" : "negative"
-                    }`}
-                  >
-                    {" "}
-                    {item.percentChange < 0
-                      ? item.percentChange.toString().split("-")
-                      : item.percentChange}
-                    %
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="field-value-icon">
-              <IoMdAddCircleOutline size={24} />
-            </div>
           </div>
         </li>
       ))}

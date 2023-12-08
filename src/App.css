@@ -55,7 +55,7 @@ body {
 
 /* Additional styles for better appearance, adjust as needed */
 .content-wrapper {
-  max-width: 1200px; /* Set a maximum width for the container */
+  max-width: 1024px; /* Set a maximum width for the container */
   margin: 0 auto; /* Center the container horizontally */
 }
 

@@ -1,5 +1,6 @@
 import React from "react";
 import Table from "./watchlist/Table";
+import { RowConfig } from "../types/types";
 
 const data = [
   {
@@ -49,9 +50,14 @@ const data = [
 ];
 
 const MarketTrendsList = () => {
+  const marketTrendsConfig: RowConfig = {
+    fields: ["symbol", "name", "article", "price", "percentChange"],
+    addIcon: true,
+  };
+
   return (
     <div className="market-trends-list">
-      <Table data={data} full={true} news={true} />
+      <Table data={data} config={marketTrendsConfig} full={true} />
     </div>
   );
 };

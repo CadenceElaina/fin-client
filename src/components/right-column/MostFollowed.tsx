@@ -1,6 +1,7 @@
 import React from "react";
 import Table from "../watchlist/Table";
 import "./right.css";
+import { RowConfig } from "../../types/types";
 
 const data = [
   {
@@ -30,13 +31,17 @@ const data = [
 ];
 
 const MostFollowed = () => {
+  const mostFollowedConfig: RowConfig = {
+    fields: ["symbol", "name", "percentChange"],
+    addIcon: true,
+  };
   return (
     <div className="most-followed-container">
       <div role="heading" className="most-followed-heading">
         Most followed on Finhub
       </div>
       <div>
-        <Table data={data} full={true} news={false} />
+        <Table data={data} config={mostFollowedConfig} full={true} />
       </div>
     </div>
   );

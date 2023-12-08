@@ -4,6 +4,7 @@
   padding: 10px;
   border: 1px solid white;
   border-radius: 8px;
+  max-width: 640px;
 }
 .watchlist-heading {
   font-size: 1.125rem;
@@ -43,8 +44,11 @@
 }
 .symbol {
   display: flex;
-  flex: 2;
-  flex-direction: row;
+  flex: 0.5;
+}
+.name {
+  display: flex;
+  flex: 1.5;
 }
 .field-value-symbol {
   text-align: center;
@@ -61,10 +65,15 @@
 .field-value-icon {
   display: flex;
 }
-.price,
-.price-change,
-.percent-change {
-  flex: 1;
+.price {
+  flex: 1.5;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.priceChange,
+.percentChange {
+  flex: 0.75;
   display: flex;
   justify-content: flex-end;
 }

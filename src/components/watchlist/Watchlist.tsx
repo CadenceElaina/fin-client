@@ -2,6 +2,8 @@ import React from "react";
 import Table from "./Table";
 import "./Watchlist.css";
 
+import { RowConfig } from "../../types/types";
+
 // symbol name price change in price & %
 // sort by
 // add investment button -> modal
@@ -54,13 +56,17 @@ const data = [
 ];
 
 const Watchlist = () => {
+  const watchlistConfig: RowConfig = {
+    fields: ["symbol", "name", "price", "priceChange", "percentChange"],
+    addIcon: true,
+  };
   return (
     <div className="table-container">
       {" "}
       <div role="heading" className="watchlist-heading">
         Top movers in your list
       </div>
-      <Table data={data} full={false} news={false} />
+      <Table data={data} config={watchlistConfig} full={true} />
     </div>
   );
 };
