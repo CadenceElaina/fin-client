@@ -1,0 +1,30 @@
+.market-trends-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 25px;
+  padding: 20px; /* Adjust padding as needed */
+  border: 1px solid white;
+  border-radius: 8px;
+}
+
+.market-trends-header {
+  margin-bottom: 15px; /* Adjust margin as needed */
+}
+
+.market-trends-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 10px; /* Adjust gap as needed */
+  flex-wrap: wrap;
+}
+
+.most-followed-container {
+  margin-top: 25px;
+  border: 1px solid white;
+  border-radius: 8px;
+  padding: 20px;
+}
+.most-followed-heading {
+  font-size: 1.125rem;
+}

@@ -15,6 +15,14 @@
   width: 75%;
   margin: 15px auto 0 auto;
 }
+.custom-list-full {
+  margin-top: 25px;
+  width: 100%;
+  padding: 0;
+}
+/* .news .list-item .item-content {
+  justify-content: space-between;
+} */
 
 .list-item {
   border-top: 1px solid #dddddd;
@@ -32,24 +40,41 @@
 }
 
 .item-field {
-  flex: 1;
-  margin-right: 10px;
+}
+.symbol {
   display: flex;
-  align-items: center;
-  flex-direction: column;
+  flex: 2;
+  flex-direction: row;
+}
+.field-value-symbol {
+  text-align: center;
+  width: 47px;
+  height: 20px;
+  border-radius: 4px;
+}
+.symbol .field-value {
+  flex: 1;
+  display: flex;
+  margin-left: 10px;
+  /*   justify-content: flex-end; */
+}
+.field-value-icon {
+  display: flex;
+}
+.price,
+.price-change,
+.percent-change {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
 }
 
-.field-value {
-}
-
-.negative,
-.positive,
 .no-change,
 .percent-change {
   padding: 3px;
 }
 .positive {
-  color: rgb(19, 115, 51);
+  color: #00ff00;
 }
 .negative {
   color: rgb(217, 48, 37);
@@ -58,19 +83,15 @@
   border-radius: 4px;
   padding: 6px;
 }
-.symbol {
-  max-width: 47px;
-  max-height: 20px;
-  border-radius: 4px;
-  padding: 6px;
-}
 
 .positive-percent {
-  background-color: #4caf50; /* Green background for positive percent change */
-  color: #006400;
+  background-color: green; /* Green background for positive percent change */
+  color: #00ff00;
+  border-radius: 8px;
 }
 
 .negative-percent {
   background-color: #660000; /* Red background for negative percent change */
   color: rgb(217, 48, 37);
+  border-radius: 8px;
 }

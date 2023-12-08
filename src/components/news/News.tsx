@@ -56,6 +56,9 @@ const News = () => {
 
   return (
     <div>
+      <div role="heading" className="news-heading">
+        Today's financial news
+      </div>
       <div style={{ display: "flex", gap: "8px" }}>
         {newsSegmentValues.map((segment) => (
           <CustomButton

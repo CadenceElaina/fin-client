@@ -7,7 +7,9 @@ import Search from "../components/search/Search";
 import Watchlist from "../components/watchlist/Watchlist";
 import News from "../components/news/News";
 import AddPortfolio from "../components/portfolio/AddPortfolio";
-import MarketTrends from "../components/MarketTrends";
+import MarketTrends from "../components/right-column/MarketTrends";
+import MostFollowed from "../components/right-column/MostFollowed";
+import MarketTrendsList from "../components/MarketTrendsList";
 
 interface HomeProps {
   portfolios: [];
@@ -28,10 +30,12 @@ const Home: React.FC<HomeProps> = () => {
             <div className="main-content-right">
               <AddPortfolio />
               <MarketTrends />
+              <MostFollowed />
             </div>
           </div>
           <LoginModal />
           <RegisterModal />
+          <MarketTrendsList />
           <div>Home</div>
         </div>
       </Layout>

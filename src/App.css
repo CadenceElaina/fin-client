@@ -68,23 +68,7 @@ body {
   background-color: #262626; /* Add background color for better separation */
   padding: 10px; /* Add padding to the columns */
 }
-.market-trends-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 20px; /* Adjust padding as needed */
-}
 
-.market-trends-header {
-  margin-bottom: 15px; /* Adjust margin as needed */
-}
-
-.market-trends-buttons {
-  display: flex;
-  flex-direction: row;
-  gap: 10px; /* Adjust gap as needed */
-  flex-wrap: wrap;
-}
 .auth {
   visibility: hidden;
 }

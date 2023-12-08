@@ -1,6 +1,6 @@
 import React from "react";
-import CustomButton from "./CustomButton"; // Update the path to CustomButton based on your project structure
-
+import CustomButton from "../CustomButton"; // Update the path to CustomButton based on your project structure
+import "./right.css";
 const MarketTrends = () => {
   return (
     <div className="market-trends-container">

@@ -1,14 +1,5 @@
 import React from "react";
-import Table from "./Table";
-import "./Watchlist.css";
-
-// symbol name price change in price & %
-// sort by
-// add investment button -> modal
-// create new portfolio component
-// related to your watchlist component
-// Your watchlist in the news comp
-// Discover more comp
+import Table from "./watchlist/Table";
 
 const data = [
   {
@@ -18,6 +9,8 @@ const data = [
     price: 440,
     priceChange: 4.4,
     percentChange: 2.3,
+    article:
+      "https://www.bloomberg.com/news/articles/2023-12-06/citi-cfo-sees-trading-revenue-dropping-as-much-as-20-in-quarter",
   },
   {
     id: 1,
@@ -42,6 +35,8 @@ const data = [
     price: 440,
     priceChange: 4.4,
     percentChange: 2.3,
+    article:
+      "https://www.bloomberg.com/news/articles/2023-12-06/citi-cfo-sees-trading-revenue-dropping-as-much-as-20-in-quarter",
   },
   {
     id: 1,
@@ -53,16 +48,12 @@ const data = [
   },
 ];
 
-const Watchlist = () => {
+const MarketTrendsList = () => {
   return (
-    <div className="table-container">
-      {" "}
-      <div role="heading" className="watchlist-heading">
-        Top movers in your list
-      </div>
-      <Table data={data} full={false} news={false} />
+    <div className="market-trends-list">
+      <Table data={data} full={true} news={true} />
     </div>
   );
 };
 
-export default Watchlist;
+export default MarketTrendsList;
