@@ -1,8 +1,7 @@
 import React from "react";
-import Table from "./Table";
-import "./Watchlist.css";
+import Table from "../table/Table";
 
-import { RowConfig } from "../../types/types";
+import { RowConfig } from "../table/types";
 
 // symbol name price change in price & %
 // sort by

@@ -1,14 +1,9 @@
 .table-container {
-  margin-top: 25px;
   margin-bottom: 25px;
   padding: 10px;
-  border: 1px solid white;
-  border-radius: 8px;
+  /*   border: 1px solid white;
+  border-radius: 8px; */
   max-width: 640px;
-}
-.watchlist-heading {
-  font-size: 1.125rem;
-  text-align: center;
 }
 .custom-list {
   list-style-type: none;
@@ -42,6 +37,22 @@
 
 .item-field {
 }
+.mostfollowed {
+}
+.mostfollowed .symbol {
+  display: flex;
+  flex: 1;
+}
+.symbol-name-followers {
+  margin-top: 5px;
+}
+.symbol-name-followers .field-value {
+  margin-top: 5px;
+}
+.symbol-name-followers .field-value:last-child {
+  font-size: 0.85rem;
+  color: #f3e5ab;
+}
 .symbol {
   display: flex;
   flex: 0.5;
@@ -64,6 +75,11 @@
 }
 .field-value-icon {
   display: flex;
+}
+.article {
+  display: flex;
+  flex-direction: column;
+  flex: 2;
 }
 .price {
   flex: 1.5;
@@ -91,6 +107,7 @@
 .percent-change {
   border-radius: 4px;
   padding: 6px;
+  display: flex;
 }
 
 .positive-percent {
@@ -103,4 +120,21 @@
   background-color: #660000; /* Red background for negative percent change */
   color: rgb(217, 48, 37);
   border-radius: 8px;
+}
+
+/* market trends */
+.symbol-name {
+  display: flex;
+  flex: 1;
+}
+.price-pc {
+  display: flex;
+  align-items: center;
+  justify-self: flex-end;
+}
+.price-pc .field-value {
+  margin-right: 10px;
+}
+.price-pc .item-field {
+  margin-right: 10px;
 }

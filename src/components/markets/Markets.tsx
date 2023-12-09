@@ -3,14 +3,8 @@ import IndexCards from "./IndexCards";
 import { FaArrowUp } from "react-icons/fa";
 import { FaArrowDown } from "react-icons/fa";
 import { Grid, Chip, Stack } from "@mui/material";
-
-enum exchange {
-  US = "US",
-  Europe = "Europe",
-  Asia = "Asia",
-  Currencies = "Currencies",
-  Crypto = "Crypto",
-}
+import "./Markets.css";
+import { exchange } from "./types";
 
 const chipStyles = {
   common: {

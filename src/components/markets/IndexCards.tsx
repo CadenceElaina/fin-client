@@ -1,29 +1,6 @@
 import React from "react";
 import { Grid, Card, CardContent, Typography, Container } from "@mui/material";
-import { IconType } from "react-icons";
-
-interface IndexCard {
-  icon: IconType;
-  exchange: string;
-  name: string;
-  symbol: string;
-  percentChange: number;
-  price: number;
-  priceChange: number;
-}
-
-enum exchange {
-  US = "US",
-  Europe = "Europe",
-  Asia = "Asia",
-  Currencies = "Currencies",
-  Crypto = "Crypto",
-}
-
-interface IndexCardProps {
-  cards: IndexCard[];
-  currExchance: exchange;
-}
+import { IndexCardProps, IndexCard } from "./types";
 
 const IndexCards: React.FC<IndexCardProps> = ({ cards, currExchance }) => {
   // Your card data (you can replace this with your actual data)

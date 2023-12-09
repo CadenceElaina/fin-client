@@ -1,7 +1,7 @@
 import React from "react";
 import CustomButton from "../CustomButton"; // Update the path to CustomButton based on your project structure
 import { FaChartBar } from "react-icons/fa";
-import "./portfolio.css";
+import "./Portfolio.css";
 const AddPortfolio = () => {
   const onAddPortfolio = () => {
     console.log("port added");

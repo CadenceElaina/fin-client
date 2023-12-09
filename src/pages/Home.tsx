@@ -4,12 +4,14 @@ import RegisterModal from "../components/modals/RegisterModal";
 import Layout from "../components/layout/Layout";
 import Markets from "../components/markets/Markets";
 import Search from "../components/search/Search";
-import Watchlist from "../components/watchlist/Watchlist";
-import News from "../components/news/News";
+import Watchlist from "../components/left-column/Watchlist";
+import News from "../components/left-column/news/News";
 import AddPortfolio from "../components/portfolio/AddPortfolio";
 import MarketTrends from "../components/right-column/MarketTrends";
 import MostFollowed from "../components/right-column/MostFollowed";
 import MarketTrendsList from "../components/MarketTrendsList";
+import DiscoverMore from "../components/DiscoverMore";
+import Footer from "../components/Footer";
 
 interface HomeProps {
   portfolios: [];
@@ -36,7 +38,8 @@ const Home: React.FC<HomeProps> = () => {
           <LoginModal />
           <RegisterModal />
           <MarketTrendsList />
-          <div>Home</div>
+          <DiscoverMore />
+          <Footer />
         </div>
       </Layout>
     </>

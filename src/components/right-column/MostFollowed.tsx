@@ -1,13 +1,14 @@
 import React from "react";
-import Table from "../watchlist/Table";
-import "./right.css";
-import { RowConfig } from "../../types/types";
+import Table from "../table/Table";
+import "./Right.css";
+import { RowConfig } from "../table/types";
 
 const data = [
   {
     id: 1,
     symbol: "SPY",
     name: "SP 500 ETF",
+    followers: "3.71M",
     price: 440,
     priceChange: 4.4,
     percentChange: 2.3,
@@ -16,6 +17,7 @@ const data = [
     id: 1,
     symbol: "MSFT",
     name: "Microsoft",
+    followers: "2.16M",
     price: 360,
     priceChange: -1.4,
     percentChange: -0.7,
@@ -24,6 +26,7 @@ const data = [
     id: 1,
     symbol: "SPY",
     name: "SP 500 ETF",
+    followers: "4.56M",
     price: 440,
     priceChange: 4.4,
     percentChange: 2.3,
@@ -34,6 +37,7 @@ const MostFollowed = () => {
   const mostFollowedConfig: RowConfig = {
     fields: ["symbol", "name", "percentChange"],
     addIcon: true,
+    name: "most-followed",
   };
   return (
     <div className="most-followed-container">

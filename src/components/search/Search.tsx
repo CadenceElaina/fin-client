@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./search.css";
+import "./Search.css";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import cleanseData, { quoteType, suggestionType, utils } from "./types";
@@ -10,7 +10,13 @@ const Search = () => {
   const AV_URL = import.meta.env.VITE_ALPHAVANTAGE_HOST;
   const YH_KEY = import.meta.env.VITE_APIDOJO_YAHOO_KEY;
   const YH_URL = import.meta.env.VITE_APIDOJO_YAHOO_HOST;
+
   const typingTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  /*   const [outsideClick, setOutsideClick] = useState(false); */
   const [searchInput, setSearchInput] = React.useState<string>("");
   const [searchedQuote, setSearchedQuote] = React.useState("");
   const [isTyping, setIsTyping] = useState<boolean>(false);
@@ -267,6 +273,29 @@ const Search = () => {
     };
   }, [searchInput]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        inputRef.current &&
+        !inputRef.current.contains(event.target as Node)
+      ) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef, inputRef]);
+
+  const handleInputClick = () => {
+    setShowDropdown(true);
+  };
+
   const handleChange = (e: { target: { value: string } }) => {
     setIsTyping(true);
     setSearchInput(e.target.value.toLowerCase());
@@ -291,6 +320,7 @@ const Search = () => {
     if (searchInput.trim() !== "") {
       setSearchedQuote(searchInput);
       setFetchDataClicked(true);
+      setShowDropdown(true);
 
       // Check if data is available in the cache
       const cachedQuote = queryClient.getQueryData(["quote", searchedQuote]);
@@ -371,18 +401,23 @@ const Search = () => {
   return (
     <>
       <div className="app-container">
-        <div className="search-container">
+        <div className="search-container" ref={inputRef}>
           <input
             className="search-input"
             value={searchInput}
             onChange={handleChange}
+            onClick={handleInputClick}
             placeholder="Search for stocks..."
           />
           <button className="search-button" onClick={handleClick}>
             Search
           </button>
         </div>
-        <div className="data">{renderQuoteResults()}</div>
+        {showDropdown && (
+          <div className="data" ref={dropdownRef}>
+            {renderQuoteResults()}
+          </div>
+        )}
       </div>
     </>
   );

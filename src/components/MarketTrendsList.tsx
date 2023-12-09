@@ -1,6 +1,6 @@
 import React from "react";
-import Table from "./watchlist/Table";
-import { RowConfig } from "../types/types";
+import Table from "./table/Table";
+import { RowConfig } from "./table/types";
 
 const data = [
   {
@@ -10,8 +10,12 @@ const data = [
     price: 440,
     priceChange: 4.4,
     percentChange: 2.3,
-    article:
-      "https://www.bloomberg.com/news/articles/2023-12-06/citi-cfo-sees-trading-revenue-dropping-as-much-as-20-in-quarter",
+    article: {
+      title:
+        "https://www.bloomberg.com/news/articles/2023-12-06/citi-cfo-sees-trading-revenue-dropping-as-much-as-20-in-quarter",
+      source: "MSN",
+      time: "2 hours ago",
+    },
   },
   {
     id: 1,
@@ -36,8 +40,12 @@ const data = [
     price: 440,
     priceChange: 4.4,
     percentChange: 2.3,
-    article:
-      "https://www.bloomberg.com/news/articles/2023-12-06/citi-cfo-sees-trading-revenue-dropping-as-much-as-20-in-quarter",
+    article: {
+      title:
+        "https://www.bloomberg.com/news/articles/2023-12-06/citi-cfo-sees-trading-revenue-dropping-as-much-as-20-in-quarter",
+      source: "Bloomberg",
+      time: "4 hours ago",
+    },
   },
   {
     id: 1,
@@ -53,6 +61,7 @@ const MarketTrendsList = () => {
   const marketTrendsConfig: RowConfig = {
     fields: ["symbol", "name", "article", "price", "percentChange"],
     addIcon: true,
+    name: "market-trends",
   };
 
   return (

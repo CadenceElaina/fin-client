@@ -1,13 +1,8 @@
 import React from "react";
-import { story, newsSegmentType } from "./types";
+import { storyProps } from "./types";
 import "./news.css"; // Import your CSS file with the styles
 
-interface StoryProps {
-  stories: story[];
-  currNewsSegment: newsSegmentType;
-}
-
-const Story: React.FC<StoryProps> = ({ stories, currNewsSegment }) => {
+const Story: React.FC<storyProps> = ({ stories, currNewsSegment }) => {
   // Filter stories based on the current segment
   const filteredStories = stories.filter((story) =>
     Array.isArray(story.segment)

@@ -2,6 +2,7 @@ interface ButtonProps {
   active?: boolean;
   label: string;
   secondary?: boolean;
+  tertiary?: boolean;
   fullWidth?: boolean;
   large?: boolean;
   onClick: () => void;
@@ -16,6 +17,7 @@ const CustomButton: React.FC<ButtonProps> = ({
   active,
   label,
   secondary,
+  tertiary,
   fullWidth,
   onClick,
   large,
@@ -30,7 +32,7 @@ const CustomButton: React.FC<ButtonProps> = ({
       className={`
       ${active ? "active" : ""}
       ${auth ? "auth" : ""}
-
+      ${tertiary ? "tertiary" : ""}
       ${fullWidth ? "full-width" : ""}
       ${secondary ? "secondary" : "button"}
       ${large ? "large" : ""}

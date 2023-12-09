@@ -5,17 +5,7 @@ import { IoMdSettings } from "react-icons/io";
 import { MdOutlineInsertChart } from "react-icons/md";
 import SidebarItem from "./SidebarItem";
 import SidebarLogo from "./SidebarLogo";
-interface SidebarItem {
-  icon: React.ElementType;
-  label: string;
-  href: string;
-  auth?: boolean;
-}
-
-interface SidebarProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+import { SidebarProps } from "./types";
 
 const Sidebar: React.FC<SidebarProps> = () => {
   // auth = must be logged in to use otherwise use login modal

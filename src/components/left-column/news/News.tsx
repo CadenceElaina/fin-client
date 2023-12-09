@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import Story from "./Story";
 import { newsSegmentType, story } from "./types";
-import CustomButton from "../CustomButton";
+import CustomButton from "../../CustomButton";
 
 const data: story[] = [
   {
@@ -64,7 +64,7 @@ const News = () => {
           <CustomButton
             key={segment}
             label={segment}
-            secondary={true}
+            tertiary={true}
             onClick={() => handleButtonClick(segment)}
             active={currNewsSegment === segment}
           />

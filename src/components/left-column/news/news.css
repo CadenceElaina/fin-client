@@ -2,8 +2,16 @@
   margin-bottom: 16px;
   font-size: 1.125rem;
 }
+.news-button-group {
+  display: "flex";
+  gap: "8px";
+}
+.news-button-group .button {
+  text-align: center;
+  margin: 0 auto;
+}
 .story-container {
-  border-bottom: 1px solid #ddd;
+  border-top: 1px solid #ddd;
   padding: 12px 0; /* Adjust padding */
 }
 
