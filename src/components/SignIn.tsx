@@ -12,36 +12,67 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
-function Copyright(props: string[]) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
+import { useState } from "react";
+import loginService from "../services/login";
+import PositionedSnackbar from "./PositionedSnackbar";
+import { useNavigate } from "react-router-dom";
+import { SnackbarType } from "../types/types";
+import { useAuth } from "../AuthContext";
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const navigate = useNavigate();
+  /*   const [user, setUser] = useState(null); */
+  const { signIn } = useAuth();
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    type: "info",
+  });
+
+  const handleSnackbarClose = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get("email"),
       password: data.get("password"),
     });
+
+    try {
+      const cred = {
+        email: data.get("email"),
+        password: data.get("password"),
+      };
+      let username = "";
+      let password = "";
+      if (typeof cred.email === "string" && typeof cred.password === "string") {
+        username = cred.email;
+        password = cred.password;
+      }
+      const user = await loginService.login({
+        username,
+        password,
+      });
+      signIn(user); // Update AuthContext with the signed-in user
+      navigate("/");
+      console.log(user);
+      setSnackbar({
+        open: true,
+        message: `${username} successfully signed in!`,
+        type: "success",
+      });
+    } catch (exception) {
+      setSnackbar({
+        open: true,
+        message: "Wrong credentials!",
+        type: "error",
+      });
+    }
   };
 
   return (
@@ -114,8 +145,15 @@ export default function SignIn() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
+      {snackbar.open && (
+        <PositionedSnackbar
+          message={snackbar.message}
+          type={snackbar.type as SnackbarType}
+          isOpen={snackbar.open}
+          onClose={handleSnackbarClose}
+        />
+      )}
     </ThemeProvider>
   );
 }

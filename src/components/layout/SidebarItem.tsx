@@ -18,13 +18,15 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   onClick,
 }) => {
   const navigate = useNavigate();
-  const currentUser: boolean = true;
+  /*   const currentUser: boolean = true; */
   const handleClick = useCallback(() => {
-    if (onClick) {
+    console.log("runs", auth);
+    if (onClick && !auth) {
+      console.log("runs our onclick");
       return onClick();
     }
 
-    if (auth && !currentUser) {
+    if (!auth) {
       navigate("/login");
     } else if (href) {
       console.log(href);
@@ -33,21 +35,8 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
       }
       navigate(`../${href}`);
     }
-  }, [onClick, auth, currentUser, href, navigate]);
+  }, [onClick, auth, href, navigate]);
 
-  /*   const { data: currentUser } = useCurrentUser(); */
-  /*   const handleClick = useCallback(() => {
-    if (onClick) {
-      return onClick();
-    }
-
-    console.log("clicked");
-    if (auth) {
-      navigate('/login');
-    } else if (href) {
-      navigate(`/${href}`);
-
-  }, [href, auth, onClick navigate]); */
   return (
     <ListItem key={label}>
       <ListItemButton onClick={handleClick}>

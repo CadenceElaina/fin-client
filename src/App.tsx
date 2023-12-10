@@ -21,6 +21,8 @@ import Feedback from "./pages/footer/Feedback";
 import Privacy from "./pages/footer/Privacy";
 import Terms from "./pages/footer/Terms";
 import Disclaimer from "./pages/footer/Disclaimer";
+import Watchlist from "./pages/Watchlist";
+import Settings from "./pages/Settings";
 
 function App() {
   /*   const user = null; */
@@ -32,6 +34,8 @@ function App() {
           <Route path="/" element={<Home portfolios={[]} />} />
           <Route path="/login" element={<SignIn />} />
           <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/watchlist" element={<Watchlist />} />
+          <Route path="/:user/settings" element={<Settings />} />
           <Route path="/help" element={<Help />} />
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/privacy" element={<Privacy />} />

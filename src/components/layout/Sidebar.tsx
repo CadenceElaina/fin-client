@@ -6,10 +6,15 @@ import { MdOutlineInsertChart } from "react-icons/md";
 import SidebarItem from "./SidebarItem";
 import { SidebarProps } from "./types";
 import { FaUncharted } from "react-icons/fa";
+import { useAuth } from "../../AuthContext";
 import "./Layout.css";
 
 const Sidebar: React.FC<SidebarProps> = () => {
-  // auth = must be logged in to use otherwise use login modal
+  const { user } = useAuth();
+  let auth = false;
+  if (user) {
+    auth = true;
+  }
   const items = [
     {
       icon: BsHouseFill,
@@ -20,19 +25,19 @@ const Sidebar: React.FC<SidebarProps> = () => {
       icon: MdOutlineInsertChart,
       label: "portfolio",
       href: "/portfolio",
-      auth: true,
+      auth: auth,
     },
     {
       icon: BsListUl,
       label: "watchlist",
       href: "/watchlist",
-      auth: true,
+      auth: auth,
     },
     {
       icon: IoMdSettings,
       label: "settings",
-      href: `/users/settings/`,
-      auth: true,
+      href: `/${user?.username}/settings/`,
+      auth: auth,
     },
   ];
   return (
@@ -46,7 +51,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
         {items.map((item) => (
           <SidebarItem
             key={item.href}
-            auth={item.auth}
+            auth={auth}
             href={item.href}
             icon={item.icon}
             label={item.label}

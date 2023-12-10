@@ -3,11 +3,19 @@ import CustomButton from "../CustomButton"; // Update the path to CustomButton b
 import { FaChartBar } from "react-icons/fa";
 import "./Portfolio.css";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../AuthContext";
 const AddPortfolio = () => {
-  const auth = false;
+  const { user } = useAuth();
+  const auth = !!user;
   const navigate = useNavigate();
   const onAddPortfolio = () => {
-    navigate("/login");
+    if (!auth) {
+      navigate("/login");
+    } else {
+      alert(
+        "add create a new portfolio modal - input: portfolio name - cancel save"
+      );
+    }
   };
   return (
     <div className="add-portfolio-container">
@@ -29,7 +37,7 @@ const AddPortfolio = () => {
           onClick={onAddPortfolio}
           fullWidth
           large
-          auth={auth}
+          /*    auth={auth} */
         />
       </div>
     </div>

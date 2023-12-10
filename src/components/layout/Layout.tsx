@@ -4,11 +4,27 @@ import Sidebar from "./Sidebar";
 import "./Layout.css";
 import CustomButton from "../CustomButton";
 import { useNavigate } from "react-router-dom";
-/* import ThemeToggle from "../../ThemeToggle"; */
+import { useAuth } from "../../AuthContext";
+import Avatar from "@mui/material/Avatar/Avatar";
+import { Button, Menu, MenuItem } from "@mui/material";
 
+// Import Material UI Avatar component
+/* import ThemeToggle from "../../ThemeToggle"; */
+const getUserInitials = (name: string | undefined): string => {
+  if (!name) return "";
+  const nameParts = name.split(" ");
+  if (nameParts.length === 1) {
+    return nameParts[0].charAt(0);
+  } else {
+    return nameParts[0].charAt(0) + nameParts[1].charAt(0);
+  }
+};
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user } = useAuth();
+  const auth = !!user;
+
   const [open, setOpen] = useState(false);
-  const auth = false;
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const handleDrawerToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -19,7 +35,24 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   };
 
   const handleClick = () => {
-    navigate("/login");
+    if (!auth) {
+      navigate("/login");
+    }
+  };
+  const handleAvatarClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+  const handleSignOut = () => {
+    // Add your sign-out logic here
+    // For example, clear user state and refresh the page
+    // ...
+
+    // Refresh the page
+    window.location.reload();
   };
   return (
     <div className={`layout-container ${open ? "open" : ""}`}>
@@ -40,12 +73,31 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </span>
         </div>
 
-        <CustomButton
-          label={"Sign in"}
-          onClick={handleClick}
-          auth={auth}
-          primary={true}
-        />
+        {auth ? (
+          <Button className="avatar-button" onClick={handleAvatarClick}>
+            <Avatar>{getUserInitials(user?.name)}</Avatar>
+          </Button>
+        ) : (
+          <CustomButton
+            label={"Sign in"}
+            onClick={handleClick}
+            auth={auth}
+            primary={true}
+          />
+        )}
+        <Menu
+          id="user-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
+        >
+          <MenuItem>
+            {user?.name} - {user?.username}
+          </MenuItem>
+          <MenuItem onClick={handleMenuClose}>Hi, {user?.name}!</MenuItem>
+          <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
+        </Menu>
       </div>
 
       <div className="container">

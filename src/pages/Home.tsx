@@ -12,12 +12,38 @@ import MostFollowed from "../components/right-column/MostFollowed";
 import MarketTrendsList from "../components/MarketTrendsList";
 import DiscoverMore from "../components/slider/DiscoverMore";
 import Footer from "../components/Footer";
+import PositionedSnackbar from "../components/PositionedSnackbar";
+import { useEffect, useState } from "react";
+import { SnackbarType } from "../types/types";
+import { useAuth } from "../AuthContext";
 
 interface HomeProps {
   portfolios: [];
 }
 
 const Home: React.FC<HomeProps> = () => {
+  const { user } = useAuth(); // Use the useAuth hook to access the authentication context
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    type: "info",
+  });
+
+  const handleSnackbarClose = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
+  useEffect(() => {
+    // Check if a user is logged in and log the authentication context
+    if (user) {
+      console.log("User is logged in. User:", user);
+      setSnackbar({
+        open: true,
+        message: `Welcome back, ${user.name}!`,
+        type: "success",
+      });
+    }
+  }, [user]); // Run this effect only when the user changes
+  console.log(user);
   return (
     <>
       <Layout>
@@ -41,6 +67,14 @@ const Home: React.FC<HomeProps> = () => {
           <DiscoverMore />
           <Footer />
         </div>
+        {snackbar.open && (
+          <PositionedSnackbar
+            message={snackbar.message}
+            type={snackbar.type as SnackbarType}
+            isOpen={snackbar.open}
+            onClose={handleSnackbarClose}
+          />
+        )}
       </Layout>
     </>
   );
