@@ -16,6 +16,11 @@ import Home from "./pages/Home";
 import RegisterModal from "./components/modals/RegisterModal";
 import SignIn from "./components/SignIn";
 import Portfolio from "./components/Portfolio";
+import Help from "./pages/footer/Help";
+import Feedback from "./pages/footer/Feedback";
+import Privacy from "./pages/footer/Privacy";
+import Terms from "./pages/footer/Terms";
+import Disclaimer from "./pages/footer/Disclaimer";
 
 function App() {
   /*   const user = null; */
@@ -27,6 +32,11 @@ function App() {
           <Route path="/" element={<Home portfolios={[]} />} />
           <Route path="/login" element={<SignIn />} />
           <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/help" element={<Help />} />
+          <Route path="/feedback" element={<Feedback />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/disclaimer" element={<Disclaimer />} />
         </Routes>
       </Router>
     </>

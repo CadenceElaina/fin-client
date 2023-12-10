@@ -2,9 +2,12 @@ import React from "react";
 import CustomButton from "../CustomButton"; // Update the path to CustomButton based on your project structure
 import { FaChartBar } from "react-icons/fa";
 import "./Portfolio.css";
+import { useNavigate } from "react-router-dom";
 const AddPortfolio = () => {
+  const auth = false;
+  const navigate = useNavigate();
   const onAddPortfolio = () => {
-    console.log("port added");
+    navigate("/login");
   };
   return (
     <div className="add-portfolio-container">
@@ -26,6 +29,7 @@ const AddPortfolio = () => {
           onClick={onAddPortfolio}
           fullWidth
           large
+          auth={auth}
         />
       </div>
     </div>

@@ -28,6 +28,9 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
       navigate("/login");
     } else if (href) {
       console.log(href);
+      if (href === "/") {
+        window.location.reload();
+      }
       navigate(`../${href}`);
     }
   }, [onClick, auth, currentUser, href, navigate]);

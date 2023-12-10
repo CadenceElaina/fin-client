@@ -4,8 +4,9 @@ import { BsHouseFill, BsListUl } from "react-icons/bs";
 import { IoMdSettings } from "react-icons/io";
 import { MdOutlineInsertChart } from "react-icons/md";
 import SidebarItem from "./SidebarItem";
-import SidebarLogo from "./SidebarLogo";
 import { SidebarProps } from "./types";
+import { FaUncharted } from "react-icons/fa";
+import "./Layout.css";
 
 const Sidebar: React.FC<SidebarProps> = () => {
   // auth = must be logged in to use otherwise use login modal
@@ -36,9 +37,12 @@ const Sidebar: React.FC<SidebarProps> = () => {
   ];
   return (
     <>
-      <SidebarLogo />
-
-      <div>
+      <span className="logo-side">
+        {" "}
+        <FaUncharted size={24} />
+        <span>Finhub</span>
+      </span>
+      <div className="sidebar-items">
         {items.map((item) => (
           <SidebarItem
             key={item.href}

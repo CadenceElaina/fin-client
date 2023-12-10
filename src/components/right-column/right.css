@@ -30,11 +30,6 @@
   margin-top: 15px;
 }
 
-.watchlist-heading {
-  font-size: 1.125rem;
-  text-align: center;
-}
-
 .most-followed-container {
   background: #142033;
   margin-top: 25px;
@@ -46,5 +41,8 @@
   min-width: 255px;
 }
 .most-followed-heading {
-  font-size: 1.125rem;
+  font-size: 1.3rem;
+}
+.market-trends-header {
+  font-size: 1.3rem;
 }

@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import { FaBars, FaChevronLeft } from "react-icons/fa";
+import { FaBars, FaChevronLeft, FaUncharted } from "react-icons/fa";
 import Sidebar from "./Sidebar";
 import "./Layout.css";
 import CustomButton from "../CustomButton";
+import { useNavigate } from "react-router-dom";
 /* import ThemeToggle from "../../ThemeToggle"; */
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [open, setOpen] = useState(false);
-
+  const auth = false;
+  const navigate = useNavigate();
   const handleDrawerToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -16,6 +18,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     setOpen(false);
   };
 
+  const handleClick = () => {
+    navigate("/login");
+  };
   return (
     <div className={`layout-container ${open ? "open" : ""}`}>
       <div
@@ -28,13 +33,18 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           <button className="menu-button" onClick={handleDrawerToggle}>
             {open ? <FaChevronLeft /> : <FaBars />}
           </button>
-          <span>Your Logo</span>
+          <span className="logo">
+            {" "}
+            <FaUncharted size={24} />
+            <span>Finhub</span>
+          </span>
         </div>
 
         <CustomButton
           label={"Sign in"}
-          onClick={() => console.log("sign in")}
-          auth={false}
+          onClick={handleClick}
+          auth={auth}
+          primary={true}
         />
       </div>
 

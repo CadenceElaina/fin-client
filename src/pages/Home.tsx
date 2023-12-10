@@ -10,7 +10,7 @@ import AddPortfolio from "../components/portfolio/AddPortfolio";
 import MarketTrends from "../components/right-column/MarketTrends";
 import MostFollowed from "../components/right-column/MostFollowed";
 import MarketTrendsList from "../components/MarketTrendsList";
-import DiscoverMore from "../components/DiscoverMore";
+import DiscoverMore from "../components/slider/DiscoverMore";
 import Footer from "../components/Footer";
 
 interface HomeProps {

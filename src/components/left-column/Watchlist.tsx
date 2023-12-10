@@ -1,6 +1,6 @@
 import React from "react";
 import Table from "../table/Table";
-
+import "../../App.css";
 import { RowConfig } from "../table/types";
 
 // symbol name price change in price & %

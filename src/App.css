@@ -2,14 +2,15 @@ body {
   /*   background-color: #262626; */
   color: #ffffff;
   font-family: "Google Sans", Roboto, Arial, sans-serif;
-  background: linear-gradient(
+  background: #040507;
+  /*   background: linear-gradient(
     180deg,
     #142033 20%,
     #0e1a26 40%,
     #0a121a 60%,
     #070b0e 80%,
     #040507 100%
-  );
+  ); */
   /*   background: linear-gradient(to right, #262626, #1a1a1a); */
   transition: background-color 0.3s ease;
 }
@@ -20,7 +21,8 @@ body {
 }
 .main-content-container {
   display: flex;
-  flex: 1; /* Make the main content container grow to fill the available space vertically */
+  flex: 1;
+  margin-bottom: 25px;
   /*   box-shadow: 0 0 50px black; */
 }
 
@@ -96,7 +98,10 @@ body {
 .button:hover {
   background-color: #1565c0; /* Adjust the hover background color as needed */
 }
-
+.primary {
+  min-width: 96px;
+  min-height: 36px;
+}
 .tertiary {
   background: #142033;
   display: flex;
@@ -221,43 +226,14 @@ body {
   gap: 10px;
   flex-wrap: wrap;
 }
-
-/* footer */
-/* .footer {
-  line-height: 1.5rem;
-  font-size: 1rem;
-  font-weight: 500;
-  border-top: 1px solid rgb(218, 220, 224);
-  padding: 36px 0 12px 0;
-  margin-top: 16px;
-}
-.footer-list-container {
-}
-.footer-list {
-  display: flex;
-  flex-direction: row;
-  list-style: none;
-  margin: 0 auto;
-}
-.footer-list li {
-  flex: 1;
-  margin: 0 auto;
-} */
 .footer {
   line-height: 1.5rem;
   font-size: 1rem;
   font-weight: 500;
   border-top: 1px solid rgb(218, 220, 224);
   padding: 36px 0 12px 0;
-  margin-top: 16px;
-
-  padding: 20px;
+  margin-top: 25px;
   text-align: center;
-}
-
-.footer-list-container {
-  display: flex;
-  justify-content: center;
 }
 
 .footer-list {
@@ -271,6 +247,16 @@ body {
   margin: 0;
 }
 
+.footer-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.footer-item span {
+  /* Adjust as needed for vertical spacing */
+}
+
 .footer-list a {
   text-decoration: none;
   color: #fff;
@@ -281,4 +267,7 @@ body {
 
 .footer-list a:hover {
   color: #1a73e8; /* Change the color on hover as needed */
+}
+.watchlist-heading {
+  font-size: 1.3rem;
 }

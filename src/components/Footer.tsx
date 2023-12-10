@@ -1,12 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { FaUncharted } from "react-icons/fa";
 
 const Footer = () => {
   return (
     <div className="footer" role="content-info">
       <ul className="footer-list">
         <li>
-          <Link to="/">Finhub</Link>
+          <div className="footer-item">
+            <FaUncharted size={24} />
+            <span>Finhub</span>
+          </div>
         </li>
         <li>
           <Link to="/help">Help</Link>

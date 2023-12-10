@@ -5,8 +5,8 @@ import "./Right.css";
 const MarketTrends = () => {
   return (
     <div className="market-trends-container">
-      <div className="market-trends-header">
-        <h2>Market Trends</h2>
+      <div className="market-trends-header" role="heading">
+        Market Trends
       </div>
 
       <div className="market-trends-buttons">
