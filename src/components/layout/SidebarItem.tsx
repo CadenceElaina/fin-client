@@ -20,19 +20,17 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   const navigate = useNavigate();
   /*   const currentUser: boolean = true; */
   const handleClick = useCallback(() => {
-    console.log("runs", auth);
-    if (onClick && !auth) {
-      console.log("runs our onclick");
-      return onClick();
-    }
-
-    if (!auth) {
-      navigate("/login");
+    if (href === "/") {
+      navigate("/");
+    } else if (!auth) {
+      if (onClick) {
+        console.log("runs our onclick");
+        onClick();
+      } else {
+        navigate("/login");
+      }
     } else if (href) {
       console.log(href);
-      if (href === "/") {
-        window.location.reload();
-      }
       navigate(`../${href}`);
     }
   }, [onClick, auth, href, navigate]);

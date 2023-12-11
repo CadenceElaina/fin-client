@@ -4,7 +4,7 @@ import Sidebar from "./Sidebar";
 import "./Layout.css";
 import CustomButton from "../CustomButton";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import Avatar from "@mui/material/Avatar/Avatar";
 import { Button, Menu, MenuItem } from "@mui/material";
 
@@ -20,7 +20,7 @@ const getUserInitials = (name: string | undefined): string => {
   }
 };
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const auth = !!user;
 
   const [open, setOpen] = useState(false);
@@ -46,13 +46,12 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
-  const handleSignOut = () => {
-    // Add your sign-out logic here
-    // For example, clear user state and refresh the page
-    // ...
-
-    // Refresh the page
+  const handleSignOut = async () => {
+    handleMenuClose();
+    localStorage.clear();
+    await signOut();
     window.location.reload();
+    navigate("/");
   };
   return (
     <div className={`layout-container ${open ? "open" : ""}`}>

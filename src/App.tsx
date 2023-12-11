@@ -23,6 +23,7 @@ import Terms from "./pages/footer/Terms";
 import Disclaimer from "./pages/footer/Disclaimer";
 import Watchlist from "./pages/Watchlist";
 import Settings from "./pages/Settings";
+import Quote from "./pages/Quote";
 
 function App() {
   /*   const user = null; */
@@ -35,6 +36,7 @@ function App() {
           <Route path="/login" element={<SignIn />} />
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/watchlist" element={<Watchlist />} />
+          <Route path="/quote/:quote" element={<Quote />} />
           <Route path="/:user/settings" element={<Settings />} />
           <Route path="/help" element={<Help />} />
           <Route path="/feedback" element={<Feedback />} />

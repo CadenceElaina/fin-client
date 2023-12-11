@@ -17,7 +17,7 @@ import loginService from "../services/login";
 import PositionedSnackbar from "./PositionedSnackbar";
 import { useNavigate } from "react-router-dom";
 import { SnackbarType } from "../types/types";
-import { useAuth } from "../AuthContext";
+import { useAuth } from "../context/AuthContext";
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 

@@ -1,4 +1,6 @@
 import React from "react";
+import { useParams, useLocation } from "react-router-dom";
+import Layout from "../components/layout/Layout";
 
 interface QuoteProps {
   symbol?: string;
@@ -7,9 +9,15 @@ interface QuoteProps {
 }
 
 const Quote: React.FC<QuoteProps> = () => {
+  const { symbol } = useParams();
+  const location = useLocation();
+  const { searchInput, showDropdown } = location.state || {};
+  console.log(searchInput, showDropdown);
   return (
     <div>
-      <div>Stock Symbol Price Data</div>
+      <Layout>
+        <div>Stock {symbol} Price Data</div>
+      </Layout>
     </div>
   );
 };

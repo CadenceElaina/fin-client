@@ -13,9 +13,10 @@ import MarketTrendsList from "../components/MarketTrendsList";
 import DiscoverMore from "../components/slider/DiscoverMore";
 import Footer from "../components/Footer";
 import PositionedSnackbar from "../components/PositionedSnackbar";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SnackbarType } from "../types/types";
-import { useAuth } from "../AuthContext";
+import { useAuth } from "../context/AuthContext";
+import { useWelcomeBack } from "../context/WelcomeBackContext";
 
 interface HomeProps {
   portfolios: [];
@@ -28,6 +29,7 @@ const Home: React.FC<HomeProps> = () => {
     message: "",
     type: "info",
   });
+  const { showWelcomeBack, setShowWelcomeBack } = useWelcomeBack();
 
   const handleSnackbarClose = () => {
     setSnackbar({ ...snackbar, open: false });
@@ -36,14 +38,20 @@ const Home: React.FC<HomeProps> = () => {
     // Check if a user is logged in and log the authentication context
     if (user) {
       console.log("User is logged in. User:", user);
-      setSnackbar({
-        open: true,
-        message: `Welcome back, ${user.name}!`,
-        type: "success",
-      });
+
+      // Display welcome back message only once
+      if (!showWelcomeBack) {
+        setShowWelcomeBack(true);
+
+        setSnackbar({
+          open: true,
+          message: `Welcome back, ${user.name}!`,
+          type: "success",
+        });
+      }
     }
-  }, [user]); // Run this effect only when the user changes
-  console.log(user);
+  }, [user, showWelcomeBack, setShowWelcomeBack]);
+
   return (
     <>
       <Layout>

@@ -3,7 +3,7 @@ import CustomButton from "../CustomButton"; // Update the path to CustomButton b
 import { FaChartBar } from "react-icons/fa";
 import "./Portfolio.css";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../AuthContext";
+import { useAuth } from "../../context/AuthContext";
 const AddPortfolio = () => {
   const { user } = useAuth();
   const auth = !!user;

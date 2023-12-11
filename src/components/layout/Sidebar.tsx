@@ -6,20 +6,18 @@ import { MdOutlineInsertChart } from "react-icons/md";
 import SidebarItem from "./SidebarItem";
 import { SidebarProps } from "./types";
 import { FaUncharted } from "react-icons/fa";
-import { useAuth } from "../../AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import "./Layout.css";
 
 const Sidebar: React.FC<SidebarProps> = () => {
   const { user } = useAuth();
-  let auth = false;
-  if (user) {
-    auth = true;
-  }
+  const auth = !!user;
   const items = [
     {
       icon: BsHouseFill,
       label: "Home",
       href: "/",
+      auth: true, // We dont want to be rerouted to login if click home
     },
     {
       icon: MdOutlineInsertChart,

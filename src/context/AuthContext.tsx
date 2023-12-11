@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 export interface User {
   token: string;
@@ -10,6 +10,7 @@ export interface User {
 interface AuthContextProps {
   user: User | null;
   signIn: (user: User) => void;
+  signOut: () => void;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -23,8 +24,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setUser(userData);
   };
 
+  const signOut = () => {
+    setUser(null);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, signIn }}>
+    <AuthContext.Provider value={{ user, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );

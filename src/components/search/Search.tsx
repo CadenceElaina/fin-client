@@ -3,6 +3,7 @@ import "./Search.css";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import cleanseData, { quoteType, suggestionType, utils } from "./types";
+import { useNavigate } from "react-router-dom";
 /* import { Navigate, useNavigate } from "react-router-dom"; */
 
 const Search = () => {
@@ -14,9 +15,9 @@ const Search = () => {
   const typingTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [showDropdown, setShowDropdown] = useState(false);
+  const navigate = useNavigate();
 
-  /*   const [outsideClick, setOutsideClick] = useState(false); */
+  const [showDropdown, setShowDropdown] = useState(false);
   const [searchInput, setSearchInput] = React.useState<string>("");
   const [searchedQuote, setSearchedQuote] = React.useState("");
   const [isTyping, setIsTyping] = useState<boolean>(false);
@@ -292,6 +293,17 @@ const Search = () => {
     };
   }, [dropdownRef, inputRef]);
 
+  useEffect(() => {
+    // Update the search input and dropdown state when returning from a quote page
+    const savedState = JSON.parse(localStorage.getItem("searchState") || "{}");
+    console.log(savedState);
+    const savedSearchInput = savedState.searchInput || "";
+    const savedShowDropdown = savedState.showDropdown || false;
+
+    setSearchInput(savedSearchInput);
+    setShowDropdown(savedShowDropdown);
+  }, []);
+
   const handleInputClick = () => {
     setShowDropdown(true);
   };
@@ -332,12 +344,43 @@ const Search = () => {
     }
   };
 
+  //If enter is pressed while search-input is focused we get quote for current input
+  const handleKeyDown = (e: { key: string }) => {
+    // console.log("User pressed: ", e.key);
+    // console.log(message);
+    if (e.key === "Enter") {
+      setSearchedQuote(searchInput);
+      setFetchDataClicked(true);
+      setShowDropdown(true);
+      // console.log(searchText)
+      const cachedQuote = queryClient.getQueryData(["quote", searchedQuote]);
+
+      if (!cachedQuote && quoteQuery.isStale) {
+        // If data is not in the cache or stale, trigger the query
+        quoteQuery.refetch();
+      }
+    }
+  };
+
+  const handleClickQuote = (quote: string) => {
+    localStorage.setItem(
+      "searchState",
+      JSON.stringify({ searchInput, showDropdown })
+    );
+    console.log("local", localStorage);
+    navigate(`quote/${quote}`);
+  };
+
   const renderQuoteResults = () => {
     const renderRow = (
       quote: quoteType,
       matches: suggestionType[] | undefined
     ) => (
-      <div key={quote.symbol} className="quote-row">
+      <div
+        key={quote.symbol}
+        className="quote-row"
+        onClick={() => handleClickQuote(quote.symbol)}
+      >
         <div className="left-column">
           <div className="stock-name">{quote.name}</div>
           <div className="stock-details">{`${quote.symbol} :  ${
@@ -361,7 +404,10 @@ const Search = () => {
       const result = quoteQuery.data[0];
 
       return (
-        <div className="result-container">
+        <div
+          className="result-container"
+          onClick={() => handleClickQuote(result.symbol)}
+        >
           {renderRow(result, bestMatchesQuery.data)}
         </div>
       );
@@ -383,7 +429,11 @@ const Search = () => {
       return (
         <div className="result-container">
           {bestMatchesQuery.data.map((result) => (
-            <div key={result.symbol} className="quote-row">
+            <div
+              key={result.symbol}
+              className="quote-row"
+              onClick={() => handleClickQuote(result.symbol)}
+            >
               <div className="left-column">
                 <div className="stock-name">{result.name}</div>
                 <div className="stock-details">{`${result.symbol} : ${result.region}`}</div>
@@ -407,6 +457,7 @@ const Search = () => {
             value={searchInput}
             onChange={handleChange}
             onClick={handleInputClick}
+            onKeyDown={handleKeyDown}
             placeholder="Search for stocks..."
           />
           <button className="search-button" onClick={handleClick}>
