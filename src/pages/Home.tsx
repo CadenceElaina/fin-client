@@ -6,7 +6,7 @@ import Markets from "../components/markets/Markets";
 import Search from "../components/search/Search";
 import Watchlist from "../components/left-column/Watchlist";
 import News from "../components/left-column/news/News";
-import AddPortfolio from "../components/portfolio/AddPortfolio";
+import AddPortfolio from "../components/right-column/portfolio/AddPortfolio";
 import MarketTrends from "../components/right-column/MarketTrends";
 import MostFollowed from "../components/right-column/MostFollowed";
 import MarketTrendsList from "../components/MarketTrendsList";
