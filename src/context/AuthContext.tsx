@@ -4,7 +4,6 @@ export interface User {
   token: string;
   username: string;
   name?: string;
-  // Add any other properties you need from the user
 }
 
 interface AuthContextProps {
@@ -15,6 +14,7 @@ interface AuthContextProps {
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
