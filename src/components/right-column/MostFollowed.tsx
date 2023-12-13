@@ -14,7 +14,7 @@ const data = [
     percentChange: 2.3,
   },
   {
-    id: 1,
+    id: 2,
     symbol: "MSFT",
     name: "Microsoft",
     followers: "2.16M",
@@ -23,7 +23,7 @@ const data = [
     percentChange: -0.7,
   },
   {
-    id: 1,
+    id: 3,
     symbol: "SPY",
     name: "SP 500 ETF",
     followers: "4.56M",

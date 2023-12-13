@@ -17,9 +17,16 @@ const getAll = async () => {
 };
 
 const create = async (newObject: newPortfolio) => {
+  const storedUserString = localStorage.getItem("loggedFinanceappUser") || "{}";
+  const storedUserData = JSON.parse(storedUserString);
+  const token = storedUserData.token || "";
+  /* console.log(token); */
   const config = {
-    headers: { Authorization: token },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   };
+
   const response = await axios.post(baseUrl, newObject, config);
   return response.data;
 };

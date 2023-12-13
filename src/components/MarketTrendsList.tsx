@@ -18,7 +18,7 @@ const data = [
     },
   },
   {
-    id: 1,
+    id: 2,
     symbol: "SPY",
     name: "SP 500 ETF",
     price: 440,
@@ -26,7 +26,7 @@ const data = [
     percentChange: -2.3,
   },
   {
-    id: 1,
+    id: 3,
     symbol: "SPY",
     name: "SP 500 ETF",
     price: 440,
@@ -34,7 +34,7 @@ const data = [
     percentChange: 2.3,
   },
   {
-    id: 1,
+    id: 4,
     symbol: "SPY",
     name: "SP 500 ETF",
     price: 440,
@@ -48,7 +48,7 @@ const data = [
     },
   },
   {
-    id: 1,
+    id: 5,
     symbol: "SPY",
     name: "SP 500 ETF",
     price: 440,

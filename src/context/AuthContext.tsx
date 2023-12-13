@@ -3,7 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 export interface User {
   token: string;
   username: string;
-  name: string;
+  name?: string;
   // Add any other properties you need from the user
 }
 
@@ -11,6 +11,7 @@ interface AuthContextProps {
   user: User | null;
   signIn: (user: User) => void;
   signOut: () => void;
+  updateUserToken: (newToken: string) => void;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -41,8 +42,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setUser(null);
   };
 
+  const updateUserToken = (newToken: string) => {
+    setUser((prevUser) => {
+      if (prevUser) {
+        return { ...prevUser, token: newToken };
+      }
+      return null;
+    });
+  };
+
   return (
-    <AuthContext.Provider value={{ user, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, signIn, signOut, updateUserToken }}>
       {children}
     </AuthContext.Provider>
   );

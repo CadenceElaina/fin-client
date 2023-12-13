@@ -1,0 +1,8 @@
+.portfolio-list {
+  margin-top: 10px;
+  border-top: 1px solid white;
+  padding: 5px;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}

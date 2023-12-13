@@ -47,7 +47,10 @@ const Table: React.FC<TableProps> = ({ data, config, full }) => {
             item.symbol &&
             item.name &&
             item.followers ? (
-              <div className="symbol-name-followers">
+              <div
+                className="symbol-name-followers"
+                key={`${item.id}-${item.symbol}-${item.name}-${item.followers}----${item.symbol}`}
+              >
                 <div
                   className="field-value-symbol"
                   style={{
@@ -62,7 +65,9 @@ const Table: React.FC<TableProps> = ({ data, config, full }) => {
               </div>
             ) : null}
             {config.name === "market-trends" && item.symbol && item.name && (
-              <>
+              <React.Fragment
+                key={`${item.id}-${item.symbol}-${item.name}---${item.symbol}`}
+              >
                 <div className="symbol-name">
                   <div className={`item-field`}>
                     <div
@@ -101,7 +106,9 @@ const Table: React.FC<TableProps> = ({ data, config, full }) => {
                     >
                       <div className={`field-value percent-change`}>
                         {item.percentChange !== 0 && (
-                          <>
+                          <React.Fragment
+                            key={`percentChange-${item.id}-${item.percentChange}--${item.symbol}`}
+                          >
                             {item.percentChange > 0 ? (
                               <FaArrowUp
                                 style={{
@@ -130,20 +137,23 @@ const Table: React.FC<TableProps> = ({ data, config, full }) => {
                                 : item.percentChange}
                               %
                             </span>
-                          </>
+                          </React.Fragment>
                         )}
                       </div>
                     </div>
                   </div>
                 </div>
-              </>
+              </React.Fragment>
             )}
             {(config.fields as AllowedFields[]).map(
               (field) =>
                 config.fields.includes(field) && (
                   <>
                     {field !== "article" && config.name !== "market-trends" && (
-                      <div key={field} className={`item-field ${field}`}>
+                      <div
+                        key={`${field}-${item.id}`}
+                        className={`item-field ${field}`}
+                      >
                         {field === "symbol" && !config.name && (
                           <div
                             className="field-value-symbol"
@@ -170,7 +180,9 @@ const Table: React.FC<TableProps> = ({ data, config, full }) => {
                             >
                               <div className={`field-value percent-change`}>
                                 {item.percentChange !== 0 && (
-                                  <>
+                                  <React.Fragment
+                                    key={`percentChange-${item.percentChange}`}
+                                  >
                                     {item.percentChange > 0 ? (
                                       <FaArrowUp
                                         style={{
@@ -203,7 +215,7 @@ const Table: React.FC<TableProps> = ({ data, config, full }) => {
                                         : item.percentChange}
                                       %
                                     </span>
-                                  </>
+                                  </React.Fragment>
                                 )}
                               </div>
                             </div>
@@ -218,11 +230,13 @@ const Table: React.FC<TableProps> = ({ data, config, full }) => {
                             >
                               {getPriceChangePrefix(item.priceChange)}
                               {item.priceChange !== 0 && (
-                                <>
+                                <React.Fragment
+                                  key={`priceChange-${item.id}-${item.priceChange}-${item.name}`}
+                                >
                                   {item.priceChange < 0
                                     ? item.priceChange.toString().split("-")
                                     : item.priceChange}
-                                </>
+                                </React.Fragment>
                               )}
                             </div>
                           </div>

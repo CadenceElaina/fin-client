@@ -17,6 +17,8 @@ import { useEffect, useState } from "react";
 import { SnackbarType } from "../types/types";
 import { useAuth } from "../context/AuthContext";
 import { useWelcomeBack } from "../context/WelcomeBackContext";
+import { usePortfolios } from "../context/PortfoliosContext";
+import YourPortfolios from "../components/right-column/portfolio/YourPortfolios";
 
 interface HomeProps {
   portfolios: [];
@@ -24,6 +26,7 @@ interface HomeProps {
 
 const Home: React.FC<HomeProps> = () => {
   const { user } = useAuth(); // Use the useAuth hook to access the authentication context
+  const { portfolios, appendPortfolio } = usePortfolios();
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -64,7 +67,8 @@ const Home: React.FC<HomeProps> = () => {
               <News />
             </div>
             <div className="main-content-right">
-              <AddPortfolio />
+              {portfolios ? <YourPortfolios /> : <AddPortfolio />}
+
               <MarketTrends />
               <MostFollowed />
             </div>
