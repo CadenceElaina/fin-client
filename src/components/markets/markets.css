@@ -5,20 +5,15 @@
 .compareMarkets {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #fff; /* Set the color to white for contrast with a black background */
+  color: #fff;
 }
 
 .divider {
   height: 5vh;
-  background-color: rgba(
-    189,
-    193,
-    198,
-    0.87
-  ); /* Adjust the color to match the existing style */
-  margin: 10px 16px; /* Adjust the margin as needed */
+  background-color: rgba(189, 193, 198, 0.87);
+  margin: 10px 16px;
   overflow: hidden;
-  border-left: 2px solid rgba(189, 193, 198, 0.87); /* Match the border color */
+  border-left: 2px solid rgba(189, 193, 198, 0.87);
 }
 
 .linkToArticle {

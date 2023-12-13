@@ -15,7 +15,7 @@ import Togglable from "./components/Togglable"; */
 import Home from "./pages/Home";
 import RegisterModal from "./components/modals/RegisterModal";
 import SignIn from "./components/SignIn";
-import Portfolio from "./components/Portfolio";
+import Portfolio from "./components/portfolio/Portfolio";
 import Help from "./pages/footer/Help";
 import Feedback from "./pages/footer/Feedback";
 import Privacy from "./pages/footer/Privacy";
@@ -35,6 +35,7 @@ function App() {
           <Route path="/" element={<Home portfolios={[]} />} />
           <Route path="/login" element={<SignIn />} />
           <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/portfolio/:id" element={<Portfolio />} />
           <Route path="/watchlist" element={<Watchlist />} />
           <Route path="/quote/:quote" element={<Quote />} />
           <Route path="/:user/settings" element={<Settings />} />

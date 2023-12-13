@@ -102,6 +102,12 @@ body {
   min-width: 96px;
   min-height: 36px;
 }
+.disabled {
+  color: rgba(60, 64, 67, 0.38);
+  background: rgba(60, 64, 67, 0.12);
+  cursor: default;
+  pointer-events: none;
+}
 .tertiary {
   background: #142033;
   display: flex;

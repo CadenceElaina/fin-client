@@ -10,30 +10,74 @@
   border-radius: 8px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   width: 300px;
-  transition: none; /* Remove the opacity transition */
-  pointer-events: auto; /* Enable interaction when modal is visible */
+  transition: none;
+  pointer-events: auto;
 }
 
 .modal-header {
   text-align: center;
   margin-bottom: 15px;
 }
+.new-portfolio-modal .modal-content input {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  color: black;
+}
 
-.modal-content input {
-  width: 100%;
+.new-portfolio-modal .modal-content input:focus {
+  outline: none;
+  border-color: rgb(26, 115, 232);
+}
+
+/* .modal-content input {
+  width: calc(100% - 20px);
   padding: 10px;
   margin-bottom: 15px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
-
+ */
 .modal-footer {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+}
+.new-portfolio-modal .modal-footer button:first-child {
+  background: none;
+  color: rgb(26, 115, 232);
+  border: none;
+  cursor: pointer;
+}
+
+.new-portfolio-modal .modal-footer button:first-child:hover {
+  background: lightblue;
+}
+
+.new-portfolio-modal .modal-footer button:last-child {
+  background: rgb(26, 115, 232);
+  color: white;
+  border: none;
+  transition: background 0.3s ease;
+}
+.new-portfolio-modal .modal-footer button:last-child:disabled {
+  color: rgba(60, 64, 67, 0.38);
+  background: rgba(60, 64, 67, 0.12);
+  cursor: default;
+  pointer-events: none;
+}
+.new-portfolio-modal .modal-footer button:last-child:not([disabled]):hover {
+  background: darkblue;
 }
 
 .modal-footer button {
-  margin-left: 10px;
+  padding: 10px;
+  width: 25%;
+  height: 25%;
+  margin: 10px 0 0 10px;
 }
 
 .modal-backdrop {

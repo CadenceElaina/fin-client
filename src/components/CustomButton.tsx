@@ -39,7 +39,8 @@ const CustomButton: React.FC<ButtonProps> = ({
   };
   return (
     <button
-      disabled={auth || disabled}
+      /*       disabled={auth || disabled} */
+      disabled={disabled}
       onClick={handleClick}
       className={`
       ${active ? "active" : ""}
@@ -50,6 +51,7 @@ const CustomButton: React.FC<ButtonProps> = ({
       ${secondary ? "secondary" : "button"}
       ${large ? "large" : ""}
       ${outline ? "button-outline" : ""}
+      ${disabled ? "disabled" : ""} 
       `}
     >
       {label}

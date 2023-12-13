@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 export interface User {
   token: string;
@@ -14,17 +14,30 @@ interface AuthContextProps {
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
-
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<User | null>(null);
 
+  useEffect(() => {
+    // Check for a logged-in user on component mount
+    const loggedUserJSON = window.localStorage.getItem("loggedFinanceappUser");
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+    }
+  }, []); // Run once on component mount
+
   const signIn = (userData: User) => {
     setUser(userData);
+    window.localStorage.setItem(
+      "loggedFinanceappUser",
+      JSON.stringify(userData)
+    );
   };
 
   const signOut = () => {
+    window.localStorage.removeItem("loggedFinanceappUser");
     setUser(null);
   };
 

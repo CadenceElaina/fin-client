@@ -1,8 +1,6 @@
 .table-container {
   margin-bottom: 25px;
   padding: 10px;
-  /*   border: 1px solid white;
-  border-radius: 8px; */
   max-width: 640px;
 }
 .custom-list {
@@ -16,9 +14,6 @@
   width: 100%;
   padding: 0;
 }
-/* .news .list-item .item-content {
-  justify-content: space-between;
-} */
 
 .list-item {
   border-top: 1px solid #dddddd;

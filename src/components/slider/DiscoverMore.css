@@ -11,7 +11,7 @@
   margin-top: 25px !important;
   max-width: 100%;
   margin: 0 auto;
-  position: relative; /* Add position relative to enable absolute positioning of arrows */
+  position: relative;
 }
 .slick-list {
   display: flex;
@@ -24,8 +24,8 @@
   text-align: center;
   box-sizing: border-box;
   height: 150px;
-  cursor: pointer; /* Add cursor pointer to indicate cards are clickable */
-  transition: transform 0.2s; /* Add transition for a smooth hover effect */
+  cursor: pointer;
+  transition: transform 0.2s;
   border-radius: 12px;
 }
 
@@ -51,37 +51,24 @@
   border: 1px solid black;
   box-shadow: 0px 0 5px white;
   padding: 8px;
-  z-index: 1; /* Ensure arrows are above slides */
-  transition: background-color 0.2s; /* Add transition for a smooth hover effect */
+  z-index: 1;
+  transition: background-color 0.2s;
 }
 
 .arrow:hover {
-  background-color: #ddd; /* Change background color on hover */
+  background-color: #ddd;
 }
 
 .next {
   border-radius: 50%;
-  right: 0px; /* Adjust the right position of the next arrow */
+  right: 0px;
 }
 
 .prev {
   border-radius: 50%;
-  left: 0px; /* Adjust the left position of the prev arrow */
+  left: 0px;
 }
 
-/* Slider */
-
-/* Icons */
-/*@font-face*/
-/*{*/
-/*    font-family: 'slick';*/
-/*    font-weight: normal;*/
-/*    font-style: normal;*/
-
-/*    src: url('./fonts/slick.eot');*/
-/*    src: url('./fonts/slick.eot?#iefix') format('embedded-opentype'), url('./fonts/slick.woff') format('woff'), url('./fonts/slick.ttf') format('truetype'), url('./fonts/slick.svg#slick') format('svg');*/
-/*}*/
-/* Arrows */
 .slick-prev,
 .slick-next {
   font-size: 0;

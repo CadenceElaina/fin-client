@@ -4,10 +4,12 @@ import { FaChartBar } from "react-icons/fa";
 import "./Portfolio.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
-import ModalBackdrop from "../../modals/ModalBackdrop";
+import portfolioService from "../../../services/portfolios";
 import NewPortfolioModal from "../../modals/AddPortfolioModal";
+import { usePortfolios } from "../../../context/PortfoliosContext";
 
 const AddPortfolio = () => {
+  const { portfolios, appendPortfolio } = usePortfolios();
   const { user } = useAuth();
   const auth = !!user;
   const navigate = useNavigate();
@@ -24,26 +26,39 @@ const AddPortfolio = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  const handleSavePortfolio = (portfolioName: string) => {
+  const handleSavePortfolio = async (portfolioName: string) => {
     // Handle saving the portfolio data (you can implement this part)
-    alert(`Saving portfolio with name: ${portfolioName}`);
+    const newPortfolio = {
+      title: portfolioName,
+      author: user?.name,
+    };
+    const response = await portfolioService.create(newPortfolio);
+    console.log(response);
+    // appendPortfolio to our context state
+    appendPortfolio({
+      id: response.id,
+      title: response.title,
+      author: response.author,
+    });
+
     closeModal();
+    navigate(`/portfolio/${response.id}`);
   };
   return (
     <div className="add-portfolio-container">
-      <div className="portfolio-header">
+      <div className="add-portfolio-header">
         {/* Portfolio/Graph icon */}
-        <div className="portfolio-icon">
+        <div className="add-portfolio-icon">
           <FaChartBar size={30} />
         </div>
 
-        <div className="portfolio-text">
+        <div className="add-portfolio-text">
           Create a portfolio to view your investments in one place
         </div>
       </div>
 
       {/* Button */}
-      <div className="portfolio-button">
+      <div className="add-portfolio-button">
         <CustomButton
           label="New Portfolio"
           onClick={openModal}

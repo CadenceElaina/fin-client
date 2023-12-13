@@ -13,7 +13,7 @@ import MarketTrendsList from "../components/MarketTrendsList";
 import DiscoverMore from "../components/slider/DiscoverMore";
 import Footer from "../components/Footer";
 import PositionedSnackbar from "../components/PositionedSnackbar";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { SnackbarType } from "../types/types";
 import { useAuth } from "../context/AuthContext";
 import { useWelcomeBack } from "../context/WelcomeBackContext";

@@ -1,0 +1,151 @@
+.portfolio-container {
+  min-width: 50vw;
+}
+.portfolio-header {
+  display: flex;
+  flex-direction: column; /* Change from row to column */
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: rgb(248, 249, 250);
+  color: black;
+  width: 100%;
+}
+
+.portfolio-header-item {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  margin-top: 10px; /* Add margin to separate the rows */
+  align-self: flex-start;
+}
+
+.arrow1 {
+  margin-left: 5px;
+}
+
+.portfolio-header-item a {
+  text-decoration: none;
+  color: #333;
+  display: flex;
+  align-items: center;
+}
+
+.label {
+  margin-left: 5px;
+  font-size: 14px;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+  padding: 5px;
+  height: 40px;
+  border: 2px solid rgb(218, 220, 224);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.tab:hover {
+  box-shadow: 0 0 5px rgb(154, 160, 166);
+}
+.active-tab {
+  border-bottom: 5px solid rgb(26, 115, 232);
+  height: 37px;
+  border-radius: 8px;
+}
+.count {
+  margin-left: 5px;
+  font-size: 12px;
+}
+
+.add-list,
+.add-investment {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  margin-top: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-list:hover,
+.add-investment:hover {
+  background-color: #0056b3;
+}
+
+.chart {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.portfolio-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.settings {
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #333;
+}
+
+.settings-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.settings {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #555;
+}
+
+.dropdown-content {
+  display: block;
+  position: absolute;
+  background-color: white;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  min-width: 160px;
+  border-radius: 4px;
+  color: black;
+}
+
+/* .dropdown-content {
+  display: block;
+  position: absolute;
+  top: 100%;
+  background-color: #fff;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  min-width: 160px;
+  border-radius: 4px;
+} */
+
+.dropdown-option {
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.dropdown-option:hover {
+  background-color: #777;
+}
+
+.settings:hover {
+  color: #007bff;
+}

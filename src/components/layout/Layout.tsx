@@ -3,7 +3,7 @@ import { FaBars, FaChevronLeft, FaUncharted } from "react-icons/fa";
 import Sidebar from "./Sidebar";
 import "./Layout.css";
 import CustomButton from "../CustomButton";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import Avatar from "@mui/material/Avatar/Avatar";
 import { Button, Menu, MenuItem } from "@mui/material";
@@ -68,7 +68,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           <span className="logo">
             {" "}
             <FaUncharted size={24} />
-            <span>Finhub</span>
+            <Link to={"/"}>Finhub</Link>
           </span>
         </div>
 

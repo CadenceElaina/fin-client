@@ -12,7 +12,7 @@
 }
 .story-container {
   border-top: 1px solid #ddd;
-  padding: 12px 0; /* Adjust padding */
+  padding: 12px 0;
 }
 
 .story-row {
@@ -64,7 +64,7 @@
   flex: 1;
   display: flex;
   justify-content: flex-end;
-  align-items: center; /* Center the image vertically */
+  align-items: center;
 }
 
 .story-image {

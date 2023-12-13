@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import CustomButton from "../CustomButton";
 import "./AddPortfolio.css";
 import ModalBackdrop from "./ModalBackdrop";
@@ -13,24 +13,18 @@ const AddPortfolioModal: React.FC<AddPortfolioProps> = ({
   onSave,
 }) => {
   const [portfolioName, setPortfolioName] = useState<string>("");
-  const isSaveDisabled = !portfolioName;
+  const [isSaveDisabled, setIsSaveDisabled] = useState<boolean>(true);
   const [isVisible, setIsVisible] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPortfolioName(e.target.value);
+    setIsSaveDisabled(portfolioName.trim() === ""); // Disable Save if the input is empty or contains only spaces
   };
-  useEffect(() => {
-    // Show modal with a delay to allow for opacity transition
-    const showTimeout = setTimeout(() => {
-      setIsVisible(true);
-    }, 50);
 
-    return () => clearTimeout(showTimeout);
-  }, []);
   const handleClose = () => {
-    console.log("Before closing - isVisible:", isVisible);
+    /*  console.log("Before closing - isVisible:", isVisible); */
     setIsVisible(false);
-    console.log("After closing - isVisible:", isVisible);
+    /*     console.log("After closing - isVisible:", isVisible); */
     onCancel();
   };
 
@@ -58,12 +52,11 @@ const AddPortfolioModal: React.FC<AddPortfolioProps> = ({
           />
         </div>
         <div className="modal-footer">
-          <CustomButton label="Cancel" onClick={() => handleClose()} tertiary />
+          <CustomButton label="Cancel" onClick={() => handleClose()} />
           <CustomButton
             label="Save"
             onClick={handleSave}
             disabled={isSaveDisabled}
-            primary
           />
         </div>
       </div>
