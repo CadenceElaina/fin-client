@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaList,
   FaChartLine,
@@ -9,14 +9,45 @@ import {
 import Layout from "../layout/Layout";
 import "./Portfolio.css";
 import { usePortfolios } from "../../context/PortfoliosContext";
+import AddToPortfolioModal from "../../components/modals/AddToPortfolioModal";
+import { useNavigate, useParams } from "react-router-dom";
+
+interface Security {
+  symbol: string;
+  quantity: number;
+  purchaseDate: string;
+  purchasePrice: number;
+}
+
+interface Portfolio {
+  id: string;
+  title: string;
+  author: string | undefined;
+  securities?: Security[];
+}
 
 const Portfolio = () => {
-  const [activeTab, setActiveTab] = useState<string>("portfolioName");
+  const [activeTab, setActiveTab] = useState<string>("");
+  const [activePortfolio, setActivePortfolio] = useState<Portfolio>();
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
-  const { portfolios, removePortfolio } = usePortfolios();
+  const [addToPortfolioModalIsOpen, setAddToPortfolioModalIsOpen] =
+    useState<boolean>(false);
+  const { portfolios, removePortfolio, addSecurityToPortfolio } =
+    usePortfolios();
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Find the portfolio with the matching id and set activePortfolio
+    const matchingPortfolio = portfolios.find((p) => p.id === id);
+    if (matchingPortfolio) {
+      setActivePortfolio(matchingPortfolio);
+      setActiveTab(matchingPortfolio.title);
+    }
+  }, [id, portfolios]);
 
   const handleTabClick = (tab: React.SetStateAction<string>) => {
-    setActiveTab(tab);
+    navigate(`/portfolio/${tab}`);
   };
 
   const handleDropdownToggle = () => {
@@ -38,9 +69,52 @@ const Portfolio = () => {
     setShowDropdown(false);
   };
 
+  const openAddToPortfolioModal = () => {
+    setAddToPortfolioModalIsOpen(true);
+  };
+
+  const addToPortfolio = async (newSecurity: Security) => {
+    //get our addedSecuritites
+    /* const addedSecurities = await portfolioService.addToPortfolio(activePortfolio.id, newSecurity)
+    setAddToPortfolioModalIsOpen(false); */
+    //return addedSecurities;
+    if (activePortfolio) {
+      // Update the context with the new security
+      addSecurityToPortfolio(activePortfolio.id, newSecurity);
+    }
+  };
+  const onClose = () => {
+    setAddToPortfolioModalIsOpen(false);
+  };
+  //console.log(addToPortfolioModalIsOpen);
+  console.log(activePortfolio);
   /*   console.log("Portfolios:", portfolios); */
+  /*  console.log(portfolios, activeTab, activePortfolio); */
   return (
     <Layout>
+      {addToPortfolioModalIsOpen && (
+        <AddToPortfolioModal
+          isOpen={addToPortfolioModalIsOpen}
+          portfolioName={activeTab}
+          onClose={onClose} // Close modal function
+          onSave={(symbol, quantity, purchaseDate, purchasePrice) => {
+            // Handle saving data to your state or API
+            // For now, just log the data
+            const newSecurity = {
+              symbol,
+              quantity,
+              purchaseDate,
+              purchasePrice,
+            };
+            addToPortfolio(newSecurity);
+            /* portfolioService.addToPortfolio(newSecurity) */
+            console.log("Symbol:", symbol);
+            console.log("Quantity:", quantity);
+            console.log("Purchase Date:", purchaseDate);
+            console.log("Purchase Price:", purchasePrice);
+          }}
+        />
+      )}
       <div className="portfolio-container">
         <div className="portfolio-header">
           <div className="portfolio-header-item">
@@ -70,7 +144,7 @@ const Portfolio = () => {
                 className={`tab ${
                   activeTab === portfolio.title ? "active-tab" : "inactive-tab"
                 }`}
-                onClick={() => handleTabClick(portfolio.title)}
+                onClick={() => handleTabClick(portfolio.id)}
               >
                 <div className="tab-inner">
                   <FaChartLine size={18} />
@@ -90,6 +164,7 @@ const Portfolio = () => {
           <div className="chart">
             <div className="chart-header">
               <span className="portfolio-title">Portfolio title</span>
+
               <div className="settings-dropdown">
                 <button className="settings" onClick={handleDropdownToggle}>
                   <FaEllipsisV size={18} />
@@ -120,10 +195,20 @@ const Portfolio = () => {
               </div>
             </div>
           </div>
-          <button className="add-investment">
+          <button className="add-investment" onClick={openAddToPortfolioModal}>
             <FaPlus size={18} />
             <span className="label">Add investments</span>
           </button>
+          <div>
+            {activePortfolio?.securities?.map((s) => (
+              <div key={s.symbol}>
+                {s.symbol}
+                {s.quantity}
+                {s.purchaseDate}
+                {s.purchasePrice}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </Layout>

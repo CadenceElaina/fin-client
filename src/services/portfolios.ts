@@ -6,6 +6,12 @@ interface newPortfolio {
   title: string;
   user?: string;
 }
+interface Security {
+  symbol: string;
+  quantity: number;
+  purchaseDate: string;
+  purchasePrice: number;
+}
 
 const setToken = (newToken: string) => {
   token = `Bearer ${newToken}`;
@@ -31,6 +37,13 @@ const create = async (newObject: newPortfolio) => {
   return response.data;
 };
 
+const addToPortfolio = async (id: string, security: Security) => {
+  const response = await axios.post(`${baseUrl}/${id}/securities`, {
+    security,
+  });
+  return response.data;
+};
+
 const remove = async (id: string) => {
   const config = {
     headers: { Authorization: token },
@@ -44,6 +57,7 @@ export default {
   setToken,
   getAll,
   create,
+  addToPortfolio,
   remove,
 };
 /*

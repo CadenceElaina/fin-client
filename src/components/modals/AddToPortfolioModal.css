@@ -1,0 +1,86 @@
+.addToPortfolio-container {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.addToPortfolio-container.open {
+  display: flex;
+}
+
+.addToPortfolio-content {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  width: 400px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  color: black;
+}
+
+.addToPortfolio-input {
+  display: flex;
+  align-items: center;
+  margin: 15px 0 15px 0;
+}
+
+.addToPortfolio-input input {
+  flex: 1;
+  padding: 8px;
+  margin-right: -5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  height: 1.69rem;
+}
+/* .addToPortfolio-input input:focus {
+  height: 1.69rem;
+} */
+.addToPortfolio-button {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  height: 100%;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.addToPortfolio-button:hover {
+  background: #0056b3;
+}
+
+.addToPortfolio-row {
+  margin: 10px 0;
+}
+
+.addToPortfolio-row span {
+  margin-right: 10px;
+}
+
+.addToPortfolio-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.addToPortfolio-buttons button {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button:first-child {
+  margin-right: 10px;
+}
+
+.addToPortfolio-buttons button:hover {
+  background: #0056b3;
+}

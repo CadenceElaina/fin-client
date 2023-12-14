@@ -1,6 +1,5 @@
 import * as React from "react";
-import LoginModal from "../components/modals/LoginModal";
-import RegisterModal from "../components/modals/RegisterModal";
+
 import Layout from "../components/layout/Layout";
 import Markets from "../components/markets/Markets";
 import Search from "../components/search/Search";
@@ -67,14 +66,12 @@ const Home: React.FC<HomeProps> = () => {
               <News />
             </div>
             <div className="main-content-right">
-              {portfolios ? <YourPortfolios /> : <AddPortfolio />}
+              {portfolios && user ? <YourPortfolios /> : <AddPortfolio />}
 
               <MarketTrends />
               <MostFollowed />
             </div>
           </div>
-          <LoginModal />
-          <RegisterModal />
           <MarketTrendsList />
           <DiscoverMore />
           <Footer />

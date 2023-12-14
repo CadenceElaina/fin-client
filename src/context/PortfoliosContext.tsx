@@ -1,8 +1,3 @@
-//PortfoliosContext.tsx
-/*
-append portfolio function - concat portfolio to our state so that if we add a new portfolio the UI stays in sync
-const blogs = await portfolioService.getAll();
-*/
 import React, {
   createContext,
   useContext,
@@ -13,16 +8,30 @@ import React, {
 } from "react";
 import portfolioService from "../services/portfolios";
 
-interface Portfolio {
+export interface Security {
+  symbol: string;
+  quantity: number;
+  purchaseDate: string;
+  purchasePrice: number;
+}
+
+export interface Portfolio {
   id: string;
   title: string;
   author: string | undefined;
+  securities?: Security[];
 }
+/* export interface Portfolio {
+  id: string;
+  title: string;
+  author: string | undefined;
+} */
 
 interface PortfoliosContextProps {
   portfolios: Portfolio[];
   appendPortfolio: (newPortfolio: Portfolio) => void;
   removePortfolio: (removedPortfolio: Portfolio) => void;
+  addSecurityToPortfolio: (portfolioId: string, security: Security) => void;
 }
 
 const PortfoliosContext = createContext<PortfoliosContextProps | undefined>(
@@ -65,8 +74,32 @@ export const PortfoliosProvider: React.FC<{ children: ReactNode }> = ({
     setPortfolios(portfolios.filter((p) => p.id !== removedPortfolio.id));
   }; */
 
+  const addSecurityToPortfolio = async (
+    portfolioId: string,
+    security: Security
+  ) => {
+    const updatedPortfolios = portfolios.map((portfolio) =>
+      portfolio.id === portfolioId
+        ? {
+            ...portfolio,
+            securities: [...(portfolio.securities ?? []), security],
+          }
+        : portfolio
+    );
+
+    setPortfolios(updatedPortfolios);
+
+    // Update the server with the new security
+    await portfolioService.addToPortfolio(portfolioId, security);
+  };
+
   const contextValue = useMemo(
-    () => ({ portfolios, appendPortfolio, removePortfolio }),
+    () => ({
+      portfolios,
+      appendPortfolio,
+      removePortfolio,
+      addSecurityToPortfolio,
+    }),
     [portfolios]
   );
 
@@ -79,11 +112,19 @@ export const PortfoliosProvider: React.FC<{ children: ReactNode }> = ({
     </PortfoliosContext.Provider>
   );
 };
-
 export const usePortfolios = () => {
+  const context = useContext(PortfoliosContext);
+  if (!context) {
+    throw new Error("usePortfolios must be used within a PortfoliosProvider");
+  }
+  return context;
+};
+
+/* export const usePortfolios = () => {
   const context = useContext(PortfoliosContext);
   if (!context) {
     throw new Error("usePortfolios must be used within a PortfoliosProvider");
   }
   return { ...context, removePortfolio: context.removePortfolio };
 };
+ */

@@ -13,7 +13,6 @@ import {
 /* import Navbar from "./components/Navbar";
 import Togglable from "./components/Togglable"; */
 import Home from "./pages/Home";
-import RegisterModal from "./components/modals/RegisterModal";
 import SignIn from "./components/SignIn";
 import Portfolio from "./components/portfolio/Portfolio";
 import Help from "./pages/footer/Help";
@@ -48,12 +47,10 @@ function App() {
   }, []); // Run once on component mount
 
   const resetSessionTimeout = () => {
-    console.log("Resetting session timeout");
     clearTimeout(sessionTimeoutRef.current as number);
-
     sessionTimeoutRef.current = window.setTimeout(() => {
       setSessionTimeoutModalOpen(true);
-    }, 0.3 * 60 * 1000); // 3 minutes
+    }, 30 * 60 * 1000); // Reset to 30 minutes
   };
   console.log(sessionTimeoutRef, isSessionTimeoutModalOpen);
   const handleSessionResponse = async (isStillThere: boolean) => {
@@ -88,7 +85,6 @@ function App() {
   return (
     <>
       <Router>
-        <RegisterModal />
         <Routes>
           <Route path="/" element={<Home portfolios={[]} />} />
           <Route path="/login" element={<SignIn />} />

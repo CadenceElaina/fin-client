@@ -3,7 +3,7 @@ import { FaChartBar } from "react-icons/fa";
 import { usePortfolios } from "../../../context/PortfoliosContext";
 import CustomButton from "../../CustomButton";
 import portfolioService from "../../../services/portfolios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import NewPortfolioModal from "../../modals/AddPortfolioModal";
 import "./Portfolio.css";
@@ -55,12 +55,18 @@ const YourPortfolios = () => {
         <div className="add-portfolio-text">Your portfolios</div>
       </div>
       <div className="portfolio-value">$0.00</div>
+      <div className="border-top"></div>
       <div className="portfolio-list">
         {portfolios.map((portfolio) => (
           <div key={portfolio.id} className="portfolio">
             <div className="tab-inner">
-              <span className="label">{portfolio.title}</span>
-              <span className="count">0</span>
+              <Link
+                to={`/portfolio/${portfolio.id}`}
+                style={{ textDecoration: "none", color: "white" }}
+              >
+                <span className="label">{portfolio.title}</span>
+                <span className="count">0</span>
+              </Link>
             </div>
           </div>
         ))}
