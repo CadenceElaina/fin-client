@@ -13,7 +13,7 @@ import { RowConfig } from "../table/types";
 
 const data = [
   {
-    id: 1,
+    id: 10,
     symbol: "SPY",
     name: "SP 500 ETF",
     price: 440,
@@ -21,7 +21,7 @@ const data = [
     percentChange: 2.3,
   },
   {
-    id: 2,
+    id: 20,
     symbol: "SPY",
     name: "SP 500 ETF",
     price: 440,
@@ -29,7 +29,7 @@ const data = [
     percentChange: -2.3,
   },
   {
-    id: 3,
+    id: 30,
     symbol: "SPY",
     name: "SP 500 ETF",
     price: 440,
@@ -37,7 +37,7 @@ const data = [
     percentChange: 2.3,
   },
   {
-    id: 4,
+    id: 40,
     symbol: "SPY",
     name: "SP 500 ETF",
     price: 440,
@@ -45,7 +45,7 @@ const data = [
     percentChange: 2.3,
   },
   {
-    id: 5,
+    id: 50,
     symbol: "SPY",
     name: "SP 500 ETF",
     price: 440,

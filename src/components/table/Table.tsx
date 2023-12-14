@@ -35,7 +35,7 @@ const getPriceChangeColor = (change: number): string => {
 const Table: React.FC<TableProps> = ({ data, config, full }) => {
   return (
     <ul className={`custom-list${full ? "-full" : ""}`}>
-      {data.map((item) => (
+      {data.map((item, i) => (
         <li
           key={item.id}
           className={`list-item${
@@ -66,7 +66,7 @@ const Table: React.FC<TableProps> = ({ data, config, full }) => {
             ) : null}
             {config.name === "market-trends" && item.symbol && item.name && (
               <React.Fragment
-                key={`${item.id}-${item.symbol}-${item.name}---${item.symbol}`}
+                key={`frag-${item.id}-${item.symbol}-${item.name}---${item.symbol}`}
               >
                 <div className="symbol-name">
                   <div className={`item-field`}>
@@ -146,12 +146,14 @@ const Table: React.FC<TableProps> = ({ data, config, full }) => {
               </React.Fragment>
             )}
             {(config.fields as AllowedFields[]).map(
-              (field) =>
+              (field, j) =>
                 config.fields.includes(field) && (
-                  <>
+                  <React.Fragment
+                    key={`This one needs to be unique key using loop${i}${item.id}${j}`}
+                  >
                     {field !== "article" && config.name !== "market-trends" && (
                       <div
-                        key={`${field}-${item.id}`}
+                        key={`k-${field}-${item.id}-l`}
                         className={`item-field ${field}`}
                       >
                         {field === "symbol" && !config.name && (
@@ -160,19 +162,33 @@ const Table: React.FC<TableProps> = ({ data, config, full }) => {
                             style={{
                               backgroundColor: getRandomColor(),
                             }}
+                            key={`please${item.symbol}${item.id}`}
                           >
                             {item[field]}
                           </div>
                         )}
                         {field === "name" && !config.name && (
-                          <div className="field-value">{item.name}</div>
+                          <div
+                            className="field-value"
+                            key={`Iwillremovethiswraning${item.symbol}`}
+                          >
+                            {item.name}
+                          </div>
                         )}
 
                         {field === "price" && (
-                          <div className="field-value">${item.price}</div>
+                          <div
+                            className="field-value"
+                            key={`mustfixwarning${item.symbol}`}
+                          >
+                            ${item.price}
+                          </div>
                         )}
                         {field === "percentChange" && (
-                          <div className={`item-field percent-change`}>
+                          <div
+                            className={`item-field percent-change`}
+                            key={`we hate warning errors ${item.id}-${item.name}`}
+                          >
                             <div
                               className={`${getChangeStyle(
                                 item.percentChange
@@ -184,23 +200,31 @@ const Table: React.FC<TableProps> = ({ data, config, full }) => {
                                     key={`percentChange-${item.percentChange}`}
                                   >
                                     {item.percentChange > 0 ? (
-                                      <FaArrowUp
-                                        style={{
-                                          color: getPriceChangeColor(
-                                            item.percentChange
-                                          ),
-                                          marginRight: "5px",
-                                        }}
-                                      />
+                                      <React.Fragment
+                                        key={`${item.priceChange}-${item.name}-lol`}
+                                      >
+                                        <FaArrowUp
+                                          style={{
+                                            color: getPriceChangeColor(
+                                              item.percentChange
+                                            ),
+                                            marginRight: "5px",
+                                          }}
+                                        />
+                                      </React.Fragment>
                                     ) : (
-                                      <FaArrowDown
-                                        style={{
-                                          color: getPriceChangeColor(
-                                            item.percentChange
-                                          ),
-                                          marginRight: "5px",
-                                        }}
-                                      />
+                                      <React.Fragment
+                                        key={`${item.priceChange}-${item.name}-lol-please`}
+                                      >
+                                        <FaArrowDown
+                                          style={{
+                                            color: getPriceChangeColor(
+                                              item.percentChange
+                                            ),
+                                            marginRight: "5px",
+                                          }}
+                                        />
+                                      </React.Fragment>
                                     )}
                                     <span
                                       className={getChangeStyle(
@@ -222,7 +246,10 @@ const Table: React.FC<TableProps> = ({ data, config, full }) => {
                           </div>
                         )}
                         {field === "priceChange" && (
-                          <div className={`item-field price-change`}>
+                          <div
+                            className={`item-field price-change`}
+                            key={`item-field-price-change ${item.priceChange}`}
+                          >
                             <div
                               className={`field-value price-change ${getChangeStyle(
                                 item.priceChange
@@ -243,12 +270,12 @@ const Table: React.FC<TableProps> = ({ data, config, full }) => {
                         )}
                       </div>
                     )}
-                  </>
+                  </React.Fragment>
                 )
             )}
 
             {config.addIcon && (
-              <div className="field-value-icon">
+              <div className="field-value-icon" key={`icon-${item.id}`}>
                 <IoMdAddCircleOutline size={24} />
               </div>
             )}

@@ -5,7 +5,7 @@ import { RowConfig } from "../table/types";
 
 const data = [
   {
-    id: 1,
+    id: 100,
     symbol: "SPY",
     name: "SP 500 ETF",
     followers: "3.71M",
@@ -14,7 +14,7 @@ const data = [
     percentChange: 2.3,
   },
   {
-    id: 2,
+    id: 200,
     symbol: "MSFT",
     name: "Microsoft",
     followers: "2.16M",
@@ -23,7 +23,7 @@ const data = [
     percentChange: -0.7,
   },
   {
-    id: 3,
+    id: 300,
     symbol: "SPY",
     name: "SP 500 ETF",
     followers: "4.56M",
