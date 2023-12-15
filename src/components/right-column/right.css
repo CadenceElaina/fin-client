@@ -8,7 +8,7 @@
   border: 1px solid white;
   border-radius: 8px;
   background: #142033;
-  overflow: hidden;
+  /*  overflow: hidden; */
 }
 
 .add-portfolio-header {
