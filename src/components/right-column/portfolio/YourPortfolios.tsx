@@ -140,7 +140,7 @@ const YourPortfolios = () => {
     const userPortfolios = portfolios.filter(
       (portfolio) => portfolio.author === user?.name
     );
-    console.log(userPortfolios);
+    // console.log(userPortfolios);
     return userPortfolios.length < 3;
   };
 

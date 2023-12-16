@@ -1,8 +1,10 @@
 import React from "react";
 import CustomButton from "../CustomButton";
 import "./Right.css";
+import { useNavigate } from "react-router-dom";
 
 const MarketTrends = () => {
+  const navigate = useNavigate();
   return (
     <div className="market-trends-container">
       <div className="market-trends-header" role="heading">
@@ -13,37 +15,37 @@ const MarketTrends = () => {
         <CustomButton
           label="Market Indexes"
           secondary
-          onClick={() => console.log("Market Indexes")}
+          onClick={() => navigate("/market-trends/indexes")}
         />
         <CustomButton
           label="Most Active"
           secondary
-          onClick={() => console.log("Most Active")}
+          onClick={() => navigate("/market-trends/active")}
         />
         <CustomButton
           label="Gainers"
           secondary
-          onClick={() => console.log("Gainers")}
+          onClick={() => navigate("/market-trends/gainers")}
         />
         <CustomButton
           label="Losers"
           secondary
-          onClick={() => console.log("Losers")}
+          onClick={() => navigate("/market-trends/losers")}
         />
         <CustomButton
           label="Climate Leaders"
           secondary
-          onClick={() => console.log("Climate Leaders")}
+          onClick={() => navigate("/market-trends/climate")}
         />
         <CustomButton
           label="Crypto"
           secondary
-          onClick={() => console.log("Crypto")}
+          onClick={() => navigate("/market-trends/crypto")}
         />
         <CustomButton
           label="Currencies"
           secondary
-          onClick={() => console.log("Currencies")}
+          onClick={() => navigate("/market-trends/currencies")}
         />
       </div>
     </div>

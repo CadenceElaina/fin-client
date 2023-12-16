@@ -96,7 +96,7 @@ body {
 }
 
 .button:hover {
-  background-color: #1565c0; /* Adjust the hover background color as needed */
+  background-color: #1565c0;
 }
 .primary {
   min-width: 96px;

@@ -1,0 +1,27 @@
+.trends-buttons {
+  display: flex;
+  justify-content: center;
+  text-size-adjust: 100%;
+  background: white;
+  cursor: pointer;
+  border: 1px solid transparent;
+  margin-right: 8px;
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+  letter-spacing: 0.0178571429em;
+  font-family: '"Google Sans", Roboto, Arial, sans-serif';
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+  box-shadow: 0 5px 5px black;
+}
+.trends-buttons:hover {
+  background-color: #f0f0f0; /* Adjust the hover background color as needed */
+}
+.trends-buttons.active {
+  border: 1px solid transparent;
+  color: rgb(232, 240, 254);
+  background: rgb(25, 103, 210);
+}

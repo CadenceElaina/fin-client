@@ -11,6 +11,8 @@ interface ButtonProps {
   disabled?: boolean;
   outline?: boolean;
   auth?: boolean;
+  noStyles?: boolean;
+  trends?: boolean;
 }
 
 import React from "react";
@@ -28,6 +30,8 @@ const CustomButton: React.FC<ButtonProps> = ({
   disabled,
   outline,
   auth,
+  noStyles,
+  trends,
 }) => {
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault(); // Prevent default behavior of the button
@@ -42,15 +46,16 @@ const CustomButton: React.FC<ButtonProps> = ({
       /*       disabled={auth || disabled} */
       disabled={disabled}
       onClick={handleClick}
-      className={`
+      className={`  
+      ${trends ? "trends-buttons" : ""}
       ${active ? "active" : ""}
-      ${auth ? "auth" : "no-auth"}
-      ${primary ? "primary" : ""}
-      ${tertiary ? "tertiary" : ""}
-      ${fullWidth ? "full-width" : ""}
-      ${secondary ? "secondary" : "button"}
-      ${large ? "large" : ""}
-      ${outline ? "button-outline" : ""}
+      ${!noStyles && auth ? "auth" : !noStyles ? "no-auth" : ""}
+      ${!noStyles && primary ? "primary" : ""}
+      ${!noStyles && tertiary ? "tertiary" : ""}
+      ${!noStyles && fullWidth ? "full-width" : ""}
+      ${!noStyles && secondary ? "secondary" : !noStyles ? "button" : ""}
+      ${!noStyles && large ? "large" : ""}
+      ${!noStyles && outline ? "button-outline" : ""}
       ${disabled ? "disabled" : ""} 
       `}
     >
