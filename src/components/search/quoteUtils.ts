@@ -3,7 +3,7 @@ import axios from "axios";
 import { quoteType, utils } from "./types";
 import { YH_KEY1, YH_KEY2, YH_URL1, YH_URL2 } from "../../constants";
 
-const getQuote = async (
+export const getQuote = async (
   queryClient: QueryClient,
   symbol: string
 ): Promise<quoteType | null> => {
@@ -12,8 +12,8 @@ const getQuote = async (
     url: "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-summary",
     params: { symbol, region: "US" },
     headers: {
-      "X-RapidAPI-Key": `${YH_KEY2}`,
-      "X-RapidAPI-Host": `${YH_URL2}`,
+      "X-RapidAPI-Key": `${YH_KEY1}`,
+      "X-RapidAPI-Host": `${YH_URL1}`,
     },
   };
 
@@ -30,7 +30,7 @@ const getQuote = async (
     // If not cached, make an API call
     console.log("quoteUtils.ts - new api request -", symbol);
     const response = await axios.request(options);
-    await new Promise((resolve) => setTimeout(resolve, 100)); // 100ms delay
+    await new Promise((resolve) => setTimeout(resolve, 500)); // 500ms delay
 
     if (!response.data.quoteType || !response.data.price) {
       throw new Error("Incomplete or missing data in the API response");
@@ -55,4 +55,101 @@ const getQuote = async (
   }
 };
 
-export default getQuote;
+/* interface ApiResponse {
+  quoteResponse: {
+    result: Array<{
+      symbol: string;
+      regularMarketPrice: number;
+      shortName: string;
+      regularMarketChange: number;
+      regularMarketChangePercent: number;
+    }>;
+  };
+} */
+
+export interface Symbols {
+  symbols: string;
+}
+
+export const getMoversSymbols = async (): /*   queryClient: QueryClient */
+Promise<string[]> => {
+  const options = {
+    method: "GET",
+    url: "https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/v2/get-movers",
+    params: {
+      region: "US",
+      lang: "en-US",
+      start: "0",
+      count: "5",
+    },
+    headers: {
+      "X-RapidAPI-Key": `${YH_KEY2}`,
+      "X-RapidAPI-Host": `${YH_URL2}`,
+    },
+  };
+
+  try {
+    console.log("get movers runs");
+    // Try to get cached data
+    /*  const cachedQuotes: Record<string, quoteType | null> = {};
+
+    // Iterate over symbols to check cache
+    for (let i = 0; i < 5; i++) {
+      const symbol = `symbol${i}`; // Replace with the actual way you get the symbol
+      const cachedQuote = queryClient.getQueryData(["quote", symbol]);
+
+      if (cachedQuote) {
+        const newCachedQuote = utils.checkCachedQuoteType(cachedQuote);
+        console.log("quoteUtils.ts - got cached quote:", cachedQuote);
+        cachedQuotes[symbol] = newCachedQuote;
+      }
+    }
+
+    // Check if all quotes are cached
+    const allQuotesCached = Object.values(cachedQuotes).every(
+      (quote) => quote !== null
+    );
+
+    if (allQuotesCached) {
+      console.log("get movers all quotes were cached");
+      return cachedQuotes;
+    } */
+
+    // If not all quotes are cached, make an API call
+    console.log("quoteUtils.ts - new api request - get movers");
+    const response = await axios.request<any>(options);
+
+    /*  if (!response || !response.quoteResponse || !response.quoteResponse || !response.data.quoteResponse.result) {
+      throw new Error("Incomplete or missing data in the API response");
+    } */
+    console.log(response.data.finance.result[2]);
+    //const data = response.data.finance.result[2]
+    // Map over response.quoteResponse.result[]
+    /*     const newQuotes: Record<string, quoteType | null> = {}; */
+    const symbols: string[] = [];
+    response.data.finance.result[2].quotes.map((q: any, i: number) => {
+      symbols.push(q.symbol); // Replace with the actual way you get the symbol
+      /*   const price = q.regularMarketPrice;
+      const name = q.shortName;
+      const priceChange = q.regularMarketChange;
+      const percentChange = q.regularMarketChangePercent;
+ */
+      /*  const quoteData: quoteType = {
+        symbol: symbol.toLowerCase(),
+        price,
+        name,
+        priceChange,
+        percentChange,
+      }; */
+      /*       console.log(quoteData); */
+      // Cache the quote data
+      /*   queryClient.setQueryData(["quote", symbol], quoteData);
+      newQuotes[symbol] = quoteData; */
+    });
+
+    return symbols;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};

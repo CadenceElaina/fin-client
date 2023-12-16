@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MarketTrendsButtons from "./MarketTrendsButtons";
 import Layout from "../layout/Layout";
 import Footer from "../Footer";
@@ -6,54 +6,74 @@ import { RowConfig } from "../table/types";
 import Table from "../table/Table";
 import SidebarNews from "./SidebarNews";
 import "./MarketTrends.css";
+import { transformQuotesToData } from "./utils";
+import { Symbols, getMoversSymbols, getQuote } from "../search/quoteUtils";
+import { useQueryClient } from "@tanstack/react-query";
+import { quoteType, utils } from "../search/types";
 
-const data = [
-  {
-    id: 10,
-    symbol: "SPY",
-    name: "SP 500 ETF",
-    price: 440,
-    priceChange: 4.4,
-    percentChange: 2.3,
-  },
-  {
-    id: 20,
-    symbol: "SPY",
-    name: "SP 500 ETF",
-    price: 440,
-    priceChange: -4.4,
-    percentChange: -2.3,
-  },
-  {
-    id: 30,
-    symbol: "SPY",
-    name: "SP 500 ETF",
-    price: 440,
-    priceChange: 4.4,
-    percentChange: 2.3,
-  },
-  {
-    id: 40,
-    symbol: "SPY",
-    name: "SP 500 ETF",
-    price: 440,
-    priceChange: 4.4,
-    percentChange: 2.3,
-  },
-  {
-    id: 50,
-    symbol: "SPY",
-    name: "SP 500 ETF",
-    price: 440,
-    priceChange: 4.4,
-    percentChange: 2.3,
-  },
-];
 const MostActive = () => {
-  const exploreConfig: RowConfig = {
+  const [symbols, setSymbols] = useState<string[]>([]);
+  const mostActiveConfig: RowConfig = {
     fields: ["symbol", "name", "price", "priceChange", "percentChange"],
     addIcon: true,
   };
+  const queryClient = useQueryClient();
+  const [mostActiveQuotes, setMostActiveQuotes] = useState<
+    Record<string, quoteType | null>
+  >({});
+
+  const fetchMostActiveQuotes = async () => {
+    try {
+      const newSymbols = await getMoversSymbols();
+
+      setSymbols(newSymbols);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchQuotesForSymbols = async () => {
+    const quotePromises = symbols.map(async (symbol) => {
+      // Check the cache first
+      const cachedQuote = queryClient.getQueryData(["quote", symbol]);
+
+      if (cachedQuote) {
+        const newCachedQuote = utils.checkCachedQuoteType(cachedQuote);
+        console.log("quoteUtils.ts - got cached quote:", cachedQuote);
+        return newCachedQuote;
+      }
+
+      // If not in the cache, make an API call
+      console.log("quoteUtils.ts - new api request -", symbol);
+      const quoteData = await getQuote(queryClient, symbol);
+      await new Promise((resolve) => setTimeout(resolve, 200)); // 200ms delay
+      // Update the cache
+      queryClient.setQueryData(["quote", symbol], quoteData);
+
+      return quoteData;
+    });
+
+    const quotes = await Promise.all(quotePromises);
+
+    const symbolQuoteMap: Record<string, quoteType | null> = {};
+    symbols.forEach((symbol, index) => {
+      symbolQuoteMap[symbol] = quotes[index];
+    });
+
+    setMostActiveQuotes(symbolQuoteMap);
+  };
+
+  useEffect(() => {
+    fetchMostActiveQuotes();
+  }, [queryClient]);
+
+  useEffect(() => {
+    if (symbols.length > 0) {
+      fetchQuotesForSymbols();
+    }
+  }, [symbols, queryClient]);
+
+  console.log(symbols);
   return (
     <Layout>
       <div role="heading" className="explore-heading">
@@ -63,7 +83,11 @@ const MostActive = () => {
         <MarketTrendsButtons />
       </div>
       <div className="explore-main-content">
-        <Table data={data} config={exploreConfig} full={true} />
+        <Table
+          data={transformQuotesToData(mostActiveQuotes)}
+          config={mostActiveConfig}
+          full={true}
+        />
         <SidebarNews />
       </div>
       <Footer />

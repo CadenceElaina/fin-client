@@ -8,10 +8,11 @@ import { RowConfig } from "../table/types";
 import SidebarNews from "./SidebarNews";
 import "./MarketTrends.css";
 import { useQueryClient } from "@tanstack/react-query";
-import getQuote from "../search/quoteUtils";
+
 import { quoteType } from "../search/types";
 import { transformQuotesToData } from "./utils";
 import { utils } from "../search/types";
+import { getQuote } from "../search/quoteUtils";
 
 const symbols = ["^GSPC", "^DJI", "^IXIC", "^RUT", "^VIX"];
 

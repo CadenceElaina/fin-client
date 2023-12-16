@@ -7,9 +7,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import NewPortfolioModal from "../../modals/AddPortfolioModal";
 import "./Portfolio.css";
-import getQuote from "../../search/quoteUtils";
+
 import { useQueryClient } from "@tanstack/react-query";
 import { quoteType } from "../../search/types";
+import { getQuote } from "../../search/quoteUtils";
 
 interface PortfolioSymbols {
   [portfolioTitle: string]: { [symbol: string]: number };
