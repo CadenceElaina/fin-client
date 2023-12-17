@@ -25,3 +25,31 @@
   color: rgb(232, 240, 254);
   background: rgb(25, 103, 210);
 }
+.explore-heading {
+  display: flex;
+  margin: 0 0 15px 0;
+  justify-content: center;
+}
+.market-trends-buttons-container {
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  align-self: center;
+  justify-content: center;
+}
+.explore-main-content {
+  margin: 0 auto;
+  max-width: 75%;
+  display: flex;
+}
+.explore-table {
+  display: flex;
+  padding: 1rem;
+  flex: 2;
+}
+.explore-news {
+  padding: 1rem;
+  display: flex;
+  flex: 1;
+}

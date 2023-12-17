@@ -1,7 +1,14 @@
 import { QueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { quoteType, utils } from "./types";
-import { YH_KEY1, YH_KEY2, YH_URL1, YH_URL2 } from "../../constants";
+import {
+  YH_KEY,
+  YH_URL,
+  YH_KEY1,
+  YH_KEY2,
+  YH_URL1,
+  YH_URL2,
+} from "../../constants";
 
 export const getQuote = async (
   queryClient: QueryClient,
@@ -71,7 +78,9 @@ export interface Symbols {
   symbols: string;
 }
 
-export const getMoversSymbols = async (): /*   queryClient: QueryClient */
+export const getMoversSymbols = async (
+  title: string
+): /*   queryClient: QueryClient */
 Promise<string[]> => {
   const options = {
     method: "GET",
@@ -127,27 +136,79 @@ Promise<string[]> => {
     // Map over response.quoteResponse.result[]
     /*     const newQuotes: Record<string, quoteType | null> = {}; */
     const symbols: string[] = [];
-    response.data.finance.result[2].quotes.map((q: any, i: number) => {
-      symbols.push(q.symbol); // Replace with the actual way you get the symbol
-      /*   const price = q.regularMarketPrice;
+    let resultIndex;
+    if (title === "active") {
+      resultIndex = 2;
+    } else if (title === "losers") {
+      console.log("resultIndex losers");
+      resultIndex = 1;
+    } else {
+      resultIndex = 0;
+    }
+    response.data.finance.result[resultIndex].quotes.map(
+      (q: any, i: number) => {
+        symbols.push(q.symbol); // Replace with the actual way you get the symbol
+        /*   const price = q.regularMarketPrice;
       const name = q.shortName;
       const priceChange = q.regularMarketChange;
       const percentChange = q.regularMarketChangePercent;
  */
-      /*  const quoteData: quoteType = {
+        /*  const quoteData: quoteType = {
         symbol: symbol.toLowerCase(),
         price,
         name,
         priceChange,
         percentChange,
       }; */
-      /*       console.log(quoteData); */
-      // Cache the quote data
-      /*   queryClient.setQueryData(["quote", symbol], quoteData);
+        /*       console.log(quoteData); */
+        // Cache the quote data
+        /*   queryClient.setQueryData(["quote", symbol], quoteData);
       newQuotes[symbol] = quoteData; */
-    });
+      }
+    );
 
     return symbols;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+export const getTrending = async (queryClient: QueryClient) => {
+  const cachedData = queryClient.getQueryData(["trending"]);
+
+  if (cachedData) {
+    console.log("Using cached data for trending", cachedData);
+    return cachedData;
+  }
+
+  const options = {
+    method: "GET",
+    url: "https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/get-trending-tickers",
+    params: { region: "US" },
+    headers: {
+      "X-RapidAPI-Key": `${YH_KEY}`,
+      "X-RapidAPI-Host": `${YH_URL}`,
+    },
+  };
+
+  try {
+    console.log("new api request - getTrending");
+    const response = await axios.request(options);
+    const trendingQuotes = response.data.finance.result[0].quotes.map(
+      (q: any) => ({
+        symbol: q.symbol,
+        name: q.shortName,
+        price: q.regularMarketPrice,
+        priceChange: q.regularMarketChange.toFixed(2),
+        percentChange: q.regularMarketChangePercent.toFixed(2),
+      })
+    );
+
+    // Cache the data
+    queryClient.setQueryData(["trending"], trendingQuotes);
+
+    return trendingQuotes;
   } catch (error) {
     console.error(error);
     return [];

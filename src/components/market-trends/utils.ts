@@ -1,3 +1,4 @@
+//utils.ts
 import { quoteType } from "../search/types";
 export type Data = {
   id: number; // Assuming 'symbol' is a string

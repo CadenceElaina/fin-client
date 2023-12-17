@@ -1,59 +1,21 @@
-import React, { useState } from "react";
-
-import Story from "./Story";
-import { newsSegmentType, story } from "./types";
+import React, { useState, useEffect } from "react";
+import { newsSegmentType } from "./types";
+import { article } from "./types";
 import CustomButton from "../../CustomButton";
-
-const data: story[] = [
-  {
-    id: "1",
-    source: "CNBC",
-    time: "4 hours ago",
-    title:
-      "Jamie Dimon lashes out against crypto: `I want the government to supress decentralized options`",
-    relatedSymbol: "btc",
-    img: "src",
-    segment: ["Top", "World"],
-  },
-  {
-    id: "2",
-    source: "Yahoo Finance",
-    time: "7 hours ago",
-    title: "Stock market news today: US Stonks...",
-    relatedSymbol: "msft",
-    img: "src",
-    segment: "Top",
-  },
-  {
-    id: "3",
-    source: "Yahoo Finance",
-    time: "7 hours ago",
-    title: "Stock market news today: US Stonks...",
-    relatedSymbol: "aapl",
-    img: "src",
-    segment: ["Top", "World"],
-  },
-  {
-    id: "4",
-    source: "Yahoo Finance",
-    time: "7 hours ago",
-    title: "Stock market news today: US Stonks...",
-    relatedSymbol: "msft",
-    img: "src",
-    segment: "Local",
-  },
-];
-
+import Articles from "./Articles";
+import { useNews } from "../../../context/NewsContext";
 const News = () => {
   const [currNewsSegment, setCurrNewsSegment] =
     useState<newsSegmentType>("Top");
+  // Use the custom hook to get the newsData from context
+  const newsData = useNews();
 
   const newsSegmentValues: newsSegmentType[] = ["Top", "Local", "World"];
 
   const handleButtonClick = (segment: newsSegmentType) => {
     setCurrNewsSegment(segment);
   };
-
+  //console.log(newsData);
   return (
     <div>
       <div role="heading" className="news-heading">
@@ -71,7 +33,8 @@ const News = () => {
         ))}
       </div>
       <div>
-        <Story stories={data} currNewsSegment={currNewsSegment} />
+        {/* Pass the newsData and currNewsSegment to the Article component */}
+        <Articles articles={newsData} currNewsSegment={currNewsSegment} />
       </div>
     </div>
   );

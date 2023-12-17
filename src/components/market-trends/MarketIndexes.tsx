@@ -5,7 +5,7 @@ import Layout from "../layout/Layout";
 import Footer from "../Footer";
 import Table from "../table/Table";
 import { RowConfig } from "../table/types";
-import SidebarNews from "./SidebarNews";
+import SidebarNews from "./news/SidebarNews";
 import "./MarketTrends.css";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -64,19 +64,25 @@ const MarketIndexes = () => {
   console.log(symbolQuotes);
   return (
     <Layout>
-      <div role="heading" className="explore-heading">
-        Explore market trends
-      </div>
-      <div>
-        <MarketTrendsButtons />
-      </div>
-      <div className="explore-main-content">
-        <Table
-          data={transformQuotesToData(symbolQuotes)}
-          config={exploreConfig}
-          full={true}
-        />
-        <SidebarNews />
+      <div className="trends-container">
+        <div role="heading" className="explore-heading">
+          Explore market trends
+        </div>
+        <div className="trend-buttons">
+          <MarketTrendsButtons />
+        </div>
+        <div className="explore-main-content trending-table">
+          <div className="explore-table">
+            <Table
+              data={transformQuotesToData(symbolQuotes)}
+              config={exploreConfig}
+              full={true}
+            />
+          </div>
+          <div className="explore-news">
+            <SidebarNews />
+          </div>
+        </div>
       </div>
       <Footer />
     </Layout>

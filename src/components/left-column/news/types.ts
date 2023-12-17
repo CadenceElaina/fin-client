@@ -6,17 +6,17 @@ export enum newsSegmentEnum {
 
 export type newsSegmentType = "Top" | "Local" | "World";
 
-export interface story {
-  id: string;
+export interface article {
+  id?: string;
   source: string;
   time: string;
   title: string;
   relatedSymbol: string;
-  img: string;
-  segment: newsSegmentType | newsSegmentType[];
+  img?: string;
+  segment?: newsSegmentType | newsSegmentType[];
 }
 
-export interface storyProps {
-  stories: story[];
-  currNewsSegment: newsSegmentType;
+export interface articleProps {
+  articles: article[];
+  currNewsSegment?: newsSegmentType;
 }

@@ -6,6 +6,7 @@ import { AuthProvider } from "./context/AuthContext.tsx";
 import { WelcomeBackProvider } from "./context/WelcomeBackContext.tsx";
 import { PortfoliosProvider } from "./context/PortfoliosContext.tsx";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { NewsProvider } from "./context/NewsContext.tsx";
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -14,7 +15,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <PortfoliosProvider>
         <WelcomeBackProvider>
           <QueryClientProvider client={queryClient}>
-            <App />
+            <NewsProvider>
+              <App />
+            </NewsProvider>
             <ReactQueryDevtools />
           </QueryClientProvider>
         </WelcomeBackProvider>

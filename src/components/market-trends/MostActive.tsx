@@ -4,7 +4,7 @@ import Layout from "../layout/Layout";
 import Footer from "../Footer";
 import { RowConfig } from "../table/types";
 import Table from "../table/Table";
-import SidebarNews from "./SidebarNews";
+import SidebarNews from "./news/SidebarNews";
 import "./MarketTrends.css";
 import { transformQuotesToData } from "./utils";
 import { Symbols, getMoversSymbols, getQuote } from "../search/quoteUtils";
@@ -24,7 +24,7 @@ const MostActive = () => {
 
   const fetchMostActiveQuotes = async () => {
     try {
-      const newSymbols = await getMoversSymbols();
+      const newSymbols = await getMoversSymbols("active");
 
       setSymbols(newSymbols);
     } catch (error) {
@@ -76,19 +76,25 @@ const MostActive = () => {
   console.log(symbols);
   return (
     <Layout>
-      <div role="heading" className="explore-heading">
-        Explore market trends
-      </div>
-      <div>
-        <MarketTrendsButtons />
-      </div>
-      <div className="explore-main-content">
-        <Table
-          data={transformQuotesToData(mostActiveQuotes)}
-          config={mostActiveConfig}
-          full={true}
-        />
-        <SidebarNews />
+      <div className="trends-container">
+        <div role="heading" className="explore-heading">
+          Explore market trends
+        </div>
+        <div className="trend-buttons">
+          <MarketTrendsButtons />
+        </div>
+        <div className="explore-main-content trending-table">
+          <div className="explore-table">
+            <Table
+              data={transformQuotesToData(mostActiveQuotes)}
+              config={mostActiveConfig}
+              full={true}
+            />
+          </div>
+          <div className="explore-news">
+            <SidebarNews />
+          </div>
+        </div>
       </div>
       <Footer />
     </Layout>

@@ -6,3 +6,5 @@ export const YH_KEY1 = import.meta.env.VITE_APIDOJO_YAHOO1_KEY;
 export const YH_URL1 = import.meta.env.VITE_APIDOJO_YAHOO1_HOST;
 export const YH_KEY2 = import.meta.env.VITE_APIDOJO_YAHOO2_KEY;
 export const YH_URL2 = import.meta.env.VITE_APIDOJO_YAHOO2_HOST;
+export const NINJA_KEY = import.meta.env.VITE_NINJA_KEY;
+export const NINJA_URL = import.meta.env.VITE_NINJA_URL;

@@ -32,10 +32,8 @@ import refreshTokenService from "./services/refreshToken";
 import MarketIndexes from "./components/market-trends/MarketIndexes";
 import MostActive from "./components/market-trends/MostActive";
 import Gainers from "./components/market-trends/Gainers";
-import ClimateLeaders from "./components/market-trends/ClimateLeaders";
-import Currencies from "./components/market-trends/Currencies";
 import Losers from "./components/market-trends/Losers";
-import Crypto from "./components/market-trends/Crypto";
+import Trending from "./components/market-trends/Trending";
 
 function App() {
   const { user, signOut, updateUserToken } = useAuth();
@@ -103,9 +101,7 @@ function App() {
           <Route path="/market-trends/active" element={<MostActive />} />
           <Route path="/market-trends/gainers" element={<Gainers />} />
           <Route path="/market-trends/losers" element={<Losers />} />
-          <Route path="/market-trends/climate" element={<ClimateLeaders />} />
-          <Route path="/market-trends/crypto" element={<Crypto />} />
-          <Route path="/market-trends/currencies" element={<Currencies />} />
+          <Route path="/market-trends/trending" element={<Trending />} />
           <Route path="/:user/settings" element={<Settings />} />
           <Route path="/help" element={<Help />} />
           <Route path="/feedback" element={<Feedback />} />

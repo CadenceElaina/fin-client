@@ -33,7 +33,7 @@ const getPriceChangeColor = (change: number): string => {
 };
 
 const Table: React.FC<TableProps> = ({ data, config, full }) => {
-  console.log(data, config);
+  /*   console.log(data, config); */
   return (
     <ul className={`custom-list${full ? "-full" : ""}`}>
       {data.map((item, i) => (

@@ -46,25 +46,11 @@ const MarketTrendsButtons: React.FC<MarketTrendsButtonsProps> = () => {
           active={isActive("/market-trends/losers")}
         />
         <CustomButton
-          label="Climate Leaders"
+          label="Trending"
           noStyles={true}
           trends={true}
-          onClick={() => navigate("/market-trends/climate")}
-          active={isActive("/market-trends/climate")}
-        />
-        <CustomButton
-          label="Crypto"
-          noStyles={true}
-          trends={true}
-          onClick={() => navigate("/market-trends/crypto")}
-          active={isActive("/market-trends/crypto")}
-        />
-        <CustomButton
-          label="Currencies"
-          noStyles={true}
-          trends={true}
-          onClick={() => navigate("/market-trends/currencies")}
-          active={isActive("/market-trends/currencies")}
+          onClick={() => navigate("/market-trends/trending")}
+          active={isActive("/market-trends/trending")}
         />
       </div>
     </div>

@@ -33,19 +33,9 @@ const MarketTrends = () => {
           onClick={() => navigate("/market-trends/losers")}
         />
         <CustomButton
-          label="Climate Leaders"
+          label="Trending"
           secondary
-          onClick={() => navigate("/market-trends/climate")}
-        />
-        <CustomButton
-          label="Crypto"
-          secondary
-          onClick={() => navigate("/market-trends/crypto")}
-        />
-        <CustomButton
-          label="Currencies"
-          secondary
-          onClick={() => navigate("/market-trends/currencies")}
+          onClick={() => navigate("/market-trends/trending")}
         />
       </div>
     </div>
