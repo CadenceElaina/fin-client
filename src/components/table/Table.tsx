@@ -3,7 +3,7 @@ import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 import "./Table.css";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { TableProps, AllowedFields } from "./types";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const getRandomColor = (): string => {
   const letters = "0123456789ABCDEF";
@@ -33,7 +33,11 @@ const getPriceChangeColor = (change: number): string => {
 };
 
 const Table: React.FC<TableProps> = ({ data, config, full }) => {
+  const navigate = useNavigate();
   /*   console.log(data, config); */
+  const handleClick = (symbol: string) => {
+    navigate(`/quote/${symbol}`);
+  };
   return (
     <ul className={`custom-list${full ? "-full" : ""}`}>
       {data.map((item, i) => (
@@ -42,6 +46,7 @@ const Table: React.FC<TableProps> = ({ data, config, full }) => {
           className={`list-item${
             config?.name === "most-followed" ? " mostfollowed" : ""
           } ${config?.name === "market-trends" ? "market-trends" : ""}`}
+          onClick={() => handleClick(item.symbol)}
         >
           <div className="item-content">
             {config.name === "most-followed" &&

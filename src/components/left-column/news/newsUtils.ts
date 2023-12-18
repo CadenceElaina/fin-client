@@ -10,6 +10,21 @@ const getRandomSegment = (): newsSegmentType => {
   return segments[randomIndex];
 };
 
+const calculateTimeDifference = (pubDate: string): string => {
+  const currentDate = new Date();
+  const publishedDate = new Date(pubDate);
+  const timeDifference = currentDate.getTime() - publishedDate.getTime();
+  const hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
+
+  if (hoursDifference < 24) {
+    return `${hoursDifference} hours ago`;
+  } else {
+    const days = Math.floor(hoursDifference / 24);
+    const remainingHours = hoursDifference % 24;
+    return `${days} day${days > 1 ? "s" : ""} ${remainingHours} hours ago`;
+  }
+};
+
 export const getNews = async (queryClient: QueryClient) => {
   const cachedData = queryClient.getQueryData(["news"]);
 
@@ -37,11 +52,12 @@ export const getNews = async (queryClient: QueryClient) => {
     console.log("new api request - getNews");
     const response = await axios.request(options);
     /*     console.log(response.data.data.main.stream); */
-
+    console.log(response.data.data.main.stream[0].content);
     const articles = response.data.data.main.stream.map((a, index) => ({
       id: a.content.id,
+      link: a.content?.clickThroughUrl?.url || "",
       title: a.content.title,
-      pubDate: a.content.pubDate,
+      time: calculateTimeDifference(a.content.pubDate),
       img:
         a.content.thumbnail?.resolutions?.[3]?.url ||
         a.content.thumbnail?.resolutions?.[2]?.url ||

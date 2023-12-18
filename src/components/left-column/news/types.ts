@@ -8,6 +8,7 @@ export type newsSegmentType = "Top" | "Local" | "World";
 
 export interface article {
   id?: string;
+  link: string;
   source: string;
   time: string;
   title: string;

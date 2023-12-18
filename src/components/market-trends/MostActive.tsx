@@ -7,7 +7,7 @@ import Table from "../table/Table";
 import SidebarNews from "./news/SidebarNews";
 import "./MarketTrends.css";
 import { transformQuotesToData } from "./utils";
-import { Symbols, getMoversSymbols, getQuote } from "../search/quoteUtils";
+import { getMoversSymbols, getQuote } from "../search/quoteUtils";
 import { useQueryClient } from "@tanstack/react-query";
 import { quoteType, utils } from "../search/types";
 

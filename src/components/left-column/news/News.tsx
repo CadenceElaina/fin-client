@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { newsSegmentType } from "./types";
-import { article } from "./types";
+
 import CustomButton from "../../CustomButton";
 import Articles from "./Articles";
 import { useNews } from "../../../context/NewsContext";

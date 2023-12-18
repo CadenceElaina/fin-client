@@ -1,8 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import Article from "./Article";
-import { article, articleProps } from "../../left-column/news/types";
-import { getNews } from "../../left-column/news/newsUtils";
 import "../MarketTrends.css";
 import { useNews } from "../../../context/NewsContext";
 

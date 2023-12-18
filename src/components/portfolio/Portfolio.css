@@ -18,6 +18,12 @@
   flex: 1;
   margin-top: 10px; /* Add margin to separate the rows */
   align-self: flex-start;
+  border: 1px solid transparent;
+  border-radius: 12px;
+}
+
+.home-label {
+  padding: 0.75rem;
 }
 
 .arrow1 {
@@ -148,4 +154,22 @@
 
 .settings:hover {
   color: #007bff;
+}
+
+.toggle-type {
+  cursor: pointer;
+  padding: 0.75rem;
+  transition: background-color 0.3s;
+  border-radius: 12px;
+}
+.active-list {
+  border-radius: 12px;
+  padding: 0.75rem;
+  transition: background-color 0.3s;
+  background: #007bff;
+  color: white;
+}
+.toggle-type:hover {
+  border-radius: 12px;
+  background: #f1f1f1;
 }

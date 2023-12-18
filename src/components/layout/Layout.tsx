@@ -48,10 +48,10 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   };
   const handleSignOut = async () => {
     handleMenuClose();
+    navigate("/");
     localStorage.clear();
     await signOut();
     window.location.reload();
-    navigate("/");
   };
   return (
     <div className={`layout-container ${open ? "open" : ""}`}>
