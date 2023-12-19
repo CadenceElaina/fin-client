@@ -7,20 +7,8 @@ import React, {
   useMemo,
 } from "react";
 import portfolioService from "../services/portfolios";
+import { Portfolio, Security } from "../types/types";
 
-export interface Security {
-  symbol: string;
-  quantity: number;
-  purchaseDate: string;
-  purchasePrice: number;
-}
-
-export interface Portfolio {
-  id: string;
-  title: string;
-  author: string | undefined;
-  securities?: Security[];
-}
 /* export interface Portfolio {
   id: string;
   title: string;

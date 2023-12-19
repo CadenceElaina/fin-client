@@ -19,8 +19,8 @@ export const getQuote = async (
     url: "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-summary",
     params: { symbol, region: "US" },
     headers: {
-      "X-RapidAPI-Key": `${YH_KEY1}`,
-      "X-RapidAPI-Host": `${YH_URL1}`,
+      "X-RapidAPI-Key": `${YH_KEY}`,
+      "X-RapidAPI-Host": `${YH_URL}`,
     },
   };
 
@@ -36,8 +36,8 @@ export const getQuote = async (
 
     // If not cached, make an API call
     console.log("quoteUtils.ts - new api request -", symbol);
-    const response = await axios.request(options);
     await new Promise((resolve) => setTimeout(resolve, 500)); // 500ms delay
+    const response = await axios.request(options);
 
     if (!response.data.quoteType || !response.data.price) {
       throw new Error("Incomplete or missing data in the API response");
@@ -54,7 +54,7 @@ export const getQuote = async (
 
     // Cache the quote data
     queryClient.setQueryData(["quote", symbol], quoteData);
-
+    console.log(quoteData);
     return quoteData;
   } catch (error) {
     console.error(error);
