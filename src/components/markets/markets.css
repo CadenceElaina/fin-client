@@ -1,29 +1,131 @@
-.cardcontent {
-  padding: 10px !important;
+.markets-container {
+  display: flex;
+  align-content: center;
+  justify-self: center;
+  align-self: center;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: row;
 }
-/* Markets */
-.compareMarkets {
+.compare-markets {
+  flex: 1;
   font-size: 1.5rem;
   font-weight: 600;
   color: #fff;
 }
 
-.divider {
-  height: 5vh;
-  background-color: rgba(189, 193, 198, 0.87);
-  margin: 10px 16px;
-  overflow: hidden;
-  border-left: 2px solid rgba(189, 193, 198, 0.87);
+.exchange-chips {
+  flex: 1;
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
 }
 
-.linkToArticle {
+.chip {
+  flex: 1;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.chip.active {
+  background-color: rgb(24, 90, 188);
+  color: #fff;
+}
+
+.markets-article-link {
+  flex: 1;
   color: rgb(24, 90, 188);
-  /*   color: rgb(24, 90, 188); */
   text-decoration: none;
   font-weight: 600;
   margin-left: 4px;
 }
 
-.linkToArticle:hover {
+.markets-article-link:hover {
   color: rgba(28, 116, 233, 0.8);
+}
+
+.index-cards-container {
+  display: flex;
+  flex: 1;
+  justify-content: center; /* Center the cards horizontally */
+  gap: 16px; /* Add some gap between the cards */
+}
+
+.index-cards-inner {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 16px; /* Add some gap between the cards */
+  justify-content: center; /* Center the cards horizontally */
+}
+
+.card-content {
+  display: flex;
+  flex-direction: row !important;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 6px;
+  border: 1px solid rgb(218, 220, 224);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+}
+
+.card-icon {
+  display: flex;
+  height: 32px;
+  min-width: 32px;
+  overflow: hidden;
+}
+
+.card-name-price {
+  display: flex;
+  flex-direction: column;
+  line-height: 1rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.025em;
+  font-weight: 400;
+  margin-right: 8px;
+  max-width: 120px;
+  min-width: 64px;
+  text-align: center;
+}
+.card-name {
+  color: rgb(32, 33, 36);
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-price {
+  color: rgb(60, 64, 67);
+}
+
+.card-change {
+  display: flex;
+  flex-direction: column;
+  font-family: Roboto, Arial, sans-serif;
+  line-height: 1rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.025em;
+  font-weight: 400;
+}
+
+.card-percent-change {
+  margin: 0 auto;
+}
+.card-price-change {
+  margin: 0 auto;
+}
+
+.card-content.neutral .card-percent-change,
+.card-content.neutral .card-price-change {
+  color: #777; /* Adjust the color for neutral change */
 }

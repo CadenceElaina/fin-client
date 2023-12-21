@@ -3,8 +3,9 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 import "./AddToPortfolioModal.css";
 
 interface AddToPortfolioModalProps {
+  type?: "portfolio" | "watchlist";
   isOpen: boolean;
-  portfolioName: string;
+  listName: string;
   onClose: () => void;
   onSave: (
     symbol: string,
@@ -16,7 +17,7 @@ interface AddToPortfolioModalProps {
 
 const AddToPortfolioModal: React.FC<AddToPortfolioModalProps> = ({
   isOpen,
-  portfolioName,
+  listName,
   onClose,
   onSave,
 }) => {
@@ -32,7 +33,7 @@ const AddToPortfolioModal: React.FC<AddToPortfolioModalProps> = ({
     }
   };
 
-  const handleAddToPortfolio = () => {
+  const handleAddToList = () => {
     setShowSymbolInput(false);
   };
 
@@ -48,7 +49,7 @@ const AddToPortfolioModal: React.FC<AddToPortfolioModalProps> = ({
   return (
     <div className={`addToPortfolio-container ${isOpen ? "open" : ""}`}>
       <div className="addToPortfolio-content">
-        <div role="heading">Add to {portfolioName}</div>
+        <div role="heading">Add to {listName}</div>
         {showSymbolInput ? (
           <div className="addToPortfolio-input">
             <input
@@ -57,10 +58,7 @@ const AddToPortfolioModal: React.FC<AddToPortfolioModalProps> = ({
               onChange={(e) => setSymbol(e.target.value)}
               onKeyDown={addSymbol}
             />
-            <button
-              className="addToPortfolio-button"
-              onClick={handleAddToPortfolio}
-            >
+            <button className="addToPortfolio-button" onClick={handleAddToList}>
               <IoMdAddCircleOutline size={24} />
             </button>
           </div>

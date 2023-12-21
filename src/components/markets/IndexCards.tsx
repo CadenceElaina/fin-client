@@ -1,74 +1,59 @@
 import React from "react";
-import { Grid, Card, CardContent, Typography, Container } from "@mui/material";
 import { IndexCardProps, IndexCard } from "./types";
+import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 
-const IndexCards: React.FC<IndexCardProps> = ({ cards, currExchance }) => {
-  // Your card data (you can replace this with your actual data)
+const IndexCards: React.FC<IndexCardProps> = ({ cards, currExchange }) => {
   return (
-    <Container>
-      <Grid container spacing={2} justifyContent="center" alignItems="center">
-        {cards
-          .filter((card: IndexCard) => card.exchange === currExchance)
-          .map((card: IndexCard) => (
-            <Grid item key={card.symbol} xs={4} sm={4} md={3} lg={2} xl={2}>
-              <Card
-                sx={{
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  transition:
-                    "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
-                  "&:hover": {
-                    transform: "scale(1.05)",
-                    boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
-                  },
-                }}
+    <div className="index-cards-inner">
+      {cards
+        .filter((card: IndexCard) => card.exchange === currExchange)
+        .map((card: IndexCard) => (
+          <div className="card-content" key={card.symbol}>
+            <div className="card-icon">
+              {card.priceChange > 0 ? (
+                <FaArrowUp style={{ color: "green" }} />
+              ) : card.priceChange === 0 ? (
+                <></>
+              ) : (
+                <FaArrowDown style={{ color: "red" }} />
+              )}
+            </div>
+            <div className="card-name-price">
+              <div className="card-name">{card.name}</div>
+              <div className="card-price">{card.price}</div>
+            </div>
+            <div className="card-change">
+              <div
+                className={`card-percent-change ${
+                  card.percentChange > 0
+                    ? "positive"
+                    : card.percentChange === 0
+                    ? ""
+                    : "negative"
+                }`}
               >
-                <CardContent
-                  className="cardcontent"
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  {card.icon && (
-                    <div>
-                      <card.icon
-                        size={24}
-                        color={card.priceChange > 0 ? "green" : "red"}
-                      />
-                    </div>
-                  )}
-                  <div>
-                    <Typography variant="h6" component="div">
-                      {card.symbol}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {card.price}
-                    </Typography>
-                  </div>
-                  <div>
-                    <Typography
-                      variant="body2"
-                      color={card.priceChange > 0 ? "green" : "red"}
-                    >
-                      {card.percentChange}%
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color={card.priceChange > 0 ? "green" : "red"}
-                    >
-                      {card.priceChange}
-                    </Typography>
-                  </div>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-      </Grid>
-    </Container>
+                {card.percentChange > 0
+                  ? "+"
+                  : card.percentChange === 0
+                  ? ""
+                  : "-"}
+                {card.percentChange}%
+              </div>
+              <div
+                className={`card-price-change ${
+                  card.priceChange > 0
+                    ? "positive"
+                    : card.priceChange === 0
+                    ? ""
+                    : "negative"
+                }`}
+              >
+                <div>{card.priceChange}</div>
+              </div>
+            </div>
+          </div>
+        ))}
+    </div>
   );
 };
 

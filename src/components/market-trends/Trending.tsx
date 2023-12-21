@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import Layout from "../layout/Layout";
 import Footer from "../Footer";
 import Table from "../table/Table";
-import { RowConfig } from "../table/types";
+import MarketTrendsButtons from "./MarketTrendsButtons";
 import SidebarNews from "./news/SidebarNews";
-
+import { RowConfig } from "../table/types";
 import { getTrending } from "../search/quoteUtils";
 import { useQueryClient } from "@tanstack/react-query";
-import MarketTrendsButtons from "./MarketTrendsButtons";
 import "./MarketTrends.css";
 
 const Trending = () => {
@@ -29,7 +28,7 @@ const Trending = () => {
     };
 
     fetchTrendingData();
-  }, []); // Empty dependency array ensures the effect runs only once on component mount
+  }, []);
 
   return (
     <Layout>

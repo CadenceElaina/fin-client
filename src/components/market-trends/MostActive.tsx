@@ -73,7 +73,6 @@ const MostActive = () => {
     }
   }, [symbols, queryClient]);
 
-  console.log(symbols);
   return (
     <Layout>
       <div className="trends-container">

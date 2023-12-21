@@ -3,13 +3,18 @@ import Table from "../../table/Table";
 import { RowConfig } from "../../table/types";
 import CustomButton from "../../CustomButton";
 import AddWatchlistModal from "../../modals/AddWatchlistModal";
+import { useWatchlists } from "../../../context/WatchlistContext";
+import { useAuth } from "../../../context/AuthContext";
 
 interface WatchlistProps {
   name: string;
   data: any;
 }
 
-const Watchlist: React.FC<WatchlistProps> = ({ name, data }) => {
+const Watchlist: React.FC<WatchlistProps> = ({ data }) => {
+  const { user } = useAuth();
+  const { watchlists, appendWatchlist } = useWatchlists();
+
   const [isAddWatchlistModalVisible, setIsAddWatchlistModalVisible] =
     useState(false);
 
@@ -31,8 +36,9 @@ const Watchlist: React.FC<WatchlistProps> = ({ name, data }) => {
   };
 
   const saveNewWatchlist = (watchlistName: string) => {
-    // Perform actions to save the new watchlist
-    console.log("Saving new watchlist:", watchlistName);
+    // Add the new security to the selected watchlist
+    const selectedWatchlist = watchlists.find(w => w.title === watchlistName);
+
 
     // Close the modal
     closeAddWatchlistModal();
@@ -40,7 +46,6 @@ const Watchlist: React.FC<WatchlistProps> = ({ name, data }) => {
 
   return (
     <div>
-  
       <div className="watchlist-table">
         <Table data={data} config={watchlistConfig} full={true} />
       </div>

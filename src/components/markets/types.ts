@@ -1,5 +1,3 @@
-import { IconType } from "react-icons";
-
 export enum exchange {
   US = "US",
   Europe = "Europe",
@@ -7,9 +5,9 @@ export enum exchange {
   Currencies = "Currencies",
   Crypto = "Crypto",
 }
+
 export interface IndexCard {
-  icon: IconType;
-  exchange: string;
+  exchange: exchange;
   name: string;
   symbol: string;
   percentChange: number;
@@ -19,5 +17,5 @@ export interface IndexCard {
 
 export interface IndexCardProps {
   cards: IndexCard[];
-  currExchance: exchange;
+  currExchange: exchange;
 }

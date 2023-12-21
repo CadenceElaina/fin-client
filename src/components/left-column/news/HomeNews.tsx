@@ -1,15 +1,13 @@
 import React, { useState } from "react";
-import { newsSegmentType } from "./types";
-
+import { newsSegmentType } from "../../../types/types";
 import CustomButton from "../../CustomButton";
 import Articles from "./Articles";
 import { useNews } from "../../../context/NewsContext";
+
 const News = () => {
   const [currNewsSegment, setCurrNewsSegment] =
     useState<newsSegmentType>("Top");
-  // Use the custom hook to get the newsData from context
   const newsData = useNews();
-
   const newsSegmentValues: newsSegmentType[] = ["Top", "Local", "World"];
 
   const handleButtonClick = (segment: newsSegmentType) => {
@@ -33,7 +31,6 @@ const News = () => {
         ))}
       </div>
       <div>
-        {/* Pass the newsData and currNewsSegment to the Article component */}
         <Articles articles={newsData} currNewsSegment={currNewsSegment} />
       </div>
     </div>

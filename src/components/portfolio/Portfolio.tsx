@@ -15,6 +15,10 @@ import Watchlist from "./watchlist/Watchlist";
 import AddWatchlistModal from "../modals/AddWatchlistModal";
 import watchlist from "../../services/watchlist";
 import { useWatchlists } from "../../context/WatchlistContext";
+import { useAuth } from "../../context/AuthContext";
+import watchlistService from "../../services/watchlist";
+import PortfolioContent from "./PortfolioContent";
+import WatchlistContent from "./WatchlistContent";
 
 interface Security {
   symbol: string;
@@ -33,25 +37,43 @@ interface Portfolio {
 const Portfolio = () => {
   const [activeTab, setActiveTab] = useState<string>("");
   const [activeListType, setActiveListType] = useState<string>("portfolios");
+  const [activeWatchlist, setActiveWatchlist] = useState<Portfolio>();
   const [activePortfolio, setActivePortfolio] = useState<Portfolio>();
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [addToPortfolioModalIsOpen, setAddToPortfolioModalIsOpen] =
+    useState<boolean>(false);
+  const [addToWatchlistModalIsOpen, setAddToWatchlistModalIsOpen] =
     useState<boolean>(false);
   const [addWatchlistModalIsOpen, setAddWatchlistModalIsOpen] =
     useState<boolean>(false);
   const { portfolios, removePortfolio, addSecurityToPortfolio } =
     usePortfolios();
-  const { watchlists, removeWatchlists, addSecurityToWatchlist } =
-    useWatchlists();
+  const {
+    watchlists,
+    removeWatchlists,
+    addSecurityToWatchlist,
+    appendWatchlist,
+  } = useWatchlists();
+  const addToWatchlistDisabled = watchlists.length > 3;
+  const { user } = useAuth();
   const { id } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
     // Find the portfolio with the matching id and set activePortfolio
-    const matchingPortfolio = portfolios.find((p) => p.id === id);
-    if (matchingPortfolio) {
-      setActivePortfolio(matchingPortfolio);
-      setActiveTab(matchingPortfolio.title);
+    if (activeListType === "portfolios") {
+      const matchingPortfolio = portfolios.find((p) => p.id === id);
+      if (matchingPortfolio) {
+        setActivePortfolio(matchingPortfolio);
+        setActiveTab(matchingPortfolio.title);
+      }
+    }
+    if (activeListType === "watchlists") {
+      const matchingWatchlist = watchlists.find((w) => w.id === id);
+      if (matchingWatchlist) {
+        setActiveWatchlist(matchingWatchlist);
+        setActiveTab(matchingWatchlist.title);
+      }
     }
   }, [id, portfolios]);
 
@@ -69,32 +91,49 @@ const Portfolio = () => {
       const removedPortfolio = portfolios.find((p) => p.title === activeTab);
 
       if (removedPortfolio) {
-        // Call the removePortfolio function from the context
         removePortfolio(removedPortfolio);
       }
     }
 
-    // Close the dropdown after selecting an option
     setShowDropdown(false);
   };
 
   const openAddToPortfolioModal = () => {
     setAddToPortfolioModalIsOpen(true);
   };
+  const openAddToWatchlistModal = () => {
+    setAddToWatchlistModalIsOpen(true);
+  };
 
-  const addToPortfolio = async (newSecurity: Security) => {
-    //get our addedSecuritites
-    /* const addedSecurities = await portfolioService.addToPortfolio(activePortfolio.id, newSecurity)
-    setAddToPortfolioModalIsOpen(false); */
-    //return addedSecurities;
+  const addToList = async (newSecurity: Security) => {
     if (activePortfolio) {
-      // Update the context with the new security
       addSecurityToPortfolio(activePortfolio.id, newSecurity);
     }
+    if (activeWatchlist) {
+      addSecurityToWatchlist(activeWatchlist.id, newSecurity);
+    }
   };
+
   const onClose = () => {
     setAddToPortfolioModalIsOpen(false);
   };
+
+  const handleSaveWatchlist = async (watchlistName: string) => {
+    const newWatchlist = {
+      title: watchlistName,
+      author: user?.name,
+    };
+    const response = await watchlistService.create(newWatchlist);
+    console.log(response);
+    appendWatchlist({
+      id: response.id,
+      title: response.title,
+      author: response.author,
+    });
+
+    onCloseWatchlist();
+  };
+
   const onCloseWatchlist = () => {
     setAddWatchlistModalIsOpen(false);
   };
@@ -102,29 +141,35 @@ const Portfolio = () => {
   const handleListClick = (type: string) => {
     setActiveListType(`${type}`);
   };
-
+  console.log(watchlists, watchlists.length, activeTab);
   //console.log(addToPortfolioModalIsOpen);
-  console.log(activePortfolio);
+  // console.log(activePortfolio);
   /*   console.log("Portfolios:", portfolios); */
   /*  console.log(portfolios, activeTab, activePortfolio); */
+  const Tooltip = () => (
+    <div className="tooltip-lists">You may not have more than 3 watchlists</div>
+  );
   return (
     <Layout>
       {addToPortfolioModalIsOpen && (
         <AddToPortfolioModal
           isOpen={addToPortfolioModalIsOpen}
-          portfolioName={activeTab}
+          listName={activeTab}
           onClose={onClose} // Close modal function
           onSave={(symbol, quantity, purchaseDate, purchasePrice) => {
-            // Handle saving data to your state or API
-            // For now, just log the data
             const newSecurity = {
               symbol,
               quantity,
               purchaseDate,
               purchasePrice,
             };
-            addToPortfolio(newSecurity);
-            /* portfolioService.addToPortfolio(newSecurity) */
+            if (activeListType === "portfolios") {
+              addToList(newSecurity);
+            }
+            if (activeListType === "watchlists") {
+              console.log("added to watchlist");
+              addToList(newSecurity);
+            }
             console.log("Symbol:", symbol);
             console.log("Quantity:", quantity);
             console.log("Purchase Date:", purchaseDate);
@@ -137,8 +182,7 @@ const Portfolio = () => {
           onCancel={onCloseWatchlist}
           onSave={(watchlistName) => {
             // Handle saving new watchlist
-            console.log("New Watchlist Name:", watchlistName);
-            // You may want to add the new watchlist to your state or perform other actions
+            handleSaveWatchlist(watchlistName);
             onClose();
           }}
         />
@@ -153,9 +197,9 @@ const Portfolio = () => {
 
             <span
               className={`toggle-type ${
-                activeListType === "watchlist" ? "active-list" : ""
+                activeListType === "watchlists" ? "active-list" : ""
               }`}
-              onClick={() => handleListClick("watchlist")}
+              onClick={() => handleListClick("watchlists")}
             >
               {" "}
               Watchlist
@@ -172,12 +216,14 @@ const Portfolio = () => {
             </span>
           </div>
           <div className="portfolio-header-item">
-            {activeListType === "watchlist" &&
+            {activeListType === "watchlists" &&
               watchlists.map((watchlist) => (
                 <div
                   key={watchlist.id}
                   className={`tab ${
-                    activeTab === "watchlist" ? "active-tab" : "inactive-tab"
+                    activeTab === watchlist.title
+                      ? "active-tab"
+                      : "inactive-tab"
                   }`}
                   onClick={() => handleTabClick(watchlist.id)}
                 >
@@ -188,6 +234,37 @@ const Portfolio = () => {
                   </div>
                 </div>
               ))}
+            <div className="add-list-div">
+              {addToWatchlistDisabled && activeListType === "watchlists" && (
+                <>
+                  <button
+                    disabled={addToWatchlistDisabled}
+                    className={`add-list ${
+                      addToWatchlistDisabled ? "disabled" : ""
+                    }`}
+                    onClick={() => setAddWatchlistModalIsOpen(true)}
+                  >
+                    <FaPlus size={18} />
+                    <span className="label">New list</span>
+                  </button>{" "}
+                  <Tooltip />
+                </>
+              )}
+              {!addToWatchlistDisabled && activeListType && (
+                <>
+                  <button
+                    disabled={addToWatchlistDisabled}
+                    className={`add-list ${
+                      addToWatchlistDisabled ? "disabled" : ""
+                    }`}
+                    onClick={() => setAddWatchlistModalIsOpen(true)}
+                  >
+                    <FaPlus size={18} />
+                    <span className="label">New list</span>
+                  </button>{" "}
+                </>
+              )}
+            </div>
 
             {activeListType === "portfolios" &&
               portfolios.map((portfolio) => (
@@ -207,16 +284,6 @@ const Portfolio = () => {
                   </div>
                 </div>
               ))}
-
-            <button className="add-list">
-              <FaPlus size={18} />
-              <span
-                className="label"
-                onClick={() => setAddWatchlistModalIsOpen(true)}
-              >
-                New list
-              </span>
-            </button>
           </div>
         </div>
         {activeListType === "watchlist" && (
@@ -224,52 +291,40 @@ const Portfolio = () => {
             <Watchlist name="123list" data={[]} />
           </div>
         )}
-        {activeListType === "portfolio" && (
+        {activeListType === "portfolios" && (
           <div className="main-container">
-            {/*  chart component */}
-            <div className="chart">
-              <div className="chart-header">
-                <span className="portfolio-title">Portfolio title</span>
-
-                <div className="settings-dropdown">
-                  <button className="settings" onClick={handleDropdownToggle}>
-                    <FaEllipsisV size={18} />
-                  </button>
-                  {showDropdown && (
-                    <div className="dropdown-content">
-                      {/* Dropdown options */}
-                      <div
-                        className="dropdown-option"
-                        onClick={() => handleDropdownOptionClick("Option 1")}
-                      >
-                        Option 1
-                      </div>
-                      <div
-                        className="dropdown-option"
-                        onClick={() => handleDropdownOptionClick("Option 2")}
-                      >
-                        Option 2
-                      </div>
-                      <div
-                        className="dropdown-option"
-                        onClick={() => handleDropdownOptionClick("remove")}
-                      >
-                        Remove
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-            <button
-              className="add-investment"
-              onClick={openAddToPortfolioModal}
-            >
-              <FaPlus size={18} />
-              <span className="label">Add investments</span>
-            </button>
+            <PortfolioContent
+              handleDropdownOptionClick={(option: string) =>
+                handleDropdownOptionClick(option)
+              }
+              handleDropdownToggle={handleDropdownToggle}
+              showDropdown={showDropdown}
+              openAddToPortfolioModal={openAddToPortfolioModal}
+            />
             <div>
               {activePortfolio?.securities?.map((s) => (
+                <div key={s.symbol}>
+                  {s.symbol}
+                  {s.quantity}
+                  {s.purchaseDate}
+                  {s.purchasePrice}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        {activeListType === "watchlists" && (
+          <div className="main-container">
+            <WatchlistContent
+              handleDropdownOptionClick={(option: string) =>
+                handleDropdownOptionClick(option)
+              }
+              handleDropdownToggle={handleDropdownToggle}
+              showDropdown={showDropdown}
+              openAddToPortfolioModal={openAddToPortfolioModal}
+            />
+            <div>
+              {activeWatchlist?.securities?.map((s) => (
                 <div key={s.symbol}>
                   {s.symbol}
                   {s.quantity}

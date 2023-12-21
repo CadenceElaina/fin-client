@@ -21,8 +21,6 @@ const SessionTimeoutModal: React.FC<SessionTimeoutModalProps> = ({
   }, [onCancel]);
 
   return (
-    // Your modal component JSX goes here
-    // Example: Ask the user if they want to stay logged in
     <div className="session-timeout-modal-container">
       <div className="session-timeout-modal-content">
         <p>Your session is about to expire. Are you still there?</p>

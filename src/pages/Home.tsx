@@ -4,7 +4,6 @@ import Layout from "../components/layout/Layout";
 import Markets from "../components/markets/Markets";
 import Search from "../components/search/Search";
 import Watchlist from "../components/left-column/Watchlist";
-import News from "../components/left-column/news/News";
 import AddPortfolio from "../components/right-column/portfolio/AddPortfolio";
 import MarketTrends from "../components/right-column/MarketTrends";
 import MostFollowed from "../components/right-column/MostFollowed";
@@ -18,6 +17,7 @@ import { useAuth } from "../context/AuthContext";
 import { useWelcomeBack } from "../context/WelcomeBackContext";
 import { usePortfolios } from "../context/PortfoliosContext";
 import YourPortfolios from "../components/right-column/portfolio/YourPortfolios";
+import HomeNews from "../components/left-column/news/HomeNews";
 
 interface HomeProps {
   portfolios: [];
@@ -63,7 +63,7 @@ const Home: React.FC<HomeProps> = () => {
           <div className="main-content-container">
             <div className="main-content-left">
               <Watchlist />
-              <News />
+              <HomeNews />
             </div>
             <div className="main-content-right">
               {portfolios && user ? <YourPortfolios /> : <AddPortfolio />}

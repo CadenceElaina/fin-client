@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import CustomButton from "../CustomButton";
-import "./AddPortfolio.css"; // You can create a new CSS file for styling if needed
+import "./AddPortfolio.css";
 import ModalBackdrop from "./ModalBackdrop";
 
 interface AddWatchlistProps {

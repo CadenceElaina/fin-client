@@ -6,10 +6,6 @@ import ListItemText from "@mui/material/ListItemText";
 import { useNavigate } from "react-router-dom";
 import { SidebarItemProps } from "./types";
 
-//import useLoginModal
-//import useCurrentUser
-//import {BsDot} from "react-icons/bs"
-
 const SidebarItem: React.FC<SidebarItemProps> = ({
   label,
   icon: Icon,
@@ -18,7 +14,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   onClick,
 }) => {
   const navigate = useNavigate();
-  /*   const currentUser: boolean = true; */
+
   const handleClick = useCallback(() => {
     if (href === "/") {
       navigate("/");

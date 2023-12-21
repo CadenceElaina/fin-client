@@ -1,5 +1,5 @@
 import React from "react";
-import { articleProps } from "../../left-column/news/types";
+import { articleProps } from "../../../types/types";
 
 const Article: React.FC<articleProps> = ({ articles }) => {
   return (

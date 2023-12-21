@@ -18,7 +18,7 @@
   box-shadow: 0 5px 5px black;
 }
 .trends-buttons:hover {
-  background-color: #f0f0f0; /* Adjust the hover background color as needed */
+  background-color: #f0f0f0;
 }
 .trends-buttons.active {
   border: 1px solid transparent;

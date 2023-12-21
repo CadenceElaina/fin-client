@@ -7,6 +7,7 @@ import React, {
   useMemo,
 } from "react";
 import watchlistService from "../services/watchlist";
+import { Portfolio, Security } from "../types/types";
 
 // ... (same interfaces for Security and Portfolio)
 

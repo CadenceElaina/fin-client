@@ -1,13 +1,11 @@
-//utils.ts
 import { quoteType } from "../search/types";
 export type Data = {
-  id: number; // Assuming 'symbol' is a string
+  id: number;
   symbol: string;
   name: string;
   price: number;
-  priceChange: number; // You might want to change this to number depending on your needs
+  priceChange: number;
   percentChange: number;
-  // Other properties...
 };
 
 export const transformQuotesToData = (

@@ -30,7 +30,7 @@ const AddPortfolioModal: React.FC<AddPortfolioProps> = ({
 
   const handleSave = () => {
     onSave(portfolioName);
-  };
+  }; //
 
   return (
     <>

@@ -3,7 +3,7 @@
 }
 .portfolio-header {
   display: flex;
-  flex-direction: column; /* Change from row to column */
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
   padding: 10px;
@@ -16,7 +16,7 @@
   display: flex;
   align-items: center;
   flex: 1;
-  margin-top: 10px; /* Add margin to separate the rows */
+  margin-top: 10px;
   align-self: flex-start;
   border: 1px solid transparent;
   border-radius: 12px;
@@ -132,17 +132,6 @@
   color: black;
 }
 
-/* .dropdown-content {
-  display: block;
-  position: absolute;
-  top: 100%;
-  background-color: #fff;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  z-index: 2;
-  min-width: 160px;
-  border-radius: 4px;
-} */
-
 .dropdown-option {
   padding: 10px;
   cursor: pointer;
@@ -172,4 +161,40 @@
 .toggle-type:hover {
   border-radius: 12px;
   background: #f1f1f1;
+}
+.add-list-div:hover .tooltip-lists {
+  visibility: visible;
+  opacity: 1;
+}
+.disabled {
+  color: rgba(60, 64, 67, 0.38);
+  background: rgba(60, 64, 67, 0.12);
+  cursor: default;
+  pointer-events: none;
+}
+.tooltip-lists {
+  position: absolute;
+  bottom: calc(61% + 8px);
+  left: 50%;
+  transform: translateX(45%);
+  background-color: gray;
+  color: black;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  white-space: nowrap;
+  visibility: hidden;
+  opacity: 1;
+  transition: opacity 0.3s linear;
+  z-index: 1000;
+}
+
+.tooltip-lists::before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 8px;
+  border-width: 8px 8px 0;
+  border-style: solid;
+  border-color: gray transparent transparent;
 }

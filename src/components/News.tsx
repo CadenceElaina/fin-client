@@ -1,31 +1,9 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { articleProps } from "../../../types/types";
-import "./news.css";
+import React from 'react'
 
-const Articles: React.FC<articleProps> = ({ articles, currNewsSegment }) => {
-  const navigate = useNavigate();
-  // Filter stories based on the current segment
-  let filteredArticles = [];
-  if (currNewsSegment) {
-    filteredArticles = articles.filter((article) =>
-      Array.isArray(article.segment)
-        ? article.segment.includes(currNewsSegment)
-        : article.segment === currNewsSegment
-    );
-  } else {
-    filteredArticles = articles;
-  }
-  const handleArticleClick = (link: string) => {
-    location.href = `${link}`;
-  };
-  const handleSymbolClick = (symbol: string) => {
-    navigate(`/quote/${symbol}`);
-  };
+const News = () => {
   return (
-    <div>
-      {filteredArticles.map((article) => (
-        <div key={article.id} className="story-container">
+    <>
+       <div key={article.id} className="story-container">
           <div className="story-row">
             <div className="story-column">
               <div
@@ -58,9 +36,8 @@ const Articles: React.FC<articleProps> = ({ articles, currNewsSegment }) => {
             </div>
           </div>
         </div>
-      ))}
-    </div>
-  );
-};
+    </>
+  )
+}
 
-export default Articles;
+export default News

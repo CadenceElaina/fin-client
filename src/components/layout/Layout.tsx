@@ -1,15 +1,13 @@
 import React, { useState } from "react";
-import { FaBars, FaChevronLeft, FaUncharted } from "react-icons/fa";
-import Sidebar from "./Sidebar";
-import "./Layout.css";
-import CustomButton from "../CustomButton";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import Avatar from "@mui/material/Avatar/Avatar";
+import { FaBars, FaChevronLeft, FaUncharted } from "react-icons/fa";
 import { Button, Menu, MenuItem } from "@mui/material";
+import Avatar from "@mui/material/Avatar/Avatar";
+import Sidebar from "./Sidebar";
+import CustomButton from "../CustomButton";
+import "./Layout.css";
 
-// Import Material UI Avatar component
-/* import ThemeToggle from "../../ThemeToggle"; */
 const getUserInitials = (name: string | undefined): string => {
   if (!name) return "";
   const nameParts = name.split(" ");
@@ -59,7 +57,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         className={`overlay ${open ? "open" : ""}`}
         onClick={handleDrawerClose}
       ></div>
-      {/* Top Banner */}
       <div className="top-banner">
         <div className="logo-container">
           <button className="menu-button" onClick={handleDrawerToggle}>
@@ -100,7 +97,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       </div>
 
       <div className="container">
-        {/* Sidebar */}
         {open && (
           <div className="sidebar">
             <div className="sidebar-header">
@@ -108,7 +104,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 <FaChevronLeft />
               </button>
             </div>
-            {/* Your Sidebar component */}
             <Sidebar
               isOpen={false}
               onClose={function (): void {
@@ -118,7 +113,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </div>
         )}
 
-        {/* Main Content */}
         <div className={`main-content ${open ? "open" : ""}`}>{children}</div>
       </div>
     </div>
