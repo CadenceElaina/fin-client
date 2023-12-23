@@ -53,12 +53,18 @@ const remove = async (id: string) => {
   return response.data;
 };
 
+const updatePortfolioValue = async (portfolioId: string, data: any) => {
+  const response = await axios.put(`${baseUrl}/${portfolioId}`, data);
+  return response; // Return the entire response object
+};
+
 export default {
   setToken,
   getAll,
   create,
   addToPortfolio,
   remove,
+  updatePortfolioValue,
 };
 /*
 

@@ -1,8 +1,13 @@
 import React from "react";
 import { FaEllipsisV, FaPlus } from "react-icons/fa";
 import "./Portfolio.css";
+import PortfolioPerformance from "./PortfolioPerformance";
+import { usePortfolios } from "../../context/PortfoliosContext";
+import Portfolio from "./Portfolio";
 
 interface PortfolioContentProps {
+  portfolio: Portfolio | undefined;
+  portfolioName: string;
   handleDropdownToggle: () => void;
   handleDropdownOptionClick: (option: string) => void;
   showDropdown: boolean;
@@ -10,6 +15,8 @@ interface PortfolioContentProps {
 }
 
 const PortfolioContent: React.FC<PortfolioContentProps> = ({
+  portfolio,
+  portfolioName,
   handleDropdownToggle,
   handleDropdownOptionClick,
   showDropdown,
@@ -19,7 +26,7 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({
     <>
       <div className="chart">
         <div className="chart-header">
-          <span className="portfolio-title">Portfolio title</span>
+          <span className="portfolio-title">{portfolioName} title</span>
 
           <div className="settings-dropdown">
             <button className="settings" onClick={handleDropdownToggle}>
@@ -49,6 +56,7 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({
             )}
           </div>
         </div>
+        <PortfolioPerformance portfolio={portfolio} />
       </div>
       <button className="add-investment" onClick={openAddToPortfolioModal}>
         <FaPlus size={18} />

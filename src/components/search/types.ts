@@ -12,6 +12,7 @@ export interface quoteType {
   symbol: string;
   name: string;
   price: number;
+  quantity?: number;
   priceChange: number;
   percentChange: number;
 }

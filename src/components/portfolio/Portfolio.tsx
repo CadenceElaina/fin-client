@@ -58,7 +58,6 @@ const Portfolio = () => {
   const { user } = useAuth();
   const { id } = useParams();
   const navigate = useNavigate();
-
   useEffect(() => {
     // Find the portfolio with the matching id and set activePortfolio
     if (activeListType === "portfolios") {
@@ -294,6 +293,8 @@ const Portfolio = () => {
         {activeListType === "portfolios" && (
           <div className="main-container">
             <PortfolioContent
+              portfolio={activePortfolio}
+              portfolioName={activeTab}
               handleDropdownOptionClick={(option: string) =>
                 handleDropdownOptionClick(option)
               }

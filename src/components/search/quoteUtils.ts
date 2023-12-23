@@ -51,7 +51,7 @@ export const getQuote = async (
       priceChange: response.data.price.regularMarketChange.fmt,
       percentChange: response.data.price.regularMarketChangePercent.raw,
     };
-
+//
     // Cache the quote data
     queryClient.setQueryData(["quote", symbol], quoteData);
     console.log(quoteData);

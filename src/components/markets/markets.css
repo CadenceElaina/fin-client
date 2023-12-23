@@ -65,7 +65,7 @@
   justify-content: center; /* Center the cards horizontally */
 }
 
-.card-content {
+.index-card-content {
   display: flex;
   flex-direction: row !important;
   align-items: center;
@@ -77,14 +77,14 @@
   white-space: nowrap;
 }
 
-.card-icon {
+.index-card-icon {
   display: flex;
   height: 32px;
   min-width: 32px;
   overflow: hidden;
 }
 
-.card-name-price {
+.index-card-name-price {
   display: flex;
   flex-direction: column;
   line-height: 1rem;
@@ -96,7 +96,7 @@
   min-width: 64px;
   text-align: center;
 }
-.card-name {
+.index-card-name {
   color: rgb(32, 33, 36);
   font-weight: bold;
   white-space: nowrap;
@@ -104,11 +104,11 @@
   text-overflow: ellipsis;
 }
 
-.card-price {
+.index-card-price {
   color: rgb(60, 64, 67);
 }
 
-.card-change {
+.index-card-change {
   display: flex;
   flex-direction: column;
   font-family: Roboto, Arial, sans-serif;
@@ -118,10 +118,10 @@
   font-weight: 400;
 }
 
-.card-percent-change {
+.index-card-percent-change {
   margin: 0 auto;
 }
-.card-price-change {
+.index-card-price-change {
   margin: 0 auto;
 }
 

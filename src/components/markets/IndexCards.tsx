@@ -8,8 +8,8 @@ const IndexCards: React.FC<IndexCardProps> = ({ cards, currExchange }) => {
       {cards
         .filter((card: IndexCard) => card.exchange === currExchange)
         .map((card: IndexCard) => (
-          <div className="card-content" key={card.symbol}>
-            <div className="card-icon">
+          <div className="index-card-content" key={card.symbol}>
+            <div className="index-card-icon">
               {card.priceChange > 0 ? (
                 <FaArrowUp style={{ color: "green" }} />
               ) : card.priceChange === 0 ? (
@@ -18,13 +18,13 @@ const IndexCards: React.FC<IndexCardProps> = ({ cards, currExchange }) => {
                 <FaArrowDown style={{ color: "red" }} />
               )}
             </div>
-            <div className="card-name-price">
-              <div className="card-name">{card.name}</div>
-              <div className="card-price">{card.price}</div>
+            <div className="index-card-name-price">
+              <div className="index-card-name">{card.name}</div>
+              <div className="index-card-price">{card.price}</div>
             </div>
-            <div className="card-change">
+            <div className="index-card-change">
               <div
-                className={`card-percent-change ${
+                className={`index-card-percent-change ${
                   card.percentChange > 0
                     ? "positive"
                     : card.percentChange === 0
@@ -40,7 +40,7 @@ const IndexCards: React.FC<IndexCardProps> = ({ cards, currExchange }) => {
                 {card.percentChange}%
               </div>
               <div
-                className={`card-price-change ${
+                className={`index-card-price-change ${
                   card.priceChange > 0
                     ? "positive"
                     : card.priceChange === 0
