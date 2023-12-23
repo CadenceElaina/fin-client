@@ -87,6 +87,7 @@ const Losers = () => {
               data={transformQuotesToData(mostActiveQuotes)}
               config={losersConfig}
               full={true}
+              icon={true}
             />
           </div>
           <div className="explore-news">

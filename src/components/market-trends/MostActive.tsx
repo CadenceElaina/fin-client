@@ -88,6 +88,7 @@ const MostActive = () => {
               data={transformQuotesToData(mostActiveQuotes)}
               config={mostActiveConfig}
               full={true}
+              icon={true}
             />
           </div>
           <div className="explore-news">

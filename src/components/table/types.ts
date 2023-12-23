@@ -24,10 +24,12 @@ export interface TableProps {
   data: Data[];
   config: RowConfig;
   full: boolean;
+  icon: boolean;
 }
 
 export interface RowConfig {
   fields: string[]; // Fields to display in each row
   addIcon?: boolean; // Whether to display the add icon
+  removeIcon?: boolean;
   name?: string;
 }

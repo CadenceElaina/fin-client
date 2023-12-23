@@ -77,6 +77,7 @@ const MarketIndexes = () => {
               data={transformQuotesToData(symbolQuotes)}
               config={exploreConfig}
               full={true}
+              icon={true}
             />
           </div>
           <div className="explore-news">

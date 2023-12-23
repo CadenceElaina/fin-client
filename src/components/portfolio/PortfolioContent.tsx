@@ -26,7 +26,7 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({
     <>
       <div className="chart">
         <div className="chart-header">
-          <span className="portfolio-title">{portfolioName} title</span>
+          <span className="portfolio-title">{portfolioName}</span>
 
           <div className="settings-dropdown">
             <button className="settings" onClick={handleDropdownToggle}>

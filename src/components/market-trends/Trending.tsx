@@ -41,7 +41,12 @@ const Trending = () => {
         </div>
         <div className="explore-main-content trending-table">
           <div className="explore-table">
-            <Table data={trendingData} config={exploreConfig} full={true} />
+            <Table
+              data={trendingData}
+              config={exploreConfig}
+              full={true}
+              icon={true}
+            />
           </div>
           <div className="explore-news">
             <SidebarNews />

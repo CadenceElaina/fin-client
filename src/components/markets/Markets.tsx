@@ -3,11 +3,22 @@ import { exchange } from "./types";
 import IndexCards from "./IndexCards";
 import "./Markets.css";
 import { Link } from "react-router-dom";
+import { useNews } from "../../context/NewsContext";
 
 const Markets = () => {
   //const currExchance = exchange.US;
   const [currExchange, setCurrExchange] = useState(exchange.US);
+  const newsData = useNews();
 
+  // Generate 9 random articles
+  const numRandomArticles = 1;
+  const randomIndexes = Array.from(
+    { length: Math.min(numRandomArticles, newsData.length) },
+    () => Math.floor(Math.random() * newsData.length)
+  );
+
+  // Get the selected random articles from newsData
+  const randomArticles = randomIndexes.map((index) => newsData[index]);
   const indexesData = [
     {
       exchange: exchange.US,
@@ -66,7 +77,7 @@ const Markets = () => {
       priceChange: 3.0,
     },
   ];
-
+  // console.log("article", randomArticles);
   return (
     <>
       <div className="markets-container">
@@ -84,10 +95,19 @@ const Markets = () => {
             </div>
           ))}
         </div>{" "}
-        <div className="markets-article-link">
-          <Link to={"/"} className="linkToArticle">
-            Link to Article
-          </Link>
+        <div className="markets-article">
+          <div className="markets-article-link">
+            <Link
+              to={`${randomArticles[0]?.link ?? ""}`}
+              className="linkToArticle"
+            >
+              {`${randomArticles[0]?.title ?? ""}`}
+            </Link>
+          </div>
+          <div className="markets-article-source">
+            {`${randomArticles[0]?.source ?? ""}`}{" "}
+            {`${randomArticles[0]?.time ?? ""}`}
+          </div>
         </div>
       </div>
 

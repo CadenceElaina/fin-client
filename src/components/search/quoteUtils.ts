@@ -19,7 +19,7 @@ export const getQuote = async (
     url: "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-summary",
     params: { symbol, region: "US" },
     headers: {
-      "X-RapidAPI-Key": `${YH_KEY}`,
+      "X-RapidAPI-Key": `${YH_KEY2}`,
       "X-RapidAPI-Host": `${YH_URL}`,
     },
   };
@@ -51,7 +51,7 @@ export const getQuote = async (
       priceChange: response.data.price.regularMarketChange.fmt,
       percentChange: response.data.price.regularMarketChangePercent.raw,
     };
-//
+    //
     // Cache the quote data
     queryClient.setQueryData(["quote", symbol], quoteData);
     console.log(quoteData);
@@ -187,7 +187,7 @@ export const getTrending = async (queryClient: QueryClient) => {
     url: "https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/get-trending-tickers",
     params: { region: "US" },
     headers: {
-      "X-RapidAPI-Key": `${YH_KEY}`,
+      "X-RapidAPI-Key": `${YH_KEY2}`,
       "X-RapidAPI-Host": `${YH_URL}`,
     },
   };

@@ -21,7 +21,64 @@
   border: 1px solid transparent;
   border-radius: 12px;
 }
+.portfolio-performance-container {
+  min-width: 1000px;
+  display: flex;
+  flex-direction: column;
+}
 
+.top-row {
+  display: flex;
+}
+
+.portfolio-chart-container {
+  flex: 3;
+}
+
+.portfolio-highlights {
+  border: 1px solid white;
+  min-width: 255px;
+  max-width: 324px;
+  padding: 16px;
+  border-radius: 12px;
+  align-self: center;
+  text-align: center;
+  margin: 0 auto;
+  flex: 1;
+}
+.portfolio-day-total-change {
+  display: flex;
+  margin: 10px 0 0 0;
+  justify-content: center;
+}
+.portfolio-day-change-gain,
+.portfolio-day-change-gain {
+  min-width: 60px;
+  min-height: 6ch;
+  margin: 10px;
+  background-color: rgb(19, 115, 51);
+  color: #00ff00;
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+.portfolio-day-change-loss,
+.portfolio-total-change-loss {
+  min-width: 60px;
+  min-height: 60px;
+  margin: 10px;
+  background-color: #660000;
+  color: rgb(217, 48, 37);
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.bottom-row {
+  flex-basis: 100%;
+}
 .home-label {
   padding: 0.75rem;
 }

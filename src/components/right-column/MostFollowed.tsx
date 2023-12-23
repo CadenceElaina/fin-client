@@ -45,7 +45,12 @@ const MostFollowed = () => {
         Most followed on Finhub
       </div>
       <div>
-        <Table data={data} config={mostFollowedConfig} full={true} />
+        <Table
+          data={data}
+          config={mostFollowedConfig}
+          full={true}
+          icon={true}
+        />
       </div>
     </div>
   );

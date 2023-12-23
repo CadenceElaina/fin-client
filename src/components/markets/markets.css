@@ -8,10 +8,13 @@
   flex-direction: row;
 }
 .compare-markets {
+  padding: 1rem;
+  text-align: end;
   flex: 1;
   font-size: 1.5rem;
   font-weight: 600;
   color: #fff;
+  margin-right: 4px;
 }
 
 .exchange-chips {
@@ -22,6 +25,7 @@
 }
 
 .chip {
+  padding: 1rem;
   flex: 1;
   cursor: pointer;
   border: 1px solid #ccc;
@@ -36,13 +40,18 @@
   background-color: rgb(24, 90, 188);
   color: #fff;
 }
-
+.markets-article {
+  padding: 1rem;
+  flex: 1;
+  margin-left: 4px;
+  font-size: 0.9rem;
+}
 .markets-article-link {
   flex: 1;
   color: rgb(24, 90, 188);
   text-decoration: none;
   font-weight: 600;
-  margin-left: 4px;
+  margin-bottom: 2px;
 }
 
 .markets-article-link:hover {

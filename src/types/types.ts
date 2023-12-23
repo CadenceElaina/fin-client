@@ -17,7 +17,7 @@ export interface Portfolio {
   securities?: Security[];
 }
 
-// News 
+// News
 export enum newsSegmentEnum {
   top = "Top",
   local = "Local",

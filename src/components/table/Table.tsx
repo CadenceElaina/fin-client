@@ -1,7 +1,7 @@
 import * as React from "react";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 import "./Table.css";
-import { IoMdAddCircleOutline } from "react-icons/io";
+import { IoMdAddCircleOutline, IoMdRemoveCircleOutline } from "react-icons/io";
 import { TableProps, AllowedFields } from "./types";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -32,7 +32,7 @@ const getPriceChangeColor = (change: number): string => {
   return change > 0 ? "#00ff00" : "rgb(217, 48, 37)";
 };
 
-const Table: React.FC<TableProps> = ({ data, config, full }) => {
+const Table: React.FC<TableProps> = ({ data, config, full, icon }) => {
   const navigate = useNavigate();
   /*   console.log(data, config); */
   const handleClick = (symbol: string) => {
@@ -280,9 +280,18 @@ const Table: React.FC<TableProps> = ({ data, config, full }) => {
                 )
             )}
 
-            {config.addIcon && (
+            {config.addIcon && icon && (
               <div className="field-value-icon" key={`icon-${item.id}`}>
                 <IoMdAddCircleOutline size={24} />
+              </div>
+            )}
+            {config.removeIcon && icon && (
+              <div
+                className="field-value-icon"
+                key={`icon-${item.id}`}
+                style={{ marginLeft: "5px" }}
+              >
+                <IoMdRemoveCircleOutline size={24} />
               </div>
             )}
           </div>

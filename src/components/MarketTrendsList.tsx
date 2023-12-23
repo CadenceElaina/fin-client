@@ -66,7 +66,7 @@ const MarketTrendsList = () => {
 
   return (
     <div className="market-trends-list">
-      <Table data={data} config={marketTrendsConfig} full={true} />
+      <Table data={data} config={marketTrendsConfig} full={true} icon={true} />
     </div>
   );
 };

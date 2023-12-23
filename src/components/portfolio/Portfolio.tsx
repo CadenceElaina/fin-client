@@ -32,6 +32,7 @@ interface Portfolio {
   title: string;
   author: string | undefined;
   securities?: Security[];
+  portfolioValue?: [{ date: string; value: number }];
 }
 
 const Portfolio = () => {
@@ -58,6 +59,7 @@ const Portfolio = () => {
   const { user } = useAuth();
   const { id } = useParams();
   const navigate = useNavigate();
+
   useEffect(() => {
     // Find the portfolio with the matching id and set activePortfolio
     if (activeListType === "portfolios") {
@@ -103,12 +105,12 @@ const Portfolio = () => {
   const openAddToWatchlistModal = () => {
     setAddToWatchlistModalIsOpen(true);
   };
-
+  //
   const addToList = async (newSecurity: Security) => {
-    if (activePortfolio) {
+    if (activePortfolio && activeListType === "portfolios") {
       addSecurityToPortfolio(activePortfolio.id, newSecurity);
     }
-    if (activeWatchlist) {
+    if (activeWatchlist && activeListType === "watchlists") {
       addSecurityToWatchlist(activeWatchlist.id, newSecurity);
     }
   };

@@ -88,6 +88,7 @@ const Gainers = () => {
               data={transformQuotesToData(mostActiveQuotes)}
               config={gainersConfig}
               full={true}
+              icon={true}
             />
           </div>
           <div className="explore-news">

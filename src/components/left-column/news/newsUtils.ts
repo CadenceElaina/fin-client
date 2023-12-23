@@ -1,6 +1,6 @@
 import { QueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { YH_KEY, YH_URL } from "../../../constants";
+import { YH_KEY2, YH_URL } from "../../../constants";
 import { newsSegmentType } from "../../../types/types";
 
 const getRandomSegment = (): newsSegmentType => {
@@ -41,7 +41,7 @@ export const getNews = async (queryClient: QueryClient) => {
     },
     headers: {
       "content-type": "text/plain",
-      "X-RapidAPI-Key": `${YH_KEY}`,
+      "X-RapidAPI-Key": `${YH_KEY2}`,
       "X-RapidAPI-Host": `${YH_URL}`,
     },
     data: "Pass in the value of uuids field returned right in this endpoint to load the next page, or leave empty to load first page",
