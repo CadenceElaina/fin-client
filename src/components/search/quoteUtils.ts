@@ -19,7 +19,7 @@ export const getQuote = async (
     url: "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-summary",
     params: { symbol, region: "US" },
     headers: {
-      "X-RapidAPI-Key": `${YH_KEY2}`,
+      "X-RapidAPI-Key": `${YH_KEY}`,
       "X-RapidAPI-Host": `${YH_URL}`,
     },
   };
@@ -61,7 +61,22 @@ export const getQuote = async (
     return null;
   }
 };
-
+export const fetchQuoteWithRetry = async (symbol, retryCount = 3) => {
+  try {
+    const quoteData = await getQuote(queryClient, symbol);
+    return quoteData;
+  } catch (error) {
+    if (error.response && error.response.status === 429 && retryCount > 0) {
+      // Retry with backoff after waiting for a certain time
+      const waitTime = Math.pow(2, 4 - retryCount) * 1000; // exponential backoff
+      await new Promise((resolve) => setTimeout(resolve, waitTime));
+      return fetchQuoteWithRetry(symbol, retryCount - 1);
+    } else {
+      // Handle other errors or propagate if no retries left
+      throw error;
+    }
+  }
+};
 /* interface ApiResponse {
   quoteResponse: {
     result: Array<{

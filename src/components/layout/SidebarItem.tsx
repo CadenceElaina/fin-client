@@ -1,8 +1,4 @@
 import React, { useCallback } from "react";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import { useNavigate } from "react-router-dom";
 import { SidebarItemProps } from "./types";
 
@@ -32,14 +28,14 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   }, [onClick, auth, href, navigate]);
 
   return (
-    <ListItem key={label}>
-      <ListItemButton onClick={handleClick}>
-        <ListItemIcon>
+    <li key={label} className="sidebar-item">
+      <button className="sidebar-item-button" onClick={handleClick}>
+        <div className="sidebar-button-icon">
           <Icon size={28} color="white" />
-        </ListItemIcon>
-        <ListItemText primary={label} />
-      </ListItemButton>
-    </ListItem>
+        </div>
+        <div className="sidebar-button-label">{label}</div>
+      </button>
+    </li>
   );
 };
 

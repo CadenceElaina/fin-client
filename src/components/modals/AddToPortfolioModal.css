@@ -77,7 +77,7 @@
   border-radius: 4px;
   cursor: pointer;
 }
-button:first-child {
+.addToPortfolio-buttons button:first-child {
   margin-right: 10px;
 }
 

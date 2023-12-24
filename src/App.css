@@ -241,6 +241,9 @@ body {
 .market-trends-buttons button:first-child {
   margin-right: 0px !important;
 }
+.sidebar-item-button button {
+  margin-right: 0px !important;
+}
 .footer {
   line-height: 1.5rem;
   font-size: 1rem;

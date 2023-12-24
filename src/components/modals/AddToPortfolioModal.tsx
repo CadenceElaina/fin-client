@@ -13,7 +13,7 @@ interface AddToPortfolioModalProps {
     purchaseDate: string,
     purchasePrice: number
   ) => void;
-}
+}//
 
 const AddToPortfolioModal: React.FC<AddToPortfolioModalProps> = ({
   isOpen,

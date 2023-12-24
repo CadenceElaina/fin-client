@@ -10,7 +10,7 @@ import "./Portfolio.css";
 
 import { useQueryClient } from "@tanstack/react-query";
 import { quoteType } from "../../search/types";
-import { getQuote } from "../../search/quoteUtils";
+import { fetchQuoteWithRetry, getQuote } from "../../search/quoteUtils";
 
 interface PortfolioSymbols {
   [portfolioTitle: string]: { [symbol: string]: number };
@@ -66,7 +66,9 @@ const YourPortfolios = () => {
         }
 
         // If not in the cache, make an API call
-        const quoteData = await getQuote(queryClient, symbol);
+        const quoteData = await fetchQuoteWithRetry(
+          getQuote(queryClient, symbol)
+        );
         //console.log(`perecnt change of ${symbol}, ${quoteData?.percentChange}`);
         // Update the cache
         setQuoteCache((prevCache) => ({
@@ -93,11 +95,13 @@ const YourPortfolios = () => {
 
   useEffect(() => {
     // Fetch quotes for each portfolio
+    console.log("useEffect triggered YourPortfolios.tsx");
     portfolios.forEach((portfolio) => {
+      console.log(`Fetching quotes for portfolio: ${portfolio.title}`);
       fetchPortfolioQuotes(portfolio.title);
     });
-  }, [portfolios, quoteCache]);
-
+  }, [portfolios]);
+// [portfolios, quoteCache] - worked previously (because I hadnt reached the api call limit?) - but currently calls infintely
   // ...
 
   //const symbol = "AAPL"; // Replace with the desired symbol

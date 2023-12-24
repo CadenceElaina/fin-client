@@ -3,7 +3,7 @@ import Table from "../table/Table";
 import "../../App.css";
 import { RowConfig } from "../table/types";
 import { useWatchlists } from "../../context/WatchlistContext";
-import { getQuote } from "../search/quoteUtils";
+import { fetchQuoteWithRetry, getQuote } from "../search/quoteUtils";
 import { quoteType } from "../search/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -96,19 +96,21 @@ const Watchlist = () => {
         const cachedQuote = quoteCache[symbol];
 
         if (cachedQuote) {
-          const pc = cachedQuote?.percentChange * 100;
+          /*  const pc = cachedQuote?.percentChange * 100; */
 
           return {
             symbol,
             name: cachedQuote?.name,
             price: cachedQuote?.price || 0,
-            percentChange: pc || 0,
+            percentChange: cachedQuote?.percentChange || 0,
             priceChange: cachedQuote?.priceChange || 0,
             quantity,
           };
         } else {
           // If not in the cache, make an API call
-          const quoteData = await getQuote(queryClient, symbol);
+          const quoteData = await fetchQuoteWithRetry(
+            getQuote(queryClient, symbol)
+          );
           console.log("new api call fetchPortfolioQuotes - Watchlist.tsx");
           // Update the cache
           setQuoteCache((prevCache) => ({
@@ -185,13 +187,15 @@ const Watchlist = () => {
           symbol,
           name: cachedQuote.name,
           price: cachedQuote.price ?? 0,
-          percentChange: cachedQuote.percentChange * 100 ?? 0,
+          percentChange: cachedQuote.percentChange ?? 0,
           priceChange: cachedQuote.priceChange ?? 0,
         };
       }
 
       // If not in the cache, make an API call
-      const quoteData = await getQuote(queryClient, symbol);
+      const quoteData = await fetchQuoteWithRetry(
+        getQuote(queryClient, symbol)
+      );
       console.log("made api call fetchWatchlistQuotes");
       let pc = 0;
       if (quoteData?.percentChange) {
@@ -294,7 +298,7 @@ const Watchlist = () => {
   //otherwise if no lists and/or not signed in we show you may be interested in list
   return (
     <>
-      {auth && (
+      {auth && watchlistsAndPortfoliosQuotes?.length > 0 && (
         <div className="table-container">
           {" "}
           <div role="heading" className="watchlist-heading">
