@@ -1,10 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-
-export interface User {
-  token: string;
-  username: string;
-  name?: string;
-}
+import { User } from "../types/types";
 
 interface AuthContextProps {
   user: User | null;

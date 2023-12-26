@@ -1,9 +1,10 @@
 import * as React from "react";
-import { FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { FaArrowUp, FaArrowDown, FaCheckCircle } from "react-icons/fa";
 import "./Table.css";
 import { IoMdAddCircleOutline, IoMdRemoveCircleOutline } from "react-icons/io";
 import { TableProps, AllowedFields } from "./types";
 import { Link, useNavigate } from "react-router-dom";
+import { useWatchlists } from "../../context/WatchlistContext";
 
 const getRandomColor = (): string => {
   const letters = "0123456789ABCDEF";
@@ -32,7 +33,15 @@ const getPriceChangeColor = (change: number): string => {
   return change > 0 ? "#00ff00" : "rgb(217, 48, 37)";
 };
 
-const Table: React.FC<TableProps> = ({ data, config, full, icon }) => {
+const Table: React.FC<TableProps> = ({
+  data,
+  config,
+  full,
+  icon,
+  onIconClick,
+}) => {
+  const { watchlists, addSecurityToWatchlist, removeSecurityFromWatchlist } =
+    useWatchlists();
   const navigate = useNavigate();
   /*   console.log(data, config); */
   const handleClick = (symbol: string) => {
@@ -46,7 +55,6 @@ const Table: React.FC<TableProps> = ({ data, config, full, icon }) => {
           className={`list-item${
             config?.name === "most-followed" ? " mostfollowed" : ""
           } ${config?.name === "market-trends" ? "market-trends" : ""}`}
-          onClick={() => handleClick(item.symbol)}
         >
           <div className="item-content">
             {config.name === "most-followed" &&
@@ -56,6 +64,7 @@ const Table: React.FC<TableProps> = ({ data, config, full, icon }) => {
               <div
                 className="symbol-name-followers"
                 key={`${item.id}-${item.symbol}-${item.name}-${item.followers}----${item.symbol}`}
+                onClick={() => handleClick(item.symbol)}
               >
                 <div
                   className="field-value-symbol"
@@ -74,7 +83,10 @@ const Table: React.FC<TableProps> = ({ data, config, full, icon }) => {
               <React.Fragment
                 key={`frag-${item.id}-${item.symbol}-${item.name}---${item.symbol}`}
               >
-                <div className="symbol-name">
+                <div
+                  className="symbol-name"
+                  onClick={() => handleClick(item.symbol)}
+                >
                   <div className={`item-field`}>
                     <div
                       className="field-value-symbol"
@@ -85,7 +97,10 @@ const Table: React.FC<TableProps> = ({ data, config, full, icon }) => {
                       {item.symbol}
                     </div>
                   </div>
-                  <div className={`item-field symbol`}>
+                  <div
+                    className={`item-field symbol`}
+                    onClick={() => handleClick(item.symbol)}
+                  >
                     <div className="field-value">{item.name}</div>
                   </div>
                 </div>
@@ -101,7 +116,10 @@ const Table: React.FC<TableProps> = ({ data, config, full, icon }) => {
                     </div>
                   </div>
                 )}
-                <div className="price-pc">
+                <div
+                  className="price-pc"
+                  onClick={() => handleClick(item.symbol)}
+                >
                   <div className="field-value">${item.price}</div>
 
                   <div className={`item-field percent-change`}>
@@ -161,6 +179,7 @@ const Table: React.FC<TableProps> = ({ data, config, full, icon }) => {
                       <div
                         key={`k-${field}-${item.id}-l`}
                         className={`item-field ${field}`}
+                        onClick={() => handleClick(item.symbol)}
                       >
                         {field === "symbol" && !config.name && (
                           <div
@@ -177,6 +196,7 @@ const Table: React.FC<TableProps> = ({ data, config, full, icon }) => {
                           <div
                             className="field-value"
                             key={`Iwillremovethiswraning${item.symbol}`}
+                            onClick={() => handleClick(item.symbol)}
                           >
                             {item.name}
                           </div>
@@ -194,6 +214,7 @@ const Table: React.FC<TableProps> = ({ data, config, full, icon }) => {
                           <div
                             className={`item-field percent-change`}
                             key={`we hate warning errors ${item.id}-${item.name}`}
+                            onClick={() => handleClick(item.symbol)}
                           >
                             <div
                               className={`${getChangeStyle(
@@ -255,6 +276,7 @@ const Table: React.FC<TableProps> = ({ data, config, full, icon }) => {
                           <div
                             className={`item-field price-change`}
                             key={`item-field-price-change ${item.priceChange}`}
+                            onClick={() => handleClick(item.symbol)}
                           >
                             <div
                               className={`field-value price-change ${getChangeStyle(
@@ -279,20 +301,22 @@ const Table: React.FC<TableProps> = ({ data, config, full, icon }) => {
                   </React.Fragment>
                 )
             )}
-
-            {config.addIcon && icon && (
-              <div className="field-value-icon" key={`icon-${item.id}`}>
-                <IoMdAddCircleOutline size={24} />
-              </div>
-            )}
-            {config.removeIcon && icon && (
-              <div
-                className="field-value-icon"
-                key={`icon-${item.id}`}
-                style={{ marginLeft: "5px" }}
-              >
-                <IoMdRemoveCircleOutline size={24} />
-              </div>
+            {watchlists.some(
+              (watchlist) =>
+                watchlist.securities?.some(
+                  (s) => s.symbol?.toLowerCase() === item.symbol?.toLowerCase()
+                ) ?? false
+            ) ? (
+              // Render check icon and show dropdown for existing watchlists
+              <FaCheckCircle
+                onClick={() => onIconClick && onIconClick(item.symbol)}
+              />
+            ) : (
+              // Render add icon and show dropdown for user's watchlists
+              <IoMdAddCircleOutline
+                onClick={() => onIconClick && onIconClick(item.symbol)}
+                size={24}
+              />
             )}
           </div>
         </li>

@@ -1,0 +1,38 @@
+.watchlist-modal {
+  position: absolute;
+  max-width: 192px;
+  max-height: 189px;
+  left: 1510px;
+  top: 1030px;
+  transform: translateX(-50%);
+  color: #222;
+  background-color: #fff; /* Background color */
+  border: 1px solid #ddd; /* Border color */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle lift effect */
+  padding: 10px;
+  z-index: 1000; /* Ensure the dropdown is above other elements */
+}
+
+.watchlist-modal h2 {
+  margin-bottom: 10px;
+}
+
+.watchlist-modal div {
+  margin-bottom: 8px;
+}
+
+.watchlist-modal input {
+  margin-right: 8px;
+}
+
+.watchlist-modal button {
+  background-color: #3498db; /* Button background color */
+  color: #fff; /* Button text color */
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.watchlist-modal button:hover {
+  background-color: #2980b9; /* Hover state color */
+}

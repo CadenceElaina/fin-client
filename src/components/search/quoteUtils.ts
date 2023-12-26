@@ -10,7 +10,26 @@ import {
   YH_URL2,
 } from "../../constants";
 
-export const getQuote = async (
+export const getQuote = async (queryClient: QueryClient, symbol: string) => {
+  return console.log("lol sorry no api calls for you");
+};
+export const fetchQuoteWithRetry = async (symbol, retryCount = 3) => {
+  try {
+    console.log("sorry");
+    return;
+  } catch (error) {
+    if (error.response && error.response.status === 429 && retryCount > 0) {
+      // Retry with backoff after waiting for a certain time
+      /*    const waitTime = Math.pow(2, 4 - retryCount) * 1000; // exponential backoff
+      await new Promise((resolve) => setTimeout(resolve, waitTime));
+      return fetchQuoteWithRetry(symbol, retryCount - 1); */
+    } else {
+      // Handle other errors or propagate if no retries left
+      throw error;
+    }
+  }
+};
+/* export const getQuote = async (
   queryClient: QueryClient,
   symbol: string
 ): Promise<quoteType | null> => {
@@ -76,7 +95,8 @@ export const fetchQuoteWithRetry = async (symbol, retryCount = 3) => {
       throw error;
     }
   }
-};
+}; */
+
 /* interface ApiResponse {
   quoteResponse: {
     result: Array<{

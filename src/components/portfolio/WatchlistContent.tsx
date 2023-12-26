@@ -6,14 +6,14 @@ interface WatchlistContentProps {
   handleDropdownToggle: () => void;
   handleDropdownOptionClick: (option: string) => void;
   showDropdown: boolean;
-  openAddToPortfolioModal: () => void;
+  openAddToWatchlistModal: () => void;
 }
 
 const WatchlistContent: React.FC<WatchlistContentProps> = ({
   handleDropdownToggle,
   handleDropdownOptionClick,
   showDropdown,
-  openAddToPortfolioModal,
+  openAddToWatchlistModal,
 }) => {
   return (
     <>
@@ -50,7 +50,7 @@ const WatchlistContent: React.FC<WatchlistContentProps> = ({
           </div>
         </div>
       </div>
-      <button className="add-investment" onClick={openAddToPortfolioModal}>
+      <button className="add-investment" onClick={openAddToWatchlistModal}>
         <FaPlus size={18} />
         <span className="label">Add investments</span>
       </button>

@@ -25,6 +25,7 @@ export interface TableProps {
   config: RowConfig;
   full: boolean;
   icon: boolean;
+  onIconClick?: (symbol: string) => void;
 }
 
 export interface RowConfig {

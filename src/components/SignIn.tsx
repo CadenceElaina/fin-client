@@ -15,6 +15,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
 import loginService from "../services/login";
 import portfolioService from "../services/portfolios";
+import watchlistService from "../services/watchlist";
 import PositionedSnackbar from "./PositionedSnackbar";
 import { useNavigate } from "react-router-dom";
 import { SnackbarType } from "../types/types";
@@ -63,6 +64,7 @@ export default function SignIn() {
       });
       signIn(user); // Update AuthContext with the signed-in user
       portfolioService.setToken(user.token);
+      watchlistService.setToken(user.token);
       navigate("/");
       console.log(user);
       setSnackbar({

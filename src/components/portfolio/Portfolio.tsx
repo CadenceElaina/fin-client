@@ -19,6 +19,8 @@ import { useAuth } from "../../context/AuthContext";
 import watchlistService from "../../services/watchlist";
 import PortfolioContent from "./PortfolioContent";
 import WatchlistContent from "./WatchlistContent";
+import AddToWatchlistModal from "../modals/AddToWatchlist";
+import { WatchlistSecurity } from "../../types/types";
 
 interface Security {
   symbol: string;
@@ -110,13 +112,16 @@ const Portfolio = () => {
     if (activePortfolio && activeListType === "portfolios") {
       addSecurityToPortfolio(activePortfolio.id, newSecurity);
     }
-    if (activeWatchlist && activeListType === "watchlists") {
+  };
+  const addToWatchlist = async (newSecurity: WatchlistSecurity) => {
+    if (activeListType === "watchlists" && activeWatchlist) {
       addSecurityToWatchlist(activeWatchlist.id, newSecurity);
     }
   };
 
   const onClose = () => {
     setAddToPortfolioModalIsOpen(false);
+    setAddToWatchlistModalIsOpen(false);
   };
 
   const handleSaveWatchlist = async (watchlistName: string) => {
@@ -142,6 +147,7 @@ const Portfolio = () => {
   const handleListClick = (type: string) => {
     setActiveListType(`${type}`);
   };
+  console.log(activeWatchlist);
   console.log(watchlists, watchlists.length, activeTab);
   //console.log(addToPortfolioModalIsOpen);
   // console.log(activePortfolio);
@@ -167,14 +173,27 @@ const Portfolio = () => {
             if (activeListType === "portfolios") {
               addToList(newSecurity);
             }
-            if (activeListType === "watchlists") {
-              console.log("added to watchlist");
-              addToList(newSecurity);
-            }
             console.log("Symbol:", symbol);
             console.log("Quantity:", quantity);
             console.log("Purchase Date:", purchaseDate);
             console.log("Purchase Price:", purchasePrice);
+          }}
+        />
+      )}
+      {addToWatchlistModalIsOpen && (
+        <AddToWatchlistModal
+          isOpen={addToWatchlistModalIsOpen}
+          listName={activeTab}
+          onClose={onClose} // Close modal function
+          onSave={(symbol) => {
+            const newSecurity = {
+              symbol,
+            };
+            if (activeListType === "watchlists") {
+              console.log(newSecurity);
+              console.log("adding security to watchlist");
+              addToWatchlist(newSecurity);
+            }
           }}
         />
       )}
@@ -324,7 +343,7 @@ const Portfolio = () => {
               }
               handleDropdownToggle={handleDropdownToggle}
               showDropdown={showDropdown}
-              openAddToPortfolioModal={openAddToPortfolioModal}
+              openAddToWatchlistModal={openAddToWatchlistModal}
             />
             <div>
               {activeWatchlist?.securities?.map((s) => (

@@ -144,12 +144,12 @@ const Watchlist = () => {
     }));
   };
 
-  useEffect(() => {
+  /*   useEffect(() => {
     // Fetch quotes for each portfolio
     portfolios.forEach((portfolio) => {
       fetchPortfolioQuotes(portfolio.title);
     });
-  }, [portfolios, quoteCache]);
+  }, [portfolios, quoteCache]); */
 
   const fetchWatchlistQuotes = async () => {
     const symbols: string[] = [];
@@ -229,7 +229,7 @@ const Watchlist = () => {
     console.log(quotesMap);
   };
 
-  useEffect(() => {
+  /*   useEffect(() => {
     // Check if portfolioQuotes has been fetched
     if (Object.keys(portfolioQuotes).length > 0) {
       // Fetch watchlist quotes
@@ -240,8 +240,8 @@ const Watchlist = () => {
   const watchlistConfig: RowConfig = {
     fields: ["symbol", "name", "price", "percentChange", "priceChange"],
     removeIcon: true,
-  };
-  useEffect(() => {
+  }; */
+  /*   useEffect(() => {
     // Check if portfolioQuotes and watchlistQuotes have been fetched
     if (
       Object.keys(portfolioQuotes).length > 0 &&
@@ -285,7 +285,7 @@ const Watchlist = () => {
       // Update state with the top quotes
       setWatchlistsAndPortfoliosQuotes(topQuotes);
     }
-  }, [portfolioQuotes, watchlistQuotes]);
+  }, [portfolioQuotes, watchlistQuotes]); */
   console.log(
     /*     watchlists,
     "ports",

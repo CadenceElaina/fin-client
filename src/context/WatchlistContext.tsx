@@ -5,17 +5,25 @@ import React, {
   useState,
   useEffect,
   useMemo,
+  Dispatch,
+  SetStateAction,
 } from "react";
 import watchlistService from "../services/watchlist";
-import { Portfolio, Security } from "../types/types";
-
-// ... (same interfaces for Security and Portfolio)
+import { Watchlist, WatchlistSecurity } from "../types/types";
 
 interface WatchlistContextProps {
-  watchlists: Portfolio[];
-  appendWatchlist: (newWatchlist: Portfolio) => void;
-  removeWatchlist: (removedWatchlist: Portfolio) => void;
-  addSecurityToWatchlist: (watchlistId: string, security: Security) => void;
+  watchlists: Watchlist[];
+  setWatchlists: Dispatch<SetStateAction<Watchlist[]>>;
+  appendWatchlist: (newWatchlist: Watchlist) => void;
+  removeWatchlist: (removedWatchlist: Watchlist) => Promise<void>;
+  addSecurityToWatchlist: (
+    watchlistId: string,
+    security: WatchlistSecurity
+  ) => Promise<void>;
+  removeSecurityFromWatchlist: (
+    watchlistId: string,
+    security: WatchlistSecurity
+  ) => Promise<void>;
 }
 
 const WatchlistContext = createContext<WatchlistContextProps | undefined>(
@@ -25,7 +33,7 @@ const WatchlistContext = createContext<WatchlistContextProps | undefined>(
 export const WatchlistsProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [watchlists, setWatchlists] = useState<Portfolio[]>([]);
+  const [watchlists, setWatchlists] = useState<Watchlist[]>([]);
 
   useEffect(() => {
     const fetchWatchlists = async () => {
@@ -36,15 +44,21 @@ export const WatchlistsProvider: React.FC<{ children: ReactNode }> = ({
     fetchWatchlists();
   }, []); // Fetch watchlists on component mount
 
-  const appendWatchlist = (newWatchlist: Portfolio) => {
-    setWatchlists((prevWatchlists) => [...prevWatchlists, newWatchlist]);
+  const updateWatchlistsState: Dispatch<SetStateAction<Watchlist[]>> = (
+    updatedWatchlists
+  ) => {
+    setWatchlists(updatedWatchlists);
   };
 
-  const removeWatchlist = async (removedWatchlist: Portfolio) => {
+  const appendWatchlist = (newWatchlist: Watchlist) => {
+    updateWatchlistsState([...watchlists, newWatchlist]);
+  };
+
+  const removeWatchlist = async (removedWatchlist: Watchlist) => {
     try {
       await watchlistService.remove(removedWatchlist.id);
-      setWatchlists((prevWatchlists) =>
-        prevWatchlists.filter((w) => w.id !== removedWatchlist.id)
+      updateWatchlistsState(
+        watchlists.filter((w) => w.id !== removedWatchlist.id)
       );
     } catch (error) {
       console.error("Error removing watchlist:", error);
@@ -54,27 +68,62 @@ export const WatchlistsProvider: React.FC<{ children: ReactNode }> = ({
 
   const addSecurityToWatchlist = async (
     watchlistId: string,
-    security: Security
+    security: WatchlistSecurity
   ) => {
-    const updatedWatchlists = watchlists.map((watchlist) =>
-      watchlist.id === watchlistId
-        ? {
-            ...watchlist,
-            securities: [...(watchlist.securities ?? []), security],
-          }
-        : watchlist
-    );
+    try {
+      const updatedWatchlists = watchlists.map((watchlist) =>
+        watchlist.id === watchlistId
+          ? {
+              ...watchlist,
+              securities: [...(watchlist.securities ?? []), security],
+            }
+          : watchlist
+      );
+      updateWatchlistsState(updatedWatchlists);
 
-    setWatchlists(updatedWatchlists);
-    await watchlistService.addToWatchlist(watchlistId, security);
+      // Ensure the API call is awaited and handle any potential errors
+      await watchlistService.addToWatchlist(watchlistId, security);
+    } catch (error) {
+      console.error("Error adding security to watchlist:", error);
+      // Rollback the state update on error (optional, depends on your use case)
+      updateWatchlistsState(watchlists);
+    }
+  };
+
+  const removeSecurityFromWatchlist = async (
+    watchlistId: string,
+    security: WatchlistSecurity
+  ) => {
+    try {
+      const updatedWatchlists = watchlists.map((watchlist) =>
+        watchlist.id === watchlistId
+          ? {
+              ...watchlist,
+              securities: watchlist.securities?.filter(
+                (s) => s.symbol !== security.symbol
+              ),
+            }
+          : watchlist
+      );
+      updateWatchlistsState(updatedWatchlists);
+
+      // Ensure the API call is awaited and handle any potential errors
+      await watchlistService.removeSecurityFromWatchlist(watchlistId, security);
+    } catch (error) {
+      console.error("Error removing security from watchlist:", error);
+      // Rollback the state update on error (optional, depends on your use case)
+      updateWatchlistsState(watchlists);
+    }
   };
 
   const contextValue = useMemo(
     () => ({
       watchlists,
+      setWatchlists: updateWatchlistsState,
       appendWatchlist,
       removeWatchlist,
       addSecurityToWatchlist,
+      removeSecurityFromWatchlist,
     }),
     [watchlists]
   );
