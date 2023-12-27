@@ -101,7 +101,7 @@ const YourPortfolios = () => {
       fetchPortfolioQuotes(portfolio.title);
     });
   }, [portfolios]);
-// [portfolios, quoteCache] - worked previously (because I hadnt reached the api call limit?) - but currently calls infintely
+  // [portfolios, quoteCache] - worked previously (because I hadnt reached the api call limit?) - but currently calls infintely
   // ...
 
   //const symbol = "AAPL"; // Replace with the desired symbol
@@ -160,6 +160,8 @@ const YourPortfolios = () => {
 
     return acc + portfolioValue;
   }, 0);
+  console.log(portfolios);
+  const usersPortfolios = portfolios.filter((p) => p.author === user?.name);
   return (
     <div className="add-portfolio-container">
       <div className="add-portfolio-header">
@@ -175,55 +177,59 @@ const YourPortfolios = () => {
         {totalPortfolioValue ? `$${totalPortfolioValue.toFixed(2)}` : "$0.00"}
       </div>
       <div className="border-top"></div>
-      <div className="portfolio-list">
-        {portfolios.map((portfolio) => {
-          const securities = portfolioQuotes[portfolio.title] || [];
-          const totalValue = securities.reduce((acc, security) => {
-            const { quantity, percentChange } = security;
-            const securityValueChange = quantity * percentChange;
-            return acc + securityValueChange;
-          }, 0);
+      {usersPortfolios.length > 0 && (
+        <div className="portfolio-list">
+          {usersPortfolios.map((portfolio) => {
+            const securities = portfolioQuotes[portfolio.title] || [];
+            const totalValue = securities.reduce((acc, security) => {
+              const { quantity, percentChange } = security;
+              const securityValueChange = quantity * percentChange;
+              return acc + securityValueChange;
+            }, 0);
 
-          const totalQuantity = securities.reduce((acc, security) => {
-            return acc + security.quantity;
-          }, 0);
+            const totalQuantity = securities.reduce((acc, security) => {
+              return acc + security.quantity;
+            }, 0);
 
-          const totalPercentChange =
-            totalQuantity !== 0 ? (totalValue / totalQuantity) * 100 : 0;
+            const totalPercentChange =
+              totalQuantity !== 0 ? (totalValue / totalQuantity) * 100 : 0;
 
-          const portfolioValue = securities.reduce((acc, security) => {
-            return acc + security.price * security.quantity;
-          }, 0);
+            const portfolioValue = securities.reduce((acc, security) => {
+              return acc + security.price * security.quantity;
+            }, 0);
 
-          return (
-            <div key={portfolio.id} className="portfolio">
-              <div className="portfolio-inner">
-                <Link
-                  to={`/portfolio/${portfolio.id}`}
-                  style={{ textDecoration: "none", color: "white" }}
-                  className="portfolio-link"
-                >
-                  <span className="portfolio-label">{portfolio.title}</span>
-                  <span className="portfolio-value">
-                    {portfolioValue ? `$${portfolioValue.toFixed(2)}` : "$0.00"}
-                  </span>
-                  <span
-                    className={`portfolio-percent-change ${
-                      totalPercentChange > 0
-                        ? "p-positive"
-                        : totalPercentChange < 0
-                        ? "p-negative"
-                        : ""
-                    }`}
+            return (
+              <div key={portfolio.id} className="portfolio">
+                <div className="portfolio-inner">
+                  <Link
+                    to={`/portfolio/${portfolio.id}`}
+                    style={{ textDecoration: "none", color: "white" }}
+                    className="portfolio-link"
                   >
-                    {totalPercentChange.toFixed(2)}%
-                  </span>
-                </Link>
+                    <span className="portfolio-label">{portfolio.title}</span>
+                    <span className="portfolio-value">
+                      {portfolioValue
+                        ? `$${portfolioValue.toFixed(2)}`
+                        : "$0.00"}
+                    </span>
+                    <span
+                      className={`portfolio-percent-change ${
+                        totalPercentChange > 0
+                          ? "p-positive"
+                          : totalPercentChange < 0
+                          ? "p-negative"
+                          : ""
+                      }`}
+                    >
+                      {totalPercentChange.toFixed(2)}%
+                    </span>
+                  </Link>
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
       <div className="add-portfolio-button">
         {canCreateNewPortfolio() ? (
           <CustomButton

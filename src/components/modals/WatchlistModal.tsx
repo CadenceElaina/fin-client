@@ -3,6 +3,8 @@ import { WatchlistSecurity, Watchlist } from "../../types/types";
 import "./WatchlistModal.css";
 import watchlistService from "../../services/watchlist";
 import { useWatchlists } from "../../context/WatchlistContext";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 interface WatchlistModalProps {
   watchlists: Watchlist[];
@@ -15,8 +17,11 @@ const WatchlistModal: React.FC<WatchlistModalProps> = ({
   onClose,
   selectedSecurity,
 }) => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const usersWatchlists = watchlists.filter((w) => w.author === user?.name);
   const [selectedWatchlists, setSelectedWatchlists] = useState<string[]>(
-    watchlists
+    usersWatchlists
       .filter((watchlist) =>
         watchlist.securities?.some((s) => s.symbol === selectedSecurity)
       )
@@ -102,34 +107,44 @@ const WatchlistModal: React.FC<WatchlistModalProps> = ({
 
   return (
     <div className="watchlist-modal">
-      <h2>Select Watchlists</h2>
-      {watchlists.map((watchlist) => (
-        <div key={watchlist.id}>
-          <input
-            type="checkbox"
-            id={watchlist.id}
-            checked={selectedWatchlists.includes(watchlist.id)}
-            onChange={() => {
-              setSelectedWatchlists((prev) => {
-                if (prev.includes(watchlist.id)) {
-                  return prev.filter((id) => id !== watchlist.id);
-                } else {
-                  return [...prev, watchlist.id];
-                }
-              });
+      {usersWatchlists.length > 1 ? (
+        <>
+          <h2>Select Watchlists</h2>
+          {usersWatchlists.map((watchlist) => (
+            <div key={watchlist.id}>
+              <input
+                type="checkbox"
+                id={watchlist.id}
+                checked={selectedWatchlists.includes(watchlist.id)}
+                onChange={() => {
+                  setSelectedWatchlists((prev) => {
+                    if (prev.includes(watchlist.id)) {
+                      return prev.filter((id) => id !== watchlist.id);
+                    } else {
+                      return [...prev, watchlist.id];
+                    }
+                  });
+                }}
+              />
+              <label htmlFor={watchlist.id}>{watchlist.title}</label>
+            </div>
+          ))}
+          <button
+            onClick={async () => {
+              await updateWatchlists();
+              onClose();
             }}
-          />
-          <label htmlFor={watchlist.id}>{watchlist.title}</label>
-        </div>
-      ))}
-      <button
-        onClick={async () => {
-          await updateWatchlists();
-          onClose();
-        }}
-      >
-        Submit
-      </button>
+          >
+            Submit
+          </button>
+        </>
+      ) : (
+        <>
+          <button onClick={() => navigate("/portfolio")}>
+            Add a watchlist
+          </button>
+        </>
+      )}
       <button onClick={onClose}>Close</button>
     </div>
   );

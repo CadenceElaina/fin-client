@@ -12,6 +12,7 @@ import {
   WatchlistSecurity,
 } from "../../types/types";
 import WatchlistModal from "../modals/WatchlistModal";
+import { useNavigate } from "react-router-dom";
 
 const data = [
   {
@@ -44,9 +45,9 @@ const data = [
 ];
 
 const MostFollowed = () => {
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [selectedSecurity, setSelectedSecurity] = useState<string>();
-
   const mostFollowedConfig: RowConfig = {
     fields: ["symbol", "name", "percentChange"],
     addIcon: true,
@@ -120,8 +121,13 @@ const MostFollowed = () => {
     setTop5Securities(newTop5Securities);
   }, [watchlists]);
 
-  const onIconClick = (symbol: string) => {
+  const onIconClick = (symbol: string, user) => {
+    console.log(user);
     console.log(symbol);
+    if (!user) {
+      console.log("user is not signed in");
+      navigate("/login");
+    }
     let s = "";
     if (typeof symbol === "string") {
       s = symbol.toLowerCase();
@@ -131,6 +137,7 @@ const MostFollowed = () => {
     setShowModal(true);
   };
 
+  console.log(user);
   console.log(watchlists, top5Securities);
   return (
     <div className="most-followed-container">

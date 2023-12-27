@@ -5,6 +5,7 @@ import { IoMdAddCircleOutline, IoMdRemoveCircleOutline } from "react-icons/io";
 import { TableProps, AllowedFields } from "./types";
 import { Link, useNavigate } from "react-router-dom";
 import { useWatchlists } from "../../context/WatchlistContext";
+import { useAuth } from "../../context/AuthContext";
 
 const getRandomColor = (): string => {
   const letters = "0123456789ABCDEF";
@@ -42,11 +43,13 @@ const Table: React.FC<TableProps> = ({
 }) => {
   const { watchlists, addSecurityToWatchlist, removeSecurityFromWatchlist } =
     useWatchlists();
+  const { user } = useAuth();
   const navigate = useNavigate();
   /*   console.log(data, config); */
   const handleClick = (symbol: string) => {
     navigate(`/quote/${symbol}`);
   };
+  const usersWatchlists = watchlists.filter((w) => w.author === user?.name);
   return (
     <ul className={`custom-list${full ? "-full" : ""}`}>
       {data.map((item, i) => (
@@ -301,7 +304,9 @@ const Table: React.FC<TableProps> = ({
                   </React.Fragment>
                 )
             )}
-            {watchlists.some(
+
+            {user &&
+            usersWatchlists.some(
               (watchlist) =>
                 watchlist.securities?.some(
                   (s) => s.symbol?.toLowerCase() === item.symbol?.toLowerCase()
@@ -314,7 +319,7 @@ const Table: React.FC<TableProps> = ({
             ) : (
               // Render add icon and show dropdown for user's watchlists
               <IoMdAddCircleOutline
-                onClick={() => onIconClick && onIconClick(item.symbol)}
+                onClick={() => onIconClick && onIconClick(item.symbol, user)}
                 size={24}
               />
             )}

@@ -11,16 +11,14 @@ import "./Portfolio.css";
 import { usePortfolios } from "../../context/PortfoliosContext";
 import AddToPortfolioModal from "../../components/modals/AddToPortfolioModal";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import Watchlist from "./watchlist/Watchlist";
 import AddWatchlistModal from "../modals/AddWatchlistModal";
-import watchlist from "../../services/watchlist";
 import { useWatchlists } from "../../context/WatchlistContext";
 import { useAuth } from "../../context/AuthContext";
 import watchlistService from "../../services/watchlist";
 import PortfolioContent from "./PortfolioContent";
 import WatchlistContent from "./WatchlistContent";
 import AddToWatchlistModal from "../modals/AddToWatchlist";
-import { WatchlistSecurity } from "../../types/types";
+import { WatchlistSecurity, Watchlist } from "../../types/types";
 
 interface Security {
   symbol: string;
@@ -40,7 +38,7 @@ interface Portfolio {
 const Portfolio = () => {
   const [activeTab, setActiveTab] = useState<string>("");
   const [activeListType, setActiveListType] = useState<string>("portfolios");
-  const [activeWatchlist, setActiveWatchlist] = useState<Portfolio>();
+  const [activeWatchlist, setActiveWatchlist] = useState<Watchlist>();
   const [activePortfolio, setActivePortfolio] = useState<Portfolio>();
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [addToPortfolioModalIsOpen, setAddToPortfolioModalIsOpen] =
@@ -61,6 +59,10 @@ const Portfolio = () => {
   const { user } = useAuth();
   const { id } = useParams();
   const navigate = useNavigate();
+  const usersPortfolios = portfolios.filter((p) => p.author === user?.name);
+  const usersWatchlists = watchlists.filter((w) => w.author === user?.name);
+  const firstWatchlist = usersWatchlists[0] || [];
+  const firstPortfolio = usersPortfolios[0] || [];
 
   useEffect(() => {
     // Find the portfolio with the matching id and set activePortfolio
@@ -78,7 +80,7 @@ const Portfolio = () => {
         setActiveTab(matchingWatchlist.title);
       }
     }
-  }, [id, portfolios]);
+  }, [activeListType, id, portfolios, watchlists]);
 
   const handleTabClick = (tab: React.SetStateAction<string>) => {
     navigate(`/portfolio/${tab}`);
@@ -146,6 +148,12 @@ const Portfolio = () => {
 
   const handleListClick = (type: string) => {
     setActiveListType(`${type}`);
+    if (type === "watchlists") {
+      navigate(`/portfolio/${firstWatchlist.id}`);
+    }
+    if (type === "portfolios") {
+      navigate(`/portfolio/${firstPortfolio.id}`);
+    }
   };
   console.log(activeWatchlist);
   console.log(watchlists, watchlists.length, activeTab);
@@ -156,6 +164,7 @@ const Portfolio = () => {
   const Tooltip = () => (
     <div className="tooltip-lists">You may not have more than 3 watchlists</div>
   );
+
   return (
     <Layout>
       {addToPortfolioModalIsOpen && (
@@ -237,7 +246,8 @@ const Portfolio = () => {
           </div>
           <div className="portfolio-header-item">
             {activeListType === "watchlists" &&
-              watchlists.map((watchlist) => (
+              user &&
+              usersWatchlists.map((watchlist) => (
                 <div
                   key={watchlist.id}
                   className={`tab ${
@@ -287,7 +297,8 @@ const Portfolio = () => {
             </div>
 
             {activeListType === "portfolios" &&
-              portfolios.map((portfolio) => (
+              user &&
+              usersPortfolios.map((portfolio) => (
                 <div
                   key={portfolio.id}
                   className={`tab ${
@@ -306,11 +317,11 @@ const Portfolio = () => {
               ))}
           </div>
         </div>
-        {activeListType === "watchlist" && (
+        {/*  {activeListType === "watchlist" && (
           <div>
             <Watchlist name="123list" data={[]} />
           </div>
-        )}
+        )} */}
         {activeListType === "portfolios" && (
           <div className="main-container">
             <PortfolioContent
