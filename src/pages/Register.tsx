@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import usersService from "../services/users";
 import loginService from "../services/login";
 import portfolioService from "../services/portfolios";
 import watchlistService from "../services/watchlist";
-import PositionedSnackbar from "./PositionedSnackbar";
+/* import PositionedSnackbar from "../PositionedSnackbar"; */
 import "../App.css";
 import { FaUncharted } from "react-icons/fa";
 
@@ -21,32 +22,43 @@ export default function SignIn() {
     setSnackbar({ ...snackbar, open: false });
   };
 
-  const handleSubmit = async (event: {
-    preventDefault: () => void;
-    currentTarget: HTMLFormElement | undefined;
-  }) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
 
     try {
       const cred = {
-        email: data.get("email"),
+        name: data.get("name"),
+        username: data.get("username"),
         password: data.get("password"),
       };
-      let username = "";
-      let password = "";
-      if (typeof cred.email === "string" && typeof cred.password === "string") {
-        username = cred.email;
-        password = cred.password;
+
+      let usernameStr = "";
+      let passwordStr = "";
+      let nameStr = "";
+      if (
+        typeof cred.name === "string" &&
+        typeof cred.username === "string" &&
+        typeof cred.password === "string"
+      ) {
+        nameStr = cred.name;
+        usernameStr = cred.username;
+        passwordStr = cred.password;
       }
-      const user = await loginService.login({
-        username,
-        password,
+
+      // Create a new user
+      const newUser = await usersService.createUser({
+        name: nameStr,
+        username: usernameStr,
+        password: passwordStr,
       });
+
+      // Log in the newly created user
+      const user = await loginService.login({
+        username: usernameStr,
+        password: passwordStr,
+      });
+
       signIn(user);
       portfolioService.setToken(user.token);
       watchlistService.setToken(user.token);
@@ -54,21 +66,20 @@ export default function SignIn() {
       console.log(user);
       setSnackbar({
         open: true,
-        message: `${username} successfully signed in!`,
+        message: `${nameStr} successfully registered and signed in!`,
         type: "success",
       });
     } catch (exception) {
       setSnackbar({
         open: true,
-        message: "Wrong credentials!",
+        message: "Error during registration or login",
         type: "error",
       });
     }
   };
-
   return (
-    <div className="sign-in">
-      <div className="sign-in-inner">
+    <div className="register">
+      <div className="register-inner">
         <div className="form-container">
           <div className="form-inner">
             <div className="sign-in-logo">
@@ -77,42 +88,49 @@ export default function SignIn() {
               <Link to={"/"}>Finhub</Link>
             </div>
             <div className="header-container">
-              <h1>Sign in</h1>
+              <h1>Create an account</h1>
             </div>
-            <form onSubmit={handleSubmit} className="signin-form">
-              <label>Email Address:</label>
+            <form onSubmit={handleSubmit} className="register-form">
+              <label>Name:</label>
               <input
-                type="email"
-                name="email"
-                autoComplete="email"
+                type="text"
+                name="name"
+                autoComplete="name"
                 autoFocus
                 required
               />
+
+              <label>Username:</label>
+              <input
+                type="text"
+                name="username"
+                autoComplete="username"
+                required
+              />
+
               <label>Password:</label>
               <input
                 type="password"
                 name="password"
-                autoComplete="current-password"
+                autoComplete="new-password"
                 required
               />
-              <div className="checkbox-container">
-                <input type="checkbox" id="remember" name="remember" />
-                <label htmlFor="remember">Remember me</label>
-              </div>
-              <button type="submit">Sign In</button>
+
+              {/*          <input type="email" name="email" autoComplete="email" required /> */}
+
+              <button type="submit">Register</button>
             </form>
             <div className="links-container">
-              <Link to={"/"}>Forgot password?</Link>
-              <Link to={"/register"}>Create account</Link>
+              <Link to={"/login"}>Have an account? Sign in</Link>
             </div>
-            {snackbar.open && (
+            {/*    {snackbar.open && (
               <PositionedSnackbar
                 message={snackbar.message}
                 type={snackbar.type}
                 isOpen={snackbar.open}
                 onClose={handleSnackbarClose}
               />
-            )}
+            )} */}
           </div>
         </div>
       </div>

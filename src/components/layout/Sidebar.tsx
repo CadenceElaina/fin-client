@@ -10,7 +10,7 @@ import { useAuth } from "../../context/AuthContext";
 import "./Layout.css";
 import { usePortfolios } from "../../context/PortfoliosContext";
 import { useWatchlists } from "../../context/WatchlistContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import portfolioService from "../../services/portfolios";
 import watchlistService from "../../services/watchlist";
 import NewPortfolioModal from "../modals/AddPortfolioModal";
@@ -173,12 +173,14 @@ const Sidebar: React.FC<SidebarProps> = () => {
         </li>
         {user &&
           usersPortfolios.map((p) => (
-            <li key={p.id} className="sidebar-item">
-              <div className="sidebar-button-icon">
-                <MdOutlineInsertChart size={24} />
-              </div>
-              <div className="sidebar-button-label">{p.title}</div>
-            </li>
+            <Link to={"/portfolio"}>
+              <li key={p.id} className="sidebar-item">
+                <div className="sidebar-button-icon">
+                  <MdOutlineInsertChart size={24} />
+                </div>
+                <div className="sidebar-button-label">{p.title}</div>
+              </li>
+            </Link>
           ))}
 
         <li className="sidebar-heading">
@@ -194,12 +196,14 @@ const Sidebar: React.FC<SidebarProps> = () => {
         </li>
         {user &&
           usersWatchlists.map((w) => (
-            <li key={w.id} className="sidebar-item">
-              <div className="sidebar-button-icon">
-                <MdOutlineInsertChart size={24} />
-              </div>
-              <div className="sidebar-button-label">{w.title}</div>
-            </li>
+            <Link to={`/portfolio/${w.id}`} key={w.id}>
+              <li className="sidebar-item">
+                <div className="sidebar-button-icon">
+                  <MdOutlineInsertChart size={24} />
+                </div>
+                <div className="sidebar-button-label">{w.title}</div>
+              </li>
+            </Link>
           ))}
         <div className="divider"></div>
         {bottomItems.map((item) => (

@@ -34,6 +34,7 @@ import MostActive from "./components/market-trends/MostActive";
 import Gainers from "./components/market-trends/Gainers";
 import Losers from "./components/market-trends/Losers";
 import Trending from "./components/market-trends/Trending";
+import Register from "./pages/Register";
 
 function App() {
   const { user, signOut, updateUserToken } = useAuth();
@@ -92,6 +93,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Home portfolios={[]} />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/login" element={<SignIn />} />
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/portfolio/:id" element={<Portfolio />} />

@@ -9,6 +9,9 @@ export interface credentials {
   username: string;
   password: string;
 }
+export interface UserCredentials extends credentials {
+  name: string;
+}
 export type SnackbarType = "info" | "success" | "error" | "warning";
 export interface Security {
   selected?: boolean;

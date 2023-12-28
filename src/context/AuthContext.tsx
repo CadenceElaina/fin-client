@@ -1,11 +1,13 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { User } from "../types/types";
+import { User, UserCredentials } from "../types/types";
+import usersService from "../services/users";
 
 interface AuthContextProps {
   user: User | null;
   signIn: (user: User) => void;
   signOut: () => void;
   updateUserToken: (newToken: string) => void;
+  register: (userData: UserCredentials) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -46,8 +48,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
+  const register = async (userData: UserCredentials) => {
+    try {
+      const newUser = await usersService.createUser(userData);
+      signIn(newUser);
+    } catch (error) {
+      throw new Error("Error during user registration");
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, signIn, signOut, updateUserToken }}>
+    <AuthContext.Provider
+      value={{ user, signIn, signOut, updateUserToken, register }}
+    >
       {children}
     </AuthContext.Provider>
   );
