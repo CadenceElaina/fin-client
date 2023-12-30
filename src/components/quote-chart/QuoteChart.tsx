@@ -1,38 +1,110 @@
 import React from "react";
-import { useLocation, useParams } from "react-router-dom";
-import { QueryClientProvider } from "./quoteQueryClient";
-import useChartData from "../../hooks/useQuoteChartData";
-import { LineChart } from "@mui/x-charts/LineChart";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  ResponsiveContainer,
+} from "recharts";
+import { useQuery } from "@tanstack/react-query";
+import { SA_KEY, SA_URL } from "../../constants";
+import axios from "axios";
+
+type AxisConfig = {
+  id: string;
+  type: string; // or a more specific type based on your needs
+  // ... other properties
+};
 
 const QuoteChart: React.FC = () => {
-  const location = useLocation();
-  const { symbol } = useParams();
-  const { search } = location;
-  const searchParams = new URLSearchParams(search);
-  const interval = searchParams.get("interval") || "1D"; // Default to 1D if not specified
+  const symbol = "msft";
+  const period = "1D";
+  const fetchChartData = async (symbol: string, period: string) => {
+    const options = {
+      method: "GET",
+      url: "https://seeking-alpha.p.rapidapi.com/symbols/get-chart",
+      params: {
+        symbol: `${symbol}`,
+        period: `${period}`,
+      },
+      headers: {
+        "X-RapidAPI-Key": `${SA_KEY}`,
+        "X-RapidAPI-Host": `${SA_URL}`,
+      },
+    };
 
-  /*   const { data, isLoading, isError } = useChartData(symbol || "", interval); */
+    try {
+      console.log("runs ");
+      const response = await axios.request(options);
+      console.log(response);
 
-  /*   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error fetching data</div>; */
+      const chartData = Object.entries(response.data.attributes).map(
+        ([timestamp, values]) => {
+          const time = new Date(timestamp);
+          const formattedTime = time.toLocaleTimeString([], {
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+          });
 
-  // Your chart rendering logic here using the data
-  /*   const chartData
-  const volumeData */
+          return {
+            time: formattedTime,
+            close: values.close,
+          };
+        }
+      );
+      console.log(chartData);
+
+      return { chartData };
+    } catch (error) {
+      console.error(error);
+      throw new Error("Error fetching data");
+    }
+  };
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["chartData", symbol, period],
+    queryFn: () => fetchChartData(symbol, period),
+    // You can set cache options here
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error fetching data</div>;
+  if (!data.chartData) return <div>No chart data available</div>;
+  const chartData = data.chartData.map((entry) => ({
+    time: entry.time,
+    close: entry.close,
+  }));
 
   return (
-    <div>
-      QuoteChart{" "}
-      <LineChart
-        xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
-        series={[
-          {
-            data: [2, 5.5, 2, 8.5, 1.5, 5],
-          },
-        ]}
-        width={500}
-        height={300}
-      />
+    <div className="chart-quote">
+      <ResponsiveContainer width="100%" height={528}>
+        <LineChart
+          data={chartData}
+          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="time" tick={{ fontSize: 12 }} />
+          <YAxis scale="linear" domain={["auto", "auto"]} />
+          <Tooltip
+            content={({ payload, label }) => {
+              if (payload && payload.length > 0) {
+                const { time, close } = payload[0].payload;
+                return (
+                  <div className="custom-tooltip">
+                    <p>{`Time: ${time}`}</p>
+                    <p>{`Price: ${close}`}</p>
+                  </div>
+                );
+              }
+              return null;
+            }}
+          />
+          <Line type="monotone" dataKey="close" stroke="#8884d8" dot={false} />
+        </LineChart>
+      </ResponsiveContainer>
     </div>
   );
 };
