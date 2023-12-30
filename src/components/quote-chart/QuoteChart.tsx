@@ -12,15 +12,130 @@ import { useQuery } from "@tanstack/react-query";
 import { SA_KEY, SA_URL } from "../../constants";
 import axios from "axios";
 
-type AxisConfig = {
-  id: string;
-  type: string; // or a more specific type based on your needs
-  // ... other properties
-};
-
-const QuoteChart: React.FC = () => {
+const QuoteChart: React.FC<{ interval: string }> = ({ interval }) => {
   const symbol = "msft";
-  const period = "1D";
+  const period = interval;
+
+  const formatTime = (time: Date, interval: string) => {
+    switch (interval) {
+      case "1D":
+        return time.toLocaleTimeString([], {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        });
+        break;
+      case "5D":
+        return time.toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+        });
+        break;
+      case "1M":
+        return time.toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+        });
+      case "6M":
+        return time.toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+        });
+      case "YTD":
+        return time.toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+        });
+      case "1Y":
+        return time.toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+        });
+      case "5Y":
+        return time.toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+        });
+      case "MAX":
+        return time.toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+        });
+      default:
+        return time.toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+        });
+    }
+  };
+
+  const formatXAxis = (time: Date, interval: string) => {
+    switch (interval) {
+      case "1D":
+        return time.toLocaleTimeString([], {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        });
+      case "5D":
+        return time.toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+        });
+      case "1M":
+        return time.toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+        });
+      case "6M":
+        return time.toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+        });
+      case "YTD":
+        return time.toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+        });
+      case "1Y":
+        return time.toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+        });
+      case "5Y":
+        return time.toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+        });
+      case "MAX":
+        return time.toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+        });
+      default:
+        return time.toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+        });
+    }
+  };
+
   const fetchChartData = async (symbol: string, period: string) => {
     const options = {
       method: "GET",
@@ -43,19 +158,23 @@ const QuoteChart: React.FC = () => {
       const chartData = Object.entries(response.data.attributes).map(
         ([timestamp, values]) => {
           const time = new Date(timestamp);
-          const formattedTime = time.toLocaleTimeString([], {
-            hour: "numeric",
-            minute: "numeric",
-            hour12: true,
-          });
 
+          // Format time for tooltip and x-axis
+          const formattedTime = formatTime(time, interval);
+          const formattedXAxis = formatXAxis(time, interval);
+          /*           console.log(formattedTime, formattedXAxis); */
           return {
             time: formattedTime,
             close: values.close,
+            formattedXAxis: formattedXAxis,
           };
         }
       );
-      console.log(chartData);
+      console.log("unsorted: ", chartData);
+      chartData.sort(
+        (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()
+      );
+      console.log("sorted chartData: ", chartData);
 
       return { chartData };
     } catch (error) {
@@ -73,10 +192,30 @@ const QuoteChart: React.FC = () => {
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error fetching data</div>;
   if (!data.chartData) return <div>No chart data available</div>;
-  const chartData = data.chartData.map((entry) => ({
+  /*   const chartData = data.chartData.map((entry) => ({
     time: entry.time,
     close: entry.close,
-  }));
+  })); */
+  const uniqueDaysSet = new Set();
+
+  const chartData = data.chartData
+    .sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime())
+    .map((entry, index) => {
+      const day = entry.formattedXAxis;
+
+      // Include the day in the set if it doesn't exist
+      uniqueDaysSet.add(day);
+      console.log(entry.time);
+      return {
+        time: entry.time,
+        close: entry.close,
+        formattedXAxis: entry.formattedXAxis,
+      };
+    });
+
+  const uniqueDaysArray = Array.from(uniqueDaysSet);
+  console.log(uniqueDaysArray);
+  console.log(chartData);
 
   return (
     <div className="chart-quote">
@@ -86,10 +225,18 @@ const QuoteChart: React.FC = () => {
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="time" tick={{ fontSize: 12 }} />
+          <XAxis
+            dataKey="formattedXAxis"
+            tick={{ fontSize: 12 }}
+            ticks={uniqueDaysArray}
+          />
           <YAxis scale="linear" domain={["auto", "auto"]} />
           <Tooltip
             content={({ payload, label }) => {
+              console.log(payload);
+              if (!payload || payload.length === 0 || !payload[0].payload) {
+                return null;
+              }
               if (payload && payload.length > 0) {
                 const { time, close } = payload[0].payload;
                 return (

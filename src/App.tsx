@@ -22,7 +22,7 @@ import Terms from "./pages/footer/Terms";
 import Disclaimer from "./pages/footer/Disclaimer";
 import Watchlist from "./pages/Watchlist";
 import Settings from "./pages/Settings";
-import Quote from "./pages/Quote";
+import Quote from "./pages/quote/Quote";
 import { useAuth } from "./context/AuthContext";
 /* import { refreshToken } from "./services/refreshToken"; */
 import { useEffect, useRef, useState } from "react";

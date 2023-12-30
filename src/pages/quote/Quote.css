@@ -1,0 +1,15 @@
+.button-group {
+  display: flex;
+  gap: 8px;
+}
+
+.button-group button {
+  padding: 8px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
+
+.button-group button.active {
+  background-color: #e0e0e0;
+}
