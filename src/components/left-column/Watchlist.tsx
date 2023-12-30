@@ -9,6 +9,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { usePortfolios } from "../../context/PortfoliosContext";
 import { useAuth } from "../../context/AuthContext";
+import { Skeleton, Typography } from "@mui/material";
 import { Quote, QuotesMap } from "../../types/types";
 interface PortfolioSymbols {
   [portfolioTitle: string]: { [symbol: string]: number };
@@ -19,6 +20,7 @@ const Watchlist = () => {
   const { user } = useAuth();
   const auth = !!user;
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [watchlistsAndPortfoliosQuotes, setWatchlistsAndPortfoliosQuotes] =
     useState<
@@ -144,12 +146,32 @@ const Watchlist = () => {
     }));
   };
 
-  /*   useEffect(() => {
+  useEffect(() => {
     // Fetch quotes for each portfolio
-    portfolios.forEach((portfolio) => {
-      fetchPortfolioQuotes(portfolio.title);
-    });
-  }, [portfolios, quoteCache]); */
+    const fetchQuotes = async () => {
+      try {
+        setIsLoading(true);
+
+        // Fetch quotes for each portfolio
+        await Promise.all(
+          portfolios.map(async (portfolio) => {
+            await fetchPortfolioQuotes(portfolio.title);
+          })
+        );
+
+        // Fetch watchlist quotes
+        await fetchWatchlistQuotes();
+      } catch (error) {
+        console.error("Error fetching quotes:", error);
+      } finally {
+        // Set loading to false once data is fetched (successful or not)
+        setIsLoading(false);
+      }
+    };
+
+    // Execute the fetchQuotes function
+    fetchQuotes();
+  }, [portfolios]);
 
   const fetchWatchlistQuotes = async () => {
     const symbols: string[] = [];
@@ -229,7 +251,7 @@ const Watchlist = () => {
     console.log(quotesMap);
   };
 
-  /*   useEffect(() => {
+  useEffect(() => {
     // Check if portfolioQuotes has been fetched
     if (Object.keys(portfolioQuotes).length > 0) {
       // Fetch watchlist quotes
@@ -240,8 +262,8 @@ const Watchlist = () => {
   const watchlistConfig: RowConfig = {
     fields: ["symbol", "name", "price", "percentChange", "priceChange"],
     removeIcon: true,
-  }; */
-  /*   useEffect(() => {
+  };
+  useEffect(() => {
     // Check if portfolioQuotes and watchlistQuotes have been fetched
     if (
       Object.keys(portfolioQuotes).length > 0 &&
@@ -285,7 +307,7 @@ const Watchlist = () => {
       // Update state with the top quotes
       setWatchlistsAndPortfoliosQuotes(topQuotes);
     }
-  }, [portfolioQuotes, watchlistQuotes]); */
+  }, [portfolioQuotes, watchlistQuotes]);
   console.log(
     /*     watchlists,
     "ports",
@@ -298,18 +320,39 @@ const Watchlist = () => {
   //otherwise if no lists and/or not signed in we show you may be interested in list
   return (
     <>
-      {auth && watchlistsAndPortfoliosQuotes?.length > 0 && (
+      {auth && (
         <div className="table-container">
-          {" "}
           <div role="heading" className="watchlist-heading">
-            Top movers in your lists
+            {isLoading ? (
+              // Show heading skeleton while data is loading
+              <Typography variant="h6">
+                <Skeleton
+                  variant="rectangular"
+                  width={300}
+                  height={50}
+                  sx={{ bgcolor: "rgba(255, 255, 255, 0.1)" }}
+                />
+              </Typography>
+            ) : (
+              "Top movers in your lists"
+            )}
           </div>
-          <Table
-            data={watchlistsAndPortfoliosQuotes}
-            config={watchlistConfig}
-            full={true}
-            icon={true}
-          />
+          {isLoading ? (
+            // Show table skeleton while data is loading
+            <Skeleton
+              variant="rectangular"
+              width={600}
+              height={300}
+              sx={{ bgcolor: "rgba(255, 255, 255, 0.1)" }}
+            />
+          ) : (
+            <Table
+              data={watchlistsAndPortfoliosQuotes || []}
+              config={watchlistConfig}
+              full={true}
+              icon={true}
+            />
+          )}
         </div>
       )}
     </>

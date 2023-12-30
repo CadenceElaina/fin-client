@@ -1,3 +1,6 @@
+import React, { ReactNode } from "react";
+import { IconType } from "react-icons";
+
 interface ButtonProps {
   active?: boolean;
   label: string;
@@ -13,9 +16,10 @@ interface ButtonProps {
   auth?: boolean;
   noStyles?: boolean;
   trends?: boolean;
+  icon?: ReactNode;
+  isUpArrow?: boolean;
+  isDownArrow?: boolean;
 }
-
-import React from "react";
 
 const CustomButton: React.FC<ButtonProps> = ({
   active,
@@ -32,6 +36,9 @@ const CustomButton: React.FC<ButtonProps> = ({
   auth,
   noStyles,
   trends,
+  icon,
+  isUpArrow,
+  isDownArrow,
 }) => {
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault(); // Prevent default behavior of the button
@@ -41,6 +48,11 @@ const CustomButton: React.FC<ButtonProps> = ({
       onClick(); // Call onClick function if provided
     }
   };
+  const arrowColorStyle = isUpArrow
+    ? { color: "green" }
+    : isDownArrow
+    ? { color: "red" }
+    : { color: "" };
   return (
     <button
       /*       disabled={auth || disabled} */
@@ -59,6 +71,11 @@ const CustomButton: React.FC<ButtonProps> = ({
       ${disabled ? "disabled" : ""} 
       `}
     >
+      {icon && (
+        <span className="button-icon" style={arrowColorStyle}>
+          {icon}
+        </span>
+      )}
       {label}
     </button>
   );

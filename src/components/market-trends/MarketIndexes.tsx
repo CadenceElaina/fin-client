@@ -13,7 +13,7 @@ import { quoteType } from "../search/types";
 import { transformQuotesToData } from "./utils";
 import { utils } from "../search/types";
 import { getQuote } from "../search/quoteUtils";
-
+//
 const symbols = ["^GSPC", "^DJI", "^IXIC", "^RUT", "^VIX"];
 
 const MarketIndexes = () => {

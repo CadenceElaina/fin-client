@@ -1,50 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Data /* ArrowProps */ } from "./types";
 import "./DiscoverMore.css"; // Import the CSS file for your custom styles
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 /* import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css"; */
 import Slider from "react-slick";
+import { Link } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
+import { getQuote } from "../search/quoteUtils";
+import { quoteBasic, quoteType, utils } from "../search/types";
 /* interface DiscoverMoreProps {
   data: Data[];
 } */
-
-const data: Data[] = [
-  { symbol: "MSFT", name: "Microsoft", price: 373.45, percentChange: 0.67 },
-  {
-    symbol: "GOOGL",
-    name: "Alphabet Inc Class A",
-    price: 134.99,
-    percentChange: -1.42,
-  },
-  { symbol: "AMZN", name: "Amazon", price: 147.42, percentChange: 0.37 },
-  { symbol: "MSFT", name: "Microsoft", price: 373.45, percentChange: 0.67 },
-  {
-    symbol: "GOOGL",
-    name: "Alphabet Inc Class A",
-    price: 134.99,
-    percentChange: -1.42,
-  },
-  { symbol: "AMZN", name: "Amazon", price: 147.42, percentChange: 0.37 },
-  { symbol: "MSFT", name: "Microsoft", price: 373.45, percentChange: 0.67 },
-  {
-    symbol: "QQQ",
-    name: "Nasdaq 100",
-    price: 340.99,
-    percentChange: -0.52,
-  },
-  { symbol: "V", name: "Visa", price: 375.42, percentChange: 0.77 },
-  { symbol: "AAPL", name: "AAPL", price: 314.95, percentChange: 0.87 },
-  {
-    symbol: "BAC",
-    name: "Bank of America",
-    price: 30.99,
-    percentChange: -2.02,
-  },
-  { symbol: "META", name: "Facebook", price: 380.42, percentChange: 0.97 },
-  { symbol: "WFC", name: "Wells Fargo", price: 56.88, percentChange: 0.55 },
-  { symbol: "BABA", name: "Alibaba", price: 77.69, percentChange: -1.43 },
-  // Add more data as needed
+const symbols = [
+  "^GSPC",
+  "^DJI",
+  "^IXIC",
+  "^RUT",
+  "^VIX",
+  "GOOGL",
+  "AMZN",
+  "MSFT",
+  "META",
+  "BABA",
+  "DIS",
+  "V",
+  "AAPL",
+  "BAC",
+  "MCD",
+  "WMT",
 ];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -74,6 +58,49 @@ const DiscoverMore: React.FC = () => {
     prevArrow: <PrevArrow />,
   };
 
+  const queryClient = useQueryClient();
+  const [symbolQuotes, setSymbolQuotes] = useState<
+    Record<string, quoteType | null>
+  >({});
+
+  const fetchSymbolQuotes = async () => {
+    const quotePromises = symbols.map(async (symbol) => {
+      // Check the cache first
+      const cachedQuote = queryClient.getQueryData(["quote", symbol]);
+
+      if (cachedQuote) {
+        const newCachedQuote = utils.checkCachedQuoteType(cachedQuote);
+        console.log("quoteUtils.ts - got cached quote:", cachedQuote);
+        return newCachedQuote;
+      }
+
+      // If not in the cache, make an API call
+      console.log("quoteUtils.ts - new api request -", symbol);
+      const quoteData = await getQuote(queryClient, symbol);
+      await new Promise((resolve) => setTimeout(resolve, 200)); // 200ms delay
+      // Update the cache
+      queryClient.setQueryData(["quote", symbol], quoteData);
+
+      return quoteData;
+    });
+
+    const quotes = await Promise.all(quotePromises);
+
+    const symbolQuoteMap: Record<string, quoteType | null> = {};
+    symbols.forEach((symbol, index) => {
+      if (quotes[index]) {
+        symbolQuoteMap[symbol] = quotes[index];
+      }
+    });
+
+    setSymbolQuotes(symbolQuoteMap);
+  };
+
+  useEffect(() => {
+    fetchSymbolQuotes();
+  }, [symbols, queryClient]);
+  console.log(symbolQuotes);
+
   return (
     <div className="discover-container">
       <div role="heading" className="discover-heading">
@@ -84,14 +111,18 @@ const DiscoverMore: React.FC = () => {
       </div>
 
       <Slider {...settings} className="slider">
-        {data.map((security) => (
-          <div key={security.symbol} className="card">
-            <div className="card-content">
-              <div>{security.symbol}</div>
-              <div>{security.name}</div>
-              <div>{security.price}</div>
-              <div>{security.percentChange}</div>
-            </div>
+        {Object.entries(symbolQuotes).map(([symbol, security]) => (
+          <div key={symbol} className="card">
+            {security && (
+              <Link to={`/quote/${security.symbol}`}>
+                <div className="card-content">
+                  <div>{security.symbol}</div>
+                  <div>{security.name}</div>
+                  <div>{security.price}</div>
+                  <div>{security.percentChange}</div>
+                </div>
+              </Link>
+            )}
           </div>
         ))}
       </Slider>

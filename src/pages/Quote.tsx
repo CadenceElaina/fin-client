@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams, useLocation } from "react-router-dom";
 import Layout from "../components/layout/Layout";
+import QuoteChart from "../components/quote-chart/QuoteChart";
 
 interface QuoteProps {
   symbol?: string;
@@ -16,7 +17,10 @@ const Quote: React.FC<QuoteProps> = () => {
   return (
     <div>
       <Layout>
-        <div>Stock {symbol} Price Data</div>
+        <div>
+          Stock {symbol} Price Data
+          <QuoteChart />
+        </div>
       </Layout>
     </div>
   );

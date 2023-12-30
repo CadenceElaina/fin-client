@@ -28,19 +28,22 @@ export default function SignIn() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
-      email: data.get("email"),
+      username: data.get("username"),
       password: data.get("password"),
     });
 
     try {
       const cred = {
-        email: data.get("email"),
+        username: data.get("username"),
         password: data.get("password"),
       };
       let username = "";
       let password = "";
-      if (typeof cred.email === "string" && typeof cred.password === "string") {
-        username = cred.email;
+      if (
+        typeof cred.username === "string" &&
+        typeof cred.password === "string"
+      ) {
+        username = cred.username;
         password = cred.password;
       }
       const user = await loginService.login({
@@ -80,11 +83,11 @@ export default function SignIn() {
               <h1>Sign in</h1>
             </div>
             <form onSubmit={handleSubmit} className="signin-form">
-              <label>Email Address:</label>
+              <label>Username:</label>
               <input
-                type="email"
-                name="email"
-                autoComplete="email"
+                type="username"
+                name="username"
+                autoComplete="username"
                 autoFocus
                 required
               />

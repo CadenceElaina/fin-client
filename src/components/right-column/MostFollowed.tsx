@@ -43,7 +43,7 @@ const data = [
     percentChange: 1.5,
   },
 ];
-
+//
 const MostFollowed = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
@@ -121,7 +121,7 @@ const MostFollowed = () => {
     setTop5Securities(newTop5Securities);
   }, [watchlists]);
 
-  const onIconClick = (symbol: string, user) => {
+  const onIconClick = (symbol: string) => {
     console.log(user);
     console.log(symbol);
     if (!user) {

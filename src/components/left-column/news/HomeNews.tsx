@@ -3,12 +3,14 @@ import { newsSegmentType } from "../../../types/types";
 import CustomButton from "../../CustomButton";
 import Articles from "./Articles";
 import { useNews } from "../../../context/NewsContext";
+import { Skeleton } from "@mui/material";
 
 const News = () => {
   const [currNewsSegment, setCurrNewsSegment] =
     useState<newsSegmentType>("Top");
   const newsData = useNews();
   const newsSegmentValues: newsSegmentType[] = ["Top", "Local", "World"];
+  /*   const [isLoading, setIsLoading] = useState(true); */
 
   const handleButtonClick = (segment: newsSegmentType) => {
     setCurrNewsSegment(segment);

@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import NewPortfolioModal from "../../modals/AddPortfolioModal";
 import "./Portfolio.css";
+import { Skeleton } from "@mui/material"; 
 
 import { useQueryClient } from "@tanstack/react-query";
 import { quoteType } from "../../search/types";
@@ -22,6 +23,7 @@ const YourPortfolios = () => {
   const auth = !!user;
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const portfolioSymbols: PortfolioSymbols = {};
 
   // Populate the object with symbols and quantities
@@ -95,10 +97,12 @@ const YourPortfolios = () => {
 
   useEffect(() => {
     // Fetch quotes for each portfolio
+
     console.log("useEffect triggered YourPortfolios.tsx");
     portfolios.forEach((portfolio) => {
       console.log(`Fetching quotes for portfolio: ${portfolio.title}`);
       fetchPortfolioQuotes(portfolio.title);
+      setIsLoading(false);
     });
   }, [portfolios]);
   // [portfolios, quoteCache] - worked previously (because I hadnt reached the api call limit?) - but currently calls infintely
@@ -169,67 +173,102 @@ const YourPortfolios = () => {
         <div className="add-portfolio-icon">
           <FaChartBar size={30} />
         </div>
-
         <div className="add-portfolio-text">Your portfolios</div>
       </div>
       <div className="portfolio-value">
-        {" "}
-        {totalPortfolioValue ? `$${totalPortfolioValue.toFixed(2)}` : "$0.00"}
+        {isLoading ? (
+          <Skeleton
+            variant="text"
+            width={100}
+            height={20}
+            sx={{ bgcolor: "rgba(255, 255, 255, 0.1)" }}
+          />
+        ) : totalPortfolioValue ? (
+          `$${totalPortfolioValue.toFixed(2)}`
+        ) : (
+          "$0.00"
+        )}
       </div>
       <div className="border-top"></div>
-      {usersPortfolios.length > 0 && (
+      {usersPortfolios.length > 0 ? (
         <div className="portfolio-list">
-          {usersPortfolios.map((portfolio) => {
-            const securities = portfolioQuotes[portfolio.title] || [];
-            const totalValue = securities.reduce((acc, security) => {
-              const { quantity, percentChange } = security;
-              const securityValueChange = quantity * percentChange;
-              return acc + securityValueChange;
-            }, 0);
+          {isLoading ? (
+            <>
+              <Skeleton
+                variant="rounded"
+                width={300}
+                height={50}
+                sx={{ bgcolor: "rgba(255, 255, 255, 0.1)" }}
+                style={{ marginBottom: "10px" }}
+              />
+              <Skeleton
+                variant="rounded"
+                width={300}
+                height={50}
+                sx={{ bgcolor: "rgba(255, 255, 255, 0.1)" }}
+                style={{ marginBottom: "10px" }}
+              />
+              <Skeleton
+                variant="rounded"
+                width={300}
+                height={50}
+                sx={{ bgcolor: "rgba(255, 255, 255, 0.1)" }}
+                style={{ marginBottom: "10px" }}
+              />
+            </>
+          ) : (
+            usersPortfolios.map((portfolio) => {
+              const securities = portfolioQuotes[portfolio.title] || [];
+              const totalValue = securities.reduce((acc, security) => {
+                const { quantity, percentChange } = security;
+                const securityValueChange = quantity * percentChange;
+                return acc + securityValueChange;
+              }, 0);
 
-            const totalQuantity = securities.reduce((acc, security) => {
-              return acc + security.quantity;
-            }, 0);
+              const totalQuantity = securities.reduce((acc, security) => {
+                return acc + security.quantity;
+              }, 0);
 
-            const totalPercentChange =
-              totalQuantity !== 0 ? (totalValue / totalQuantity) * 100 : 0;
+              const totalPercentChange =
+                totalQuantity !== 0 ? (totalValue / totalQuantity) * 100 : 0;
 
-            const portfolioValue = securities.reduce((acc, security) => {
-              return acc + security.price * security.quantity;
-            }, 0);
+              const portfolioValue = securities.reduce((acc, security) => {
+                return acc + security.price * security.quantity;
+              }, 0);
 
-            return (
-              <div key={portfolio.id} className="portfolio">
-                <div className="portfolio-inner">
-                  <Link
-                    to={`/portfolio/${portfolio.id}`}
-                    style={{ textDecoration: "none", color: "white" }}
-                    className="portfolio-link"
-                  >
-                    <span className="portfolio-label">{portfolio.title}</span>
-                    <span className="portfolio-value">
-                      {portfolioValue
-                        ? `$${portfolioValue.toFixed(2)}`
-                        : "$0.00"}
-                    </span>
-                    <span
-                      className={`portfolio-percent-change ${
-                        totalPercentChange > 0
-                          ? "p-positive"
-                          : totalPercentChange < 0
-                          ? "p-negative"
-                          : ""
-                      }`}
+              return (
+                <div key={portfolio.id} className="portfolio">
+                  <div className="portfolio-inner">
+                    <Link
+                      to={`/portfolio/${portfolio.id}`}
+                      style={{ textDecoration: "none", color: "white" }}
+                      className="portfolio-link"
                     >
-                      {totalPercentChange.toFixed(2)}%
-                    </span>
-                  </Link>
+                      <span className="portfolio-label">{portfolio.title}</span>
+                      <span className="portfolio-value">
+                        {portfolioValue
+                          ? `$${portfolioValue.toFixed(2)}`
+                          : "$0.00"}
+                      </span>
+                      <span
+                        className={`portfolio-percent-change ${
+                          totalPercentChange > 0
+                            ? "p-positive"
+                            : totalPercentChange < 0
+                            ? "p-negative"
+                            : ""
+                        }`}
+                      >
+                        {totalPercentChange.toFixed(2)}%
+                      </span>
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
-      )}
+      ) : null}
       <div className="add-portfolio-button">
         {canCreateNewPortfolio() ? (
           <CustomButton

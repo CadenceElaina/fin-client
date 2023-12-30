@@ -7,7 +7,12 @@ export interface suggestionType {
   currency: string;
   matchScore?: number; // rank by match score?
 }
-
+export interface quoteBasic {
+  symbol: string;
+  name: string;
+  price: number;
+  percentChange: number;
+}
 export interface quoteType {
   symbol: string;
   name: string;
