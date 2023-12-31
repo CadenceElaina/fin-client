@@ -1,0 +1,28 @@
+.chart-quote {
+  width: 675px;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8); /* Light background with alpha */
+  border-radius: 8px; /* Add border-radius for a modern look */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add box shadow for depth */
+}
+.chart-quote .custom-tooltip {
+  color: black;
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.9
+  ); /* Light background for tooltips */
+  border: 1px solid #ccc;
+  padding: 8px;
+  border-radius: 4px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.chart-quote .recharts-cartesian-grid-horizontal line {
+  stroke: rgba(0, 0, 0, 0.1); /* Light horizontal grid lines */
+}
+
+.chart-quote .recharts-cartesian-grid-vertical line {
+  stroke: rgba(0, 0, 0, 0.1); /* Light vertical grid lines */
+}

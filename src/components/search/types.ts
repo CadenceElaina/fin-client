@@ -13,9 +13,12 @@ export interface quoteBasic {
   price: number;
   percentChange: number;
 }
-export interface quoteType {
+export interface previousClose {
   symbol: string;
   name: string;
+  previousClose?: number;
+}
+export interface quoteType extends previousClose {
   price: number;
   quantity?: number;
   priceChange: number;

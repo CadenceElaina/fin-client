@@ -7,136 +7,38 @@ import {
   Tooltip,
   CartesianGrid,
   ResponsiveContainer,
+  ReferenceDot,
+  ReferenceLine,
+  Area,
+  ComposedChart,
 } from "recharts";
 import { useQuery } from "@tanstack/react-query";
 import { SA_KEY, SA_URL } from "../../constants";
 import axios from "axios";
+import { formatTime, formatXAxis } from "./QuoteChartUtils";
+import { queryClient } from "./quoteQueryClient";
+import { getPreviousClose } from "../../components/search/quoteUtils";
+import "./QuoteChart.css";
 
-const QuoteChart: React.FC<{ interval: string }> = ({ interval }) => {
-  const symbol = "msft";
+const QuoteChart: React.FC<{ interval: string; symbol: string }> = ({
+  interval,
+  symbol,
+}) => {
+  console.log(interval, symbol);
+  queryClient.setQueryDefaults(["chartData"], { gcTime: 1000 * 60 * 30 });
   const period = interval;
 
-  const formatTime = (time: Date, interval: string) => {
-    switch (interval) {
-      case "1D":
-        return time.toLocaleTimeString([], {
-          hour: "numeric",
-          minute: "numeric",
-          hour12: true,
-        });
-        break;
-      case "5D":
-        return time.toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-        });
-        break;
-      case "1M":
-        return time.toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-        });
-      case "6M":
-        return time.toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-        });
-      case "YTD":
-        return time.toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-        });
-      case "1Y":
-        return time.toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-        });
-      case "5Y":
-        return time.toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-        });
-      case "MAX":
-        return time.toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-        });
-      default:
-        return time.toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-        });
-    }
-  };
-
-  const formatXAxis = (time: Date, interval: string) => {
-    switch (interval) {
-      case "1D":
-        return time.toLocaleTimeString([], {
-          hour: "numeric",
-          minute: "numeric",
-          hour12: true,
-        });
-      case "5D":
-        return time.toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-        });
-      case "1M":
-        return time.toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-        });
-      case "6M":
-        return time.toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-        });
-      case "YTD":
-        return time.toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-        });
-      case "1Y":
-        return time.toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-        });
-      case "5Y":
-        return time.toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-        });
-      case "MAX":
-        return time.toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-        });
-      default:
-        return time.toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-        });
-    }
-  };
-
   const fetchChartData = async (symbol: string, period: string) => {
+    const chartQueryKey = ["chartData", symbol, period];
+    const prevCloseQueryKey = ["prevClose", symbol];
+
+    // Check the cache first
+    const cachedChartData = queryClient.getQueryData(chartQueryKey);
+    if (cachedChartData) {
+      console.log("Using cached chart data for", chartQueryKey);
+      return { chartData: cachedChartData };
+    }
+    // If not in the cache, make the API call
     const options = {
       method: "GET",
       url: "https://seeking-alpha.p.rapidapi.com/symbols/get-chart",
@@ -151,18 +53,17 @@ const QuoteChart: React.FC<{ interval: string }> = ({ interval }) => {
     };
 
     try {
-      console.log("runs ");
+      console.log("new api call QuoteChart.tsx");
       const response = await axios.request(options);
       console.log(response);
 
       const chartData = Object.entries(response.data.attributes).map(
         ([timestamp, values]) => {
           const time = new Date(timestamp);
-
           // Format time for tooltip and x-axis
           const formattedTime = formatTime(time, interval);
           const formattedXAxis = formatXAxis(time, interval);
-          /*           console.log(formattedTime, formattedXAxis); */
+          /*console.log(formattedTime, formattedXAxis); */
           return {
             time: formattedTime,
             close: values.close,
@@ -170,12 +71,34 @@ const QuoteChart: React.FC<{ interval: string }> = ({ interval }) => {
           };
         }
       );
-      console.log("unsorted: ", chartData);
-      chartData.sort(
-        (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()
-      );
-      console.log("sorted chartData: ", chartData);
+      console.log("chartData: ", chartData);
+      // Cache the chart data
+      queryClient.setQueryData(chartQueryKey, chartData);
 
+      if (interval === "1D") {
+        const prevCloseData = await getPreviousClose(queryClient, symbol);
+        if (prevCloseData) {
+          queryClient.setQueryData(prevCloseQueryKey, prevCloseData);
+          console.log("Previous Close:", prevClosePrice);
+
+          // Now you can compare previousClose with the final close in chartData
+          const finalClose = chartData[chartData.length - 1].close;
+          console.log("Final Close:", finalClose);
+
+          // Perform your comparison logic here
+          if (finalClose > prevClosePrice) {
+            console.log(
+              "Symbol finished higher than the previous day's close."
+            );
+          } else if (finalClose < prevClosePrice) {
+            console.log("Symbol finished lower than the previous day's close.");
+          } else {
+            console.log(
+              "Symbol finished at the same level as the previous day's close."
+            );
+          }
+        }
+      }
       return { chartData };
     } catch (error) {
       console.error(error);
@@ -186,41 +109,87 @@ const QuoteChart: React.FC<{ interval: string }> = ({ interval }) => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["chartData", symbol, period],
     queryFn: () => fetchChartData(symbol, period),
-    // You can set cache options here
+  });
+  const {
+    data: prevCloseData,
+    isLoading: isPrevCloseLoading,
+    isError: isPrevCloseError,
+  } = useQuery({
+    queryKey: ["prevClose", symbol],
+    queryFn: () => getPreviousClose(queryClient, symbol),
+    enabled: interval === "1D", // Only enable the query when interval is "1D"
   });
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error fetching data</div>;
   if (!data.chartData) return <div>No chart data available</div>;
-  /*   const chartData = data.chartData.map((entry) => ({
-    time: entry.time,
-    close: entry.close,
-  })); */
+
   const uniqueDaysSet = new Set();
+  const uniqueYearsSet = new Set();
 
-  const chartData = data.chartData
-    .sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime())
-    .map((entry, index) => {
-      const day = entry.formattedXAxis;
-
-      // Include the day in the set if it doesn't exist
-      uniqueDaysSet.add(day);
-      console.log(entry.time);
+  const chartData = data.chartData.map((entry, index) => {
+    if (interval === "5Y" || interval === "MAX") {
+      const year = entry.formattedXAxis;
+      uniqueYearsSet.add(year);
       return {
         time: entry.time,
         close: entry.close,
         formattedXAxis: entry.formattedXAxis,
       };
-    });
+    }
+    if (
+      interval === "1D" ||
+      interval === "5D" ||
+      interval === "1M" ||
+      interval === "6M" ||
+      interval === "YTD" ||
+      interval === "1Y"
+    ) {
+      const day = entry.formattedXAxis;
+
+      // Include the day in the set if it doesn't exist
+      uniqueDaysSet.add(day);
+      //console.log(entry.time);
+      return {
+        time: entry.time,
+        close: entry.close,
+        formattedXAxis: entry.formattedXAxis,
+      };
+    }
+  });
 
   const uniqueDaysArray = Array.from(uniqueDaysSet);
-  console.log(uniqueDaysArray);
-  console.log(chartData);
+  // console.log(uniqueDaysArray);
+  // console.log(chartData);
+  //console.log(prevCloseData, prevClosePrice);
+  const cachedPrevCloseData = queryClient.getQueryData(["prevClose", symbol]);
+  const finalPrevCloseData: { previousClose?: number } | null | undefined =
+    cachedPrevCloseData || prevCloseData;
 
+  const prevClosePrice =
+    finalPrevCloseData && finalPrevCloseData.previousClose !== undefined
+      ? finalPrevCloseData.previousClose
+      : 0;
+  console.log(finalPrevCloseData);
+  let lineStrokeColor = "#8884d8"; // Default color
+
+  if (interval === "1D" && prevClosePrice !== undefined) {
+    const finalClose = chartData[chartData.length - 1].close;
+
+    // Compare final close with previous close and set line color accordingly
+    lineStrokeColor = finalClose > prevClosePrice ? "green" : "red";
+  } else if (interval !== "1D") {
+    const initialPrice = chartData[0].close;
+    const finalClose = chartData[chartData.length - 1].close;
+    lineStrokeColor = finalClose > initialPrice ? "green" : "red";
+  }
+  const areaFill =
+    lineStrokeColor === "red" ? "rgba(255, 0, 0, 0.2)" : "rgba(0, 255, 0, 0.2)";
+  console.log(areaFill);
   return (
     <div className="chart-quote">
       <ResponsiveContainer width="100%" height={528}>
-        <LineChart
+        <ComposedChart
           data={chartData}
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
         >
@@ -230,10 +199,17 @@ const QuoteChart: React.FC<{ interval: string }> = ({ interval }) => {
             tick={{ fontSize: 12 }}
             ticks={uniqueDaysArray}
           />
-          <YAxis scale="linear" domain={["auto", "auto"]} />
+          <YAxis
+            scale="linear"
+            domain={
+              interval === "1D" && prevClosePrice !== 0
+                ? [prevClosePrice, "auto"]
+                : ["auto", "auto"]
+            }
+          />
           <Tooltip
             content={({ payload, label }) => {
-              console.log(payload);
+              /*   console.log(payload); */
               if (!payload || payload.length === 0 || !payload[0].payload) {
                 return null;
               }
@@ -249,8 +225,50 @@ const QuoteChart: React.FC<{ interval: string }> = ({ interval }) => {
               return null;
             }}
           />
-          <Line type="monotone" dataKey="close" stroke="#8884d8" dot={false} />
-        </LineChart>
+
+          <Area
+            type="monotone"
+            dataKey="close"
+            fill={areaFill}
+            stroke={lineStrokeColor}
+          />
+          <Line
+            type="monotone"
+            dataKey="close"
+            stroke={lineStrokeColor}
+            dot={false}
+          />
+          {interval === "1D" &&
+            prevClosePrice !== undefined &&
+            prevClosePrice !== 0 && (
+              <>
+                {/* Horizontal Dotted Line */}
+                <ReferenceLine
+                  y={prevClosePrice}
+                  stroke="black"
+                  strokeDasharray="3 3"
+                  label={`Prev close ${prevClosePrice}`}
+                />
+
+                {/* Reference Dot with Label */}
+                <ReferenceDot
+                  x={chartData[chartData.length - 1].formattedXAxis} // X-coordinate of the dot (last data point)
+                  y={prevClosePrice} // Y-coordinate of the dot (previous close price)
+                  r={6} // Radius of the dot
+                  fill="black" // Dot color
+                  stroke="none"
+                >
+                  {/* Label for the dot */}
+                  <text x={10} y={-10} dy={-4} fontSize={12} fill="black">
+                    Prev close
+                  </text>
+                  <text x={10} y={-10} dy={12} fontSize={12} fill="black">
+                    ${prevClosePrice}
+                  </text>
+                </ReferenceDot>
+              </>
+            )}
+        </ComposedChart>
       </ResponsiveContainer>
     </div>
   );

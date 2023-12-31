@@ -1,15 +1,44 @@
+.quote-container {
+  /* background: linear-gradient(
+    180deg,
+    #142033 25%,
+    #0e1a26 50%,
+    #070b0e 75%,
+    #040507 100%
+  ); */
+  padding: 20px; /* Add padding to the container */
+}
 .button-group {
   display: flex;
   gap: 8px;
+  margin-bottom: 10px;
 }
 
 .button-group button {
+  color: rgba(255, 255, 255, 0.85);
+  font-family: "Google Sans", Roboto, Arial, sans-serif;
+  font-size: 16px; /* You can adjust the font size */
+  letter-spacing: 0.25px;
+  font-weight: 500;
+  text-transform: none;
+  white-space: nowrap;
+  cursor: pointer;
+  box-sizing: content-box;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
   padding: 8px;
   cursor: pointer;
   border: 1px solid #ccc;
-  background-color: #fff;
+  background-color: transparent;
 }
-
+.button-group button:hover {
+  background-color: rgba(26, 115, 232, 0.9);
+}
 .button-group button.active {
-  background-color: #e0e0e0;
+  background: #1a73e8;
+}
+.button-group button.active:hover {
+  background-color: #1565c0;
+  color: rgba(255, 255, 255, 1);
 }

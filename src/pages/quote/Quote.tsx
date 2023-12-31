@@ -11,10 +11,12 @@ interface QuoteProps {
 }
 
 const Quote: React.FC<QuoteProps> = () => {
-  const { symbol } = useParams();
+  /*   const { symbol } = useParams();
+  console.log(symbol); */
   const location = useLocation();
   const { searchInput, showDropdown } = location.state || {};
-
+  const symbol = location.pathname.split("/").pop();
+  console.log(symbol);
   // State to track the selected time interval
   const [selectedInterval, setSelectedInterval] = useState("1D");
 
@@ -26,7 +28,7 @@ const Quote: React.FC<QuoteProps> = () => {
   return (
     <div>
       <Layout>
-        <div>
+        <div className="quote-container">
           {/* Button group for time intervals */}
           <div className="button-group">
             {["1D", "5D", "1M", "6M", "YTD", "1Y", "5Y", "MAX"].map(
@@ -43,7 +45,7 @@ const Quote: React.FC<QuoteProps> = () => {
           </div>
 
           {/* Chart component with the selected interval */}
-          <QuoteChart interval={selectedInterval} />
+          <QuoteChart interval={selectedInterval} symbol={symbol || ""} />
         </div>
       </Layout>
     </div>

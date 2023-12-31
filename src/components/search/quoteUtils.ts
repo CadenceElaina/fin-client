@@ -1,6 +1,6 @@
 import { QueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { quoteType, utils } from "./types";
+import { previousClose, quoteType, utils } from "./types";
 import {
   YH_KEY,
   YH_URL,
@@ -8,12 +8,13 @@ import {
   YH_KEY2,
   YH_URL1,
   YH_URL2,
+  YH_KEY3,
 } from "../../constants";
 
-export const getQuote = async (queryClient: QueryClient, symbol: string) => {
+/* export const getQuote = async (queryClient: QueryClient, symbol: string) => {
   return console.log("lol sorry no api calls for you");
-};
-export const fetchQuoteWithRetry = async (symbol, retryCount = 3) => {
+}; */
+/* export const fetchQuoteWithRetry = async (symbol, retryCount = 3) => {
   try {
     console.log("sorry");
     return;
@@ -23,13 +24,62 @@ export const fetchQuoteWithRetry = async (symbol, retryCount = 3) => {
       /*    const waitTime = Math.pow(2, 4 - retryCount) * 1000; // exponential backoff
       await new Promise((resolve) => setTimeout(resolve, waitTime));
       return fetchQuoteWithRetry(symbol, retryCount - 1); */
-    } else {
+/*    } else {
       // Handle other errors or propagate if no retries left
       throw error;
     }
   }
+}; */
+export const getPreviousClose = async (
+  queryClient: QueryClient,
+  symbol: string
+): Promise<previousClose | null> => {
+  const options = {
+    method: "GET",
+    url: "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-summary",
+    params: { symbol, region: "US" },
+    headers: {
+      "X-RapidAPI-Key": `${YH_KEY3}`,
+      "X-RapidAPI-Host": `${YH_URL}`,
+    },
+  };
+
+  try {
+    // Try to get cached data
+    const cachedQuote = queryClient.getQueryData(["prevClose", symbol]);
+
+    if (cachedQuote) {
+      const newCachedQuote = utils.checkCachedQuoteType(cachedQuote);
+      console.log("quoteUtils.ts - got cached prevClose:", cachedQuote);
+      return newCachedQuote;
+    }
+
+    // If not cached, make an API call
+    console.log("quoteUtils.ts - new api request -prevClose ", symbol);
+    await new Promise((resolve) => setTimeout(resolve, 500)); // 500ms delay
+    const response = await axios.request(options);
+
+    if (!response.data.quoteType || !response.data.price) {
+      throw new Error("Incomplete or missing data in the API response");
+    }
+
+    const temp = response.data.quoteType.symbol;
+    const quoteData: previousClose = {
+      symbol: temp.toLowerCase(),
+      previousClose: response.data.price.regularMarketPreviousClose.raw,
+      name: response.data.price.shortName,
+    };
+    //
+    // Cache the quote data
+    queryClient.setQueryData(["prevClose", symbol], quoteData);
+    console.log(quoteData);
+    return quoteData;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 };
-/* export const getQuote = async (
+export const getQuote = async (
   queryClient: QueryClient,
   symbol: string
 ): Promise<quoteType | null> => {
@@ -38,7 +88,7 @@ export const fetchQuoteWithRetry = async (symbol, retryCount = 3) => {
     url: "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-summary",
     params: { symbol, region: "US" },
     headers: {
-      "X-RapidAPI-Key": `${YH_KEY}`,
+      "X-RapidAPI-Key": `${YH_KEY3}`,
       "X-RapidAPI-Host": `${YH_URL}`,
     },
   };
@@ -95,7 +145,7 @@ export const fetchQuoteWithRetry = async (symbol, retryCount = 3) => {
       throw error;
     }
   }
-}; */
+};
 
 /* interface ApiResponse {
   quoteResponse: {
