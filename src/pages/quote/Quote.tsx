@@ -1,15 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useLocation, Link } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
 import QuoteChart from "../../components/quote-chart/QuoteChart";
 import "./Quote.css";
 import Footer from "../../components/Footer";
-import { FaAngleDown, FaAngleRight, FaAngleUp } from "react-icons/fa";
+import {
+  FaAngleDown,
+  FaAngleRight,
+  FaAngleUp,
+  FaArrowDown,
+  FaArrowUp,
+} from "react-icons/fa";
 import QuoteNews from "../../components/quote-chart/news/QuoteNews";
 import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getQuotePageData } from "../../components/search/quoteUtils";
 import { IoAddSharp } from "react-icons/io5";
 import { CiShare2 } from "react-icons/ci";
+import { isHoliday } from "./quoteUtils";
 
 interface QuoteProps {
   symbol?: string;
@@ -20,6 +27,7 @@ interface QuoteProps {
 const Quote: React.FC<QuoteProps> = () => {
   /*   const { symbol } = useParams();
   console.log(symbol); */
+  const [marketStatus, setMarketStatus] = useState<string>("Closed");
   const queryClient = useQueryClient();
   const location = useLocation();
   const { searchInput, showDropdown } = location.state || {};
@@ -47,6 +55,53 @@ const Quote: React.FC<QuoteProps> = () => {
     queryFn: () => getQuotePageData(queryClient, symbol || ""),
     enabled: Boolean(symbol), // Only enable the query when symbol is available
   });
+
+  useEffect(() => {
+    const getCurrentTime = () => {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+
+      // Convert the current time to minutes for easier comparison
+      const currentTimeInMinutes = hours * 60 + minutes;
+
+      // Define the trading hours
+      const marketOpenTimeInMinutes = 9 * 60 + 30; // 9:30 AM
+      const marketCloseTimeInMinutes = 16 * 60; // 4:00 PM
+      const afterHoursStartInMinutes = 16 * 60 + 15; // 4:15 PM
+      const afterHoursEndInMinutes = 18 * 60 + 30; // 6:30 PM
+
+      // Compare the current time with trading hours
+      console.log(now);
+      if (isHoliday(now)) {
+        setMarketStatus("Closed - Holiday");
+      } else {
+        if (
+          currentTimeInMinutes >= marketOpenTimeInMinutes &&
+          currentTimeInMinutes < marketCloseTimeInMinutes
+        ) {
+          setMarketStatus("Regular Market Hours");
+        } else if (
+          currentTimeInMinutes >= afterHoursStartInMinutes &&
+          currentTimeInMinutes <= afterHoursEndInMinutes
+        ) {
+          setMarketStatus("After-Hours Trading");
+        } else if (currentTimeInMinutes >= marketCloseTimeInMinutes) {
+          setMarketStatus("Closed");
+        } else {
+          setMarketStatus("Pre-Market");
+        }
+      }
+    };
+
+    getCurrentTime();
+
+    // Update market status every hour
+    const interval = setInterval(getCurrentTime, 3600000); // Set interval to 1 hour (60 minutes * 60 seconds * 1000 milliseconds)
+
+    // Clear interval on component unmount
+    return () => clearInterval(interval);
+  }, []);
   const quoteData = quotePageData?.quoteData;
   const quoteSidebarData = quotePageData?.quoteSidebarData;
   const quoteSidebarAboutData = quotePageData?.quoteSidebarAboutData;
@@ -77,6 +132,76 @@ const Quote: React.FC<QuoteProps> = () => {
         </div>
         <div className="quote-container">
           <div className="quote-main-column">
+            <div className="quote-price-container">
+              {/* Price, Percent Change, Price Change, Today/Interval on the same row */}
+              <div className="quote-price-changes">
+                <div
+                  className={
+                    quoteData?.percentChange !== undefined &&
+                    quoteData?.percentChange >= 0
+                      ? "quote-price-positive"
+                      : "quote-price-negative"
+                  }
+                >
+                  {quoteData?.price}
+                </div>
+                <div
+                  className={
+                    quoteData?.percentChange !== undefined &&
+                    quoteData.percentChange >= 0
+                      ? "quote-percent-change-positive"
+                      : "quote-percent-change-negative"
+                  }
+                >
+                  {quoteData?.percentChange !== undefined &&
+                  quoteData.percentChange >= 0 ? (
+                    <FaArrowUp />
+                  ) : (
+                    <FaArrowDown />
+                  )}
+
+                  {quoteData?.percentChange !== undefined
+                    ? `${(quoteData.percentChange * 100).toFixed(2)}%`
+                    : ""}
+                </div>
+                <div
+                  className={
+                    quoteData?.priceChange !== undefined &&
+                    quoteData.priceChange >= 0
+                      ? "quote-price-change-positive"
+                      : "quote-price-change-negative"
+                  }
+                >
+                  {quoteData?.priceChange !== undefined
+                    ? quoteData.priceChange > 0
+                      ? `+${quoteData.priceChange}`
+                      : quoteData.priceChange
+                    : ""}
+                </div>
+                <div
+                  className={
+                    selectedInterval === "1D" &&
+                    quoteData?.percentChange !== undefined &&
+                    quoteData.percentChange >= 0
+                      ? "quote-price-interval-positive"
+                      : "quote-price-interval-negative"
+                  }
+                >
+                  {selectedInterval === "1D" ? "Today" : selectedInterval}
+                </div>
+              </div>
+
+              {/* Market status, exchange, and disclaimer on a separate row */}
+              <div className="quote-price-subheading">
+                <div>({marketStatus})</div>{" "}
+                <div className="quote-links-item"> • </div>{" "}
+                <div>{quoteSidebarData?.primaryExchange}</div>{" "}
+                <div>
+                  <Link to={"/disclaimer"}>Disclaimer</Link>
+                </div>
+              </div>
+            </div>
+
             <div className="button-group">
               {["1D", "5D", "1M", "6M", "YTD", "1Y", "5Y", "MAX"].map(
                 (interval) => (

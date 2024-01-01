@@ -254,12 +254,12 @@ const QuoteChart: React.FC<{ interval: string; symbol: string }> = ({
                 <ReferenceDot
                   x={chartData[chartData.length - 1].formattedXAxis} // X-coordinate of the dot (last data point)
                   y={prevClosePrice} // Y-coordinate of the dot (previous close price)
-                  r={6} // Radius of the dot
-                  fill="black" // Dot color
+                  r={0} // Radius of the dot
+                  fill="white" // Dot color
                   stroke="none"
                 >
                   {/* Label for the dot */}
-                  <text x={10} y={-10} dy={-4} fontSize={12} fill="black">
+                  <text x={10} y={-10} dy={-4} fontSize={12} fill="white">
                     Prev close
                   </text>
                   <text x={10} y={-10} dy={12} fontSize={12} fill="black">

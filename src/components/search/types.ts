@@ -24,6 +24,10 @@ export interface quoteType extends previousClose {
   priceChange: number;
   percentChange: number;
 }
+/* export interface QuoteTime {
+  regularMarketTime: Date;
+  postMarketTime: Date;
+} */
 export interface QuotePageSidebarData {
   previousClose: string;
   dayRange: string;
@@ -48,6 +52,7 @@ export interface QuotePageFinancialData {
 }
 export type QuotePageData = {
   quoteData: quoteType;
+  /*   quoteTime: QuoteTime; */
   quoteSidebarData: QuotePageSidebarData;
   quoteSidebarAboutData: QuotePageSidebarAboutData;
   quoteFinancialData: QuotePageFinancialData;
