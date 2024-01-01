@@ -1,6 +1,6 @@
 .chart-quote {
-  width: 675px;
-  height: 100%;
+  max-width: 675px;
+  height: auto;
   background-color: rgba(255, 255, 255, 0.8); /* Light background with alpha */
   border-radius: 8px; /* Add border-radius for a modern look */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add box shadow for depth */

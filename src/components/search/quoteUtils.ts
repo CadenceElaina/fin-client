@@ -1,6 +1,14 @@
 import { QueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { previousClose, quoteType, utils } from "./types";
+import {
+  QuotePageData,
+  QuotePageFinancialData,
+  QuotePageSidebarAboutData,
+  QuotePageSidebarData,
+  previousClose,
+  quoteType,
+  utils,
+} from "./types";
 import {
   YH_KEY,
   YH_URL,
@@ -11,6 +19,61 @@ import {
   YH_KEY3,
 } from "../../constants";
 
+const stateAbbreviations: { [key: string]: string } = {
+  AL: "Alabama",
+  AK: "Alaska",
+  AZ: "Arizona",
+  AR: "Arkansas",
+  CA: "California",
+  CO: "Colorado",
+  CT: "Connecticut",
+  DE: "Delaware",
+  FL: "Florida",
+  GA: "Georgia",
+  HI: "Hawaii",
+  ID: "Idaho",
+  IL: "Illinois",
+  IN: "Indiana",
+  IA: "Iowa",
+  KS: "Kansas",
+  KY: "Kentucky",
+  LA: "Louisiana",
+  ME: "Maine",
+  MD: "Maryland",
+  MA: "Massachusetts",
+  MI: "Michigan",
+  MN: "Minnesota",
+  MS: "Mississippi",
+  MO: "Missouri",
+  MT: "Montana",
+  NE: "Nebraska",
+  NV: "Nevada",
+  NH: "New Hampshire",
+  NJ: "New Jersey",
+  NM: "New Mexico",
+  NY: "New York",
+  NC: "North Carolina",
+  ND: "North Dakota",
+  OH: "Ohio",
+  OK: "Oklahoma",
+  OR: "Oregon",
+  PA: "Pennsylvania",
+  RI: "Rhode Island",
+  SC: "South Carolina",
+  SD: "South Dakota",
+  TN: "Tennessee",
+  TX: "Texas",
+  UT: "Utah",
+  VT: "Vermont",
+  VA: "Virginia",
+  WA: "Washington",
+  WV: "West Virginia",
+  WI: "Wisconsin",
+  WY: "Wyoming",
+};
+const getStateFullName = (abbreviation: string): string | undefined => {
+  return stateAbbreviations[abbreviation.toUpperCase()];
+};
 /* export const getQuote = async (queryClient: QueryClient, symbol: string) => {
   return console.log("lol sorry no api calls for you");
 }; */
@@ -66,8 +129,8 @@ export const getPreviousClose = async (
     const temp = response.data.quoteType.symbol;
     const quoteData: previousClose = {
       symbol: temp.toLowerCase(),
-      previousClose: response.data.price.regularMarketPreviousClose.raw,
-      name: response.data.price.shortName,
+      previousClose: response.data.price.regularMarketPreviousClose.raw ?? "",
+      name: response.data.price.shortName ?? "",
     };
     //
     // Cache the quote data
@@ -115,10 +178,10 @@ export const getQuote = async (
     const temp = response.data.quoteType.symbol;
     const quoteData: quoteType = {
       symbol: temp.toLowerCase(),
-      price: response.data.price.regularMarketPrice.raw,
-      name: response.data.price.shortName,
-      priceChange: response.data.price.regularMarketChange.fmt,
-      percentChange: response.data.price.regularMarketChangePercent.raw,
+      price: response.data.price.regularMarketPrice.raw ?? "",
+      name: response.data.price.shortName ?? "",
+      priceChange: response.data.price.regularMarketChange.fmt ?? "",
+      percentChange: response.data.price.regularMarketChangePercent.raw ?? "",
     };
     //
     // Cache the quote data
@@ -144,6 +207,100 @@ export const fetchQuoteWithRetry = async (symbol, retryCount = 3) => {
       // Handle other errors or propagate if no retries left
       throw error;
     }
+  }
+};
+export const getQuotePageData = async (
+  queryClient: QueryClient,
+  symbol: string
+): Promise<QuotePageData | null> => {
+  const options = {
+    method: "GET",
+    url: "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-summary",
+    params: { symbol, region: "US" },
+    headers: {
+      "X-RapidAPI-Key": `${YH_KEY3}`,
+      "X-RapidAPI-Host": `${YH_URL}`,
+    },
+  };
+
+  try {
+    // Try to get cached data
+    const cachedQuote = queryClient.getQueryData(["quotePageData", symbol]);
+
+    if (cachedQuote) {
+      /*      const newCachedQuote = utils.checkCachedQuoteType(cachedQuote); */
+      console.log("quoteUtils.ts - got cached quotePageData:", cachedQuote);
+      return cachedQuote;
+    }
+
+    // If not cached, make an API call
+    console.log("quoteUtils.ts quotePageData - new api request -", symbol);
+    await new Promise((resolve) => setTimeout(resolve, 500)); // 500ms delay
+    const response = await axios.request(options);
+
+    if (!response.data.quoteType || !response.data.price) {
+      throw new Error("Incomplete or missing data in the API response");
+    }
+
+    const temp = response.data.quoteType.symbol;
+    const quoteData: quoteType = {
+      symbol: temp.toLowerCase(),
+      price: response.data.price.regularMarketPrice.raw ?? "",
+      name: response.data.price.shortName ?? "",
+      priceChange: response.data.price.regularMarketChange.fmt ?? "",
+      percentChange: response.data.price.regularMarketChangePercent.raw ?? "",
+    };
+    const quoteSidebarData: QuotePageSidebarData = {
+      previousClose:
+        "$" + (response.data.price.regularMarketPreviousClose.fmt ?? ""),
+      dayRange:
+        "$" +
+        (response.data.price.regularMarketDayLow.fmt ?? "") +
+        " - $" +
+        (response.data.price.regularMarketDayHigh.fmt ?? ""),
+      fiftyTwoWeekHigh: response.data.summaryDetail.fiftyTwoWeekHigh.fmt ?? "",
+      marketCap: response.data.summaryDetail.marketCap.fmt ?? "",
+      avgVolume: response.data.price.averageDailyVolume3Month.fmt ?? "",
+      trailingPE: response.data.summaryDetail.trailingPE.fmt ?? "",
+      dividendYield: response.data.summaryDetail.dividendYield.fmt ?? "",
+      primaryExchange: response.data.price.exchangeName ?? "",
+    };
+    const quoteSidebarAboutData: QuotePageSidebarAboutData = {
+      summary: response.data.summaryProfile.longBusinessSummary ?? "",
+      website: response.data.summaryProfile.website ?? "",
+      headquarters: `${
+        response.data.summaryProfile.city || ""
+      }, ${getStateFullName(response.data.summaryProfile.state ?? "NC")} ${
+        response.data.summaryProfile.country || ""
+      }`,
+      employees: response.data.summaryProfile.fullTimeEmployees ?? "",
+    };
+    /*     console.log(
+      response.data.summaryProfile.state,
+      response.data.summaryProfile.country,
+      getStateFullName(response.data.summaryProfile.state)
+    );
+    console.log(getStateFullName(response.data.summaryProfile.state ?? "NC")); */
+    const quoteFinancialData: QuotePageFinancialData = {
+      annualRevenue: response.data.financialData.totalRevenue.fmt ?? "",
+      netIncome: response.data.defaultKeyStatistics.netIncomeToCommon.fmt ?? "",
+      netProfitMargin: response.data.financialData.profitMargins.fmt ?? "",
+      ebitda: response.data.financialData.ebitda.fmt ?? "",
+    };
+    //
+    // Cache the quote data
+    const quotePageData: QuotePageData = {
+      quoteData,
+      quoteSidebarData,
+      quoteSidebarAboutData,
+      quoteFinancialData,
+    };
+    queryClient.setQueryData(["quotePageData", symbol], quotePageData);
+    console.log(quotePageData);
+    return quotePageData;
+  } catch (error) {
+    console.error(error);
+    return null;
   }
 };
 

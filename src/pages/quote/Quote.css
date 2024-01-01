@@ -1,39 +1,20 @@
 .quote-container {
-  /* background: linear-gradient(
-    180deg,
-    #142033 25%,
-    #0e1a26 50%,
-    #070b0e 75%,
-    #040507 100%
-  ); */
-  padding: 20px; /* Add padding to the container */
+  display: flex;
+  justify-content: space-between;
+  max-width: 1024px;
+  padding: 24px 48px;
+  margin: 0 auto;
 }
 .button-group {
   display: flex;
   gap: 8px;
   margin-bottom: 10px;
 }
-
-.button-group button {
-  color: rgba(255, 255, 255, 0.85);
-  font-family: "Google Sans", Roboto, Arial, sans-serif;
-  font-size: 16px; /* You can adjust the font size */
-  letter-spacing: 0.25px;
-  font-weight: 500;
-  text-transform: none;
-  white-space: nowrap;
-  cursor: pointer;
-  box-sizing: content-box;
-  border-radius: 4px;
-  position: relative;
-  overflow: hidden;
-  padding: 8px;
-  cursor: pointer;
-  border: 1px solid #ccc;
-  background-color: transparent;
-}
 .button-group button:hover {
   background-color: rgba(26, 115, 232, 0.9);
+}
+.quote-data-buttons button:hover {
+  background-color: rgba(255, 255, 255, 0.9);
 }
 .button-group button.active {
   background: #1a73e8;
@@ -41,4 +22,172 @@
 .button-group button.active:hover {
   background-color: #1565c0;
   color: rgba(255, 255, 255, 1);
+}
+.button-group button {
+  border: none;
+}
+.button-group button,
+.quote-data-buttons button {
+  color: rgba(255, 255, 255, 0.85);
+  font-family: "Google Sans", Roboto, Arial, sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.25px;
+  font-weight: 500;
+  text-transform: none;
+  white-space: nowrap;
+  cursor: pointer;
+  box-sizing: content-box;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  padding: 8px;
+  cursor: pointer;
+  background-color: transparent;
+}
+.quote-data-buttons {
+  display: flex;
+  justify-self: center;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: 0 auto;
+  padding: 0.5rem;
+}
+.quote-data-buttons button {
+  border: 1px solid #ccc;
+  border-radius: 24px;
+  background-color: aliceblue;
+  color: black;
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3),
+    0 1px 3px 1px rgba(60, 64, 67, 0.15);
+}
+.quote-data-buttons button,
+.quote-data-buttons span {
+  display: flex;
+  align-items: center;
+  margin-right: 8px; /* Adjust the margin as needed */
+}
+
+.quote-data-buttons span:last-child {
+  margin-right: 0; /* Remove margin from the last span to prevent extra spacing */
+}
+.quote-main-column {
+  width: 66%;
+  margin-right: 24px;
+}
+.quote-side-column {
+  width: 32%;
+}
+.quote-top-container {
+  border-bottom: 1px solid rgb(232, 234, 237);
+  margin: 0 auto;
+  padding-bottom: 8px;
+  max-width: 1024px;
+  justify-content: space-between;
+}
+.quote-links {
+  display: flex;
+  max-width: 1024px;
+  margin-top: 25px;
+  margin: 25px auto 0 auto;
+  a {
+    text-decoration: none;
+    color: white;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+}
+
+.quote-arrow {
+  display: flex;
+  align-items: center;
+  align-self: center;
+  margin: 0 5px 0 5px;
+}
+.quote-links-item {
+  margin: 0 5px 0 5px;
+}
+.quote-name {
+  display: flex;
+  max-width: 1024px;
+  font-size: 2rem;
+  margin: 5px auto 0 auto;
+  text-transform: uppercase;
+}
+.quote-data-list {
+  border: 1px solid white;
+  border-radius: 12px;
+  padding: 10px;
+}
+.about-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Optional: align items vertically in the center */
+  /* Add any other styles you need */
+}
+
+.about-heading span:first-child {
+  font-size: 1.2rem;
+  margin-right: 8px; /* Adjust the spacing between "About" and the arrow as needed */
+  margin-bottom: 10px;
+}
+.quote-about-text {
+  padding-bottom: 16px;
+  word-wrap: break-word;
+  font-size: 0.75rem;
+}
+.quote-data-row {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid white;
+  padding: 8px 0;
+}
+
+.quote-about {
+  border: 1px solid white;
+  border-radius: 12px;
+  margin-top: 20px; /* Adjust the margin as needed */
+  padding: 15px;
+}
+
+.quote-about-row {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid rgb(218, 220, 224);
+  padding: 8px 0;
+  min-height: 43px;
+  box-sizing: border-box;
+  align-items: center;
+
+  font-size: 0.875rem;
+}
+.quote-about-row span {
+  line-height: 1.25rem;
+  text-overflow: ellipsis;
+}
+.quote-about-row span:first-child {
+  text-transform: uppercase;
+}
+.quote-about-row span:nth-child(2) {
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  max-width: 60%;
+}
+.quote-about-row span a {
+  color: rgb(25, 103, 210);
+  text-decoration: none;
+}
+.quote-about-row span a:hover {
+  text-decoration: underline;
+}
+@media (max-width: 768px) {
+  .quote-container {
+    flex-direction: column; /* Switch to a single column on smaller screens */
+  }
+
+  .quote-side-column {
+    flex: 1; /* Allow the side column to take full width on smaller screens */
+  }
 }

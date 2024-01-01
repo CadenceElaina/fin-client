@@ -82,4 +82,5 @@ export interface article {
 export interface articleProps {
   articles: article[];
   currNewsSegment?: newsSegmentType;
+  symbol?: string;
 }

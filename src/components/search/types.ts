@@ -24,7 +24,34 @@ export interface quoteType extends previousClose {
   priceChange: number;
   percentChange: number;
 }
-
+export interface QuotePageSidebarData {
+  previousClose: string;
+  dayRange: string;
+  fiftyTwoWeekHigh: string;
+  marketCap: string;
+  avgVolume: string;
+  trailingPE: string;
+  dividendYield: string;
+  primaryExchange: string;
+}
+export interface QuotePageSidebarAboutData {
+  summary: string;
+  website: string;
+  headquarters: string;
+  employees: string;
+}
+export interface QuotePageFinancialData {
+  annualRevenue: string;
+  netIncome: string;
+  netProfitMargin: string;
+  ebitda: string;
+}
+export type QuotePageData = {
+  quoteData: quoteType;
+  quoteSidebarData: QuotePageSidebarData;
+  quoteSidebarAboutData: QuotePageSidebarAboutData;
+  quoteFinancialData: QuotePageFinancialData;
+};
 const isString = (text: unknown): text is string => {
   return typeof text === "string" || text instanceof String;
 };
