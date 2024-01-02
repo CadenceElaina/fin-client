@@ -20,17 +20,24 @@ import { queryClient } from "./quoteQueryClient";
 import { getPreviousClose } from "../../components/search/quoteUtils";
 import "./QuoteChart.css";
 
-const QuoteChart: React.FC<{ interval: string; symbol: string }> = ({
-  interval,
-  symbol,
-}) => {
+const QuoteChart: React.FC<{
+  interval: string;
+  symbol: string;
+  previousClosePrice: string;
+}> = ({ interval, symbol, previousClosePrice }) => {
   console.log(interval, symbol);
   queryClient.setQueryDefaults(["chartData"], { gcTime: 1000 * 60 * 30 });
   const period = interval;
 
+  let previousCloseWithoutSymbol = "";
+  if (previousClosePrice !== undefined && previousClosePrice) {
+    previousCloseWithoutSymbol = previousClosePrice.replace("$", "");
+  }
+  // Convert the string to a floating-point number using parseFloat()
+  const previousCloseNumber = parseFloat(previousCloseWithoutSymbol);
+
   const fetchChartData = async (symbol: string, period: string) => {
     const chartQueryKey = ["chartData", symbol, period];
-    const prevCloseQueryKey = ["prevClose", symbol];
 
     // Check the cache first
     const cachedChartData = queryClient.getQueryData(chartQueryKey);
@@ -76,27 +83,11 @@ const QuoteChart: React.FC<{ interval: string; symbol: string }> = ({
       queryClient.setQueryData(chartQueryKey, chartData);
 
       if (interval === "1D") {
-        const prevCloseData = await getPreviousClose(queryClient, symbol);
-        if (prevCloseData) {
-          queryClient.setQueryData(prevCloseQueryKey, prevCloseData);
-          console.log("Previous Close:", prevClosePrice);
-
-          // Now you can compare previousClose with the final close in chartData
+        const previousCloseNumber = parseFloat(previousCloseWithoutSymbol);
+        if (previousCloseNumber) {
+          console.log("Previous Close:", previousCloseNumber);
           const finalClose = chartData[chartData.length - 1].close;
           console.log("Final Close:", finalClose);
-
-          // Perform your comparison logic here
-          if (finalClose > prevClosePrice) {
-            console.log(
-              "Symbol finished higher than the previous day's close."
-            );
-          } else if (finalClose < prevClosePrice) {
-            console.log("Symbol finished lower than the previous day's close.");
-          } else {
-            console.log(
-              "Symbol finished at the same level as the previous day's close."
-            );
-          }
         }
       }
       return { chartData };
@@ -109,15 +100,6 @@ const QuoteChart: React.FC<{ interval: string; symbol: string }> = ({
   const { data, isLoading, isError } = useQuery({
     queryKey: ["chartData", symbol, period],
     queryFn: () => fetchChartData(symbol, period),
-  });
-  const {
-    data: prevCloseData,
-    isLoading: isPrevCloseLoading,
-    isError: isPrevCloseError,
-  } = useQuery({
-    queryKey: ["prevClose", symbol],
-    queryFn: () => getPreviousClose(queryClient, symbol),
-    enabled: interval === "1D", // Only enable the query when interval is "1D"
   });
 
   if (isLoading) return <div>Loading...</div>;
@@ -159,25 +141,13 @@ const QuoteChart: React.FC<{ interval: string; symbol: string }> = ({
   });
 
   const uniqueDaysArray = Array.from(uniqueDaysSet);
-  // console.log(uniqueDaysArray);
-  // console.log(chartData);
-  //console.log(prevCloseData, prevClosePrice);
-  const cachedPrevCloseData = queryClient.getQueryData(["prevClose", symbol]);
-  const finalPrevCloseData: { previousClose?: number } | null | undefined =
-    cachedPrevCloseData || prevCloseData;
 
-  const prevClosePrice =
-    finalPrevCloseData && finalPrevCloseData.previousClose !== undefined
-      ? finalPrevCloseData.previousClose
-      : 0;
-  console.log(finalPrevCloseData);
   let lineStrokeColor = "#8884d8"; // Default color
 
-  if (interval === "1D" && prevClosePrice !== undefined) {
+  if (interval === "1D" && previousCloseNumber !== undefined) {
     const finalClose = chartData[chartData.length - 1].close;
-
     // Compare final close with previous close and set line color accordingly
-    lineStrokeColor = finalClose > prevClosePrice ? "green" : "red";
+    lineStrokeColor = finalClose > previousCloseNumber ? "green" : "red";
   } else if (interval !== "1D") {
     const initialPrice = chartData[0].close;
     const finalClose = chartData[chartData.length - 1].close;
@@ -185,7 +155,7 @@ const QuoteChart: React.FC<{ interval: string; symbol: string }> = ({
   }
   const areaFill =
     lineStrokeColor === "red" ? "rgba(255, 0, 0, 0.2)" : "rgba(0, 255, 0, 0.2)";
-  console.log(areaFill);
+  // console.log(areaFill);
   return (
     <div className="chart-quote">
       <ResponsiveContainer width="100%" height={528}>
@@ -202,8 +172,8 @@ const QuoteChart: React.FC<{ interval: string; symbol: string }> = ({
           <YAxis
             scale="linear"
             domain={
-              interval === "1D" && prevClosePrice !== 0
-                ? [prevClosePrice, "auto"]
+              interval === "1D" && previousCloseNumber !== 0
+                ? [previousCloseNumber, "auto"]
                 : ["auto", "auto"]
             }
           />
@@ -239,21 +209,21 @@ const QuoteChart: React.FC<{ interval: string; symbol: string }> = ({
             dot={false}
           />
           {interval === "1D" &&
-            prevClosePrice !== undefined &&
-            prevClosePrice !== 0 && (
+            previousCloseNumber !== undefined &&
+            previousCloseNumber !== 0 && (
               <>
                 {/* Horizontal Dotted Line */}
                 <ReferenceLine
-                  y={prevClosePrice}
+                  y={previousCloseNumber}
                   stroke="black"
                   strokeDasharray="3 3"
-                  label={`Prev close ${prevClosePrice}`}
+                  label={`Prev close ${previousCloseNumber}`}
                 />
 
                 {/* Reference Dot with Label */}
                 <ReferenceDot
                   x={chartData[chartData.length - 1].formattedXAxis} // X-coordinate of the dot (last data point)
-                  y={prevClosePrice} // Y-coordinate of the dot (previous close price)
+                  y={previousCloseNumber} // Y-coordinate of the dot (previous close price)
                   r={0} // Radius of the dot
                   fill="white" // Dot color
                   stroke="none"
@@ -263,7 +233,7 @@ const QuoteChart: React.FC<{ interval: string; symbol: string }> = ({
                     Prev close
                   </text>
                   <text x={10} y={-10} dy={12} fontSize={12} fill="black">
-                    ${prevClosePrice}
+                    ${previousCloseNumber}
                   </text>
                 </ReferenceDot>
               </>

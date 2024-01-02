@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Table from "../table/Table";
 import "./Right.css";
-import { RowConfig } from "../table/types";
+import { Data, RowConfig } from "../table/types";
 import { useAuth } from "../../context/AuthContext";
 import { useWatchlists } from "../../context/WatchlistContext";
 import {
@@ -13,6 +13,8 @@ import {
 } from "../../types/types";
 import WatchlistModal from "../modals/WatchlistModal";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
+import { getQuote } from "../search/quoteUtils";
 
 const data = [
   {
@@ -59,6 +61,8 @@ const MostFollowed = () => {
   const [top5Securities, setTop5Securities] = useState<
     MostFollowedSecurities[]
   >([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
 
   const onWatchlistChange = async (
     watchlistId: string,
@@ -88,7 +92,7 @@ const MostFollowed = () => {
         }
       );
     });
-
+    // console.log(symbolFollowers);
     // Sort symbols based on their total followers in descending order
     const sortedSymbols = Object.entries(symbolFollowers).sort(
       ([symbolA, followersA], [symbolB, followersB]) => followersB - followersA
@@ -116,14 +120,52 @@ const MostFollowed = () => {
           // Include other necessary details like price, percentChange
         };
       });
-
+    //console.log(newTop5Securities);
     // Update the state with the new top 5 securities
-    setTop5Securities(newTop5Securities);
+    const fetchQuotes = async () => {
+      try {
+        setIsLoading(true); // Set loading state to true before fetching data
+        // console.log("fetching quotes for top5 followed ");
+        // Fetch quotes for each symbol in top5Securities
+        const updatedTop5Securities = await Promise.all(
+          newTop5Securities.map(async (security) => {
+            const { symbol } = security;
+            //   console.log(security.followers);
+            const quote = await getQuote(queryClient, symbol);
+
+            // Combine data from top5Securities and quote
+            let fmtPC = "";
+            if (quote?.percentChange) {
+              fmtPC = (quote.percentChange * 100).toFixed(2);
+            }
+            return {
+              id: symbol + "^_^",
+              symbol,
+              name: quote?.name || "",
+              followers: security.followers,
+              price: quote?.price || 0,
+              priceChange: quote?.priceChange || 0,
+              percentChange: Number(fmtPC) || 0,
+            };
+          })
+        );
+        //     console.log(updatedTop5Securities);
+        //  console.log(top5Quotes);
+        setTop5Securities(updatedTop5Securities);
+      } catch (error) {
+        console.error("Error fetching quotes:", error);
+      } finally {
+        setIsLoading(false); // Set loading state to false after fetching data
+      }
+    };
+    if (newTop5Securities) {
+      fetchQuotes();
+    }
   }, [watchlists]);
 
   const onIconClick = (symbol: string) => {
-    console.log(user);
-    console.log(symbol);
+    //  console.log(user);
+    //  console.log(symbol);
     if (!user) {
       console.log("user is not signed in");
       navigate("/login");
@@ -132,13 +174,24 @@ const MostFollowed = () => {
     if (typeof symbol === "string") {
       s = symbol.toLowerCase();
     }
-    console.log(s);
+    // console.log(s);
     setSelectedSecurity(s);
     setShowModal(true);
   };
 
-  console.log(user);
-  console.log(watchlists, top5Securities);
+  // console.log(user);
+  // console.log(watchlists, top5Securities);
+  const convertedTop5Securities: Data[] = top5Securities.map((security) => ({
+    id: security.symbol,
+    symbol: security.symbol,
+    name: security.name,
+    followers: security.followers.toString(),
+    price: security.price || 0,
+    priceChange: Number(security.priceChange) || 0,
+    percentChange: Number(security.percentChange) || 0,
+  }));
+  //console.log(convertedTop5Securities);
+
   return (
     <div className="most-followed-container">
       <div role="heading" className="most-followed-heading">
@@ -146,7 +199,7 @@ const MostFollowed = () => {
       </div>
       <div>
         <Table
-          data={data}
+          data={convertedTop5Securities}
           config={mostFollowedConfig}
           full={true}
           icon={true}

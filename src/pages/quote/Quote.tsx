@@ -106,6 +106,16 @@ const Quote: React.FC<QuoteProps> = () => {
   const quoteSidebarData = quotePageData?.quoteSidebarData;
   const quoteSidebarAboutData = quotePageData?.quoteSidebarAboutData;
   const quoteFinancialData = quotePageData?.quoteFinancialData;
+  const keyMappings = {
+    previousClose: "PREVIOUS CLOSE",
+    dayRange: "DAY RANGE",
+    fiftyTwoWeekHigh: "52 WEEK HIGH",
+    marketCap: "MARKET CAP",
+    average3MonthVolume: "AVG 3M VOLUME",
+    trailingPE: "TRAILING PE",
+    dividendYield: "DIVIDEND YIELD",
+    primaryExchange: "EXCHANGE",
+  };
   console.log(
     quoteData,
     quoteSidebarData,
@@ -217,7 +227,11 @@ const Quote: React.FC<QuoteProps> = () => {
             </div>
 
             {/* Chart component with the selected interval */}
-            <QuoteChart interval={selectedInterval} symbol={symbol || ""} />
+            <QuoteChart
+              interval={selectedInterval}
+              symbol={symbol || ""}
+              previousClosePrice={quoteSidebarData?.previousClose}
+            />
             <div className="quote-news">
               {" "}
               <QuoteNews />
@@ -270,7 +284,8 @@ const Quote: React.FC<QuoteProps> = () => {
                 </div>
                 {Object.entries(quoteSidebarData || {}).map(([key, value]) => (
                   <div key={key} className="quote-data-row">
-                    <div>{key}</div>
+                    {/* Use the mapped key for display */}
+                    <div>{keyMappings[key]}</div>
                     <div>{value}</div>
                   </div>
                 ))}

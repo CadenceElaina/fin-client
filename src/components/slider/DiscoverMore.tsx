@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Data /* ArrowProps */ } from "./types";
-import "./DiscoverMore.css"; // Import the CSS file for your custom styles
+import { Data } from "./types";
+import "./DiscoverMore.css"; 
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-/* import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css"; */
 import Slider from "react-slick";
 import { Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { getQuote } from "../search/quoteUtils";
 import { quoteBasic, quoteType, utils } from "../search/types";
-/* interface DiscoverMoreProps {
-  data: Data[];
-} */
+
 const symbols = [
   "^GSPC",
   "^DJI",

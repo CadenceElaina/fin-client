@@ -77,7 +77,6 @@ const Table: React.FC<TableProps> = ({
                 >
                   {item.symbol}
                 </div>
-
                 <div className="field-value">{item.name}</div>
                 <div className="field-value">{item.followers}</div>
               </div>

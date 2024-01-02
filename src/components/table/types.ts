@@ -1,5 +1,5 @@
 export interface Data {
-  id: number;
+  id?: number | string;
   symbol: string;
   name: string;
   price: number;

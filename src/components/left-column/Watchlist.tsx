@@ -3,7 +3,7 @@ import Table from "../table/Table";
 import "../../App.css";
 import { RowConfig } from "../table/types";
 import { useWatchlists } from "../../context/WatchlistContext";
-import { fetchQuoteWithRetry, getQuote } from "../search/quoteUtils";
+import { /* fetchQuoteWithRetry */ getQuote } from "../search/quoteUtils";
 import { quoteType } from "../search/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -62,18 +62,7 @@ const Watchlist = () => {
       >
     >
   >({});
-  /*  const [portfolioQuotes, setPortfolioQuotes] = useState<
-    Record<
-      string,
-      {
-        symbol: string;
-        price: number;
-        percentChange: number;
-        priceChange: number;
-        quantity: number;
-      }[]
-    >
-  >({}); */
+
   const [quoteCache, setQuoteCache] = useState<
     Record<string, quoteType | null>
   >({});
@@ -98,8 +87,7 @@ const Watchlist = () => {
         const cachedQuote = quoteCache[symbol];
 
         if (cachedQuote) {
-          /*  const pc = cachedQuote?.percentChange * 100; */
-
+          console.log('got cached quote Watchlist.tsx ', cachedQuote)
           return {
             symbol,
             name: cachedQuote?.name,
@@ -110,9 +98,8 @@ const Watchlist = () => {
           };
         } else {
           // If not in the cache, make an API call
-          const quoteData = await fetchQuoteWithRetry(
-            getQuote(queryClient, symbol)
-          );
+          const quoteData = await getQuote(queryClient, symbol);
+
           console.log("new api call fetchPortfolioQuotes - Watchlist.tsx");
           // Update the cache
           setQuoteCache((prevCache) => ({
@@ -215,9 +202,8 @@ const Watchlist = () => {
       }
 
       // If not in the cache, make an API call
-      const quoteData = await fetchQuoteWithRetry(
-        getQuote(queryClient, symbol)
-      );
+      const quoteData = await getQuote(queryClient, symbol);
+
       console.log("made api call fetchWatchlistQuotes");
       let pc = 0;
       if (quoteData?.percentChange) {
@@ -299,7 +285,7 @@ const Watchlist = () => {
       const sortedQuotes = formattedQuotes.sort(
         (a, b) => b.percentChange - a.percentChange
       );
-
+      console.log(sortedQuotes);
       // Take the top 5 securities or as many as available
       const topQuotesCount = Math.min(sortedQuotes.length, 5);
       const topQuotes = sortedQuotes.slice(0, topQuotesCount);

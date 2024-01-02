@@ -74,25 +74,7 @@ const stateAbbreviations: { [key: string]: string } = {
 const getStateFullName = (abbreviation: string): string | undefined => {
   return stateAbbreviations[abbreviation.toUpperCase()];
 };
-/* export const getQuote = async (queryClient: QueryClient, symbol: string) => {
-  return console.log("lol sorry no api calls for you");
-}; */
-/* export const fetchQuoteWithRetry = async (symbol, retryCount = 3) => {
-  try {
-    console.log("sorry");
-    return;
-  } catch (error) {
-    if (error.response && error.response.status === 429 && retryCount > 0) {
-      // Retry with backoff after waiting for a certain time
-      /*    const waitTime = Math.pow(2, 4 - retryCount) * 1000; // exponential backoff
-      await new Promise((resolve) => setTimeout(resolve, waitTime));
-      return fetchQuoteWithRetry(symbol, retryCount - 1); */
-/*    } else {
-      // Handle other errors or propagate if no retries left
-      throw error;
-    }
-  }
-}; */
+
 export const getPreviousClose = async (
   queryClient: QueryClient,
   symbol: string
@@ -102,12 +84,13 @@ export const getPreviousClose = async (
     url: "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-summary",
     params: { symbol, region: "US" },
     headers: {
-      "X-RapidAPI-Key": `${YH_KEY3}`,
+      "X-RapidAPI-Key": `${YH_KEY}`,
       "X-RapidAPI-Host": `${YH_URL}`,
     },
   };
 
   try {
+    console.log("ran getPrevClose");
     // Try to get cached data
     const cachedQuote = queryClient.getQueryData(["prevClose", symbol]);
 
@@ -151,7 +134,7 @@ export const getQuote = async (
     url: "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-summary",
     params: { symbol, region: "US" },
     headers: {
-      "X-RapidAPI-Key": `${YH_KEY3}`,
+      "X-RapidAPI-Key": `${YH_KEY}`,
       "X-RapidAPI-Host": `${YH_URL}`,
     },
   };
@@ -193,22 +176,7 @@ export const getQuote = async (
     return null;
   }
 };
-export const fetchQuoteWithRetry = async (symbol, retryCount = 3) => {
-  try {
-    const quoteData = await getQuote(queryClient, symbol);
-    return quoteData;
-  } catch (error) {
-    if (error.response && error.response.status === 429 && retryCount > 0) {
-      // Retry with backoff after waiting for a certain time
-      const waitTime = Math.pow(2, 4 - retryCount) * 1000; // exponential backoff
-      await new Promise((resolve) => setTimeout(resolve, waitTime));
-      return fetchQuoteWithRetry(symbol, retryCount - 1);
-    } else {
-      // Handle other errors or propagate if no retries left
-      throw error;
-    }
-  }
-};
+
 export const getQuotePageData = async (
   queryClient: QueryClient,
   symbol: string
@@ -218,7 +186,7 @@ export const getQuotePageData = async (
     url: "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-summary",
     params: { symbol, region: "US" },
     headers: {
-      "X-RapidAPI-Key": `${YH_KEY3}`,
+      "X-RapidAPI-Key": `${YH_KEY}`,
       "X-RapidAPI-Host": `${YH_URL}`,
     },
   };
@@ -260,7 +228,8 @@ export const getQuotePageData = async (
         (response.data.price.regularMarketDayHigh.fmt ?? ""),
       fiftyTwoWeekHigh: response.data.summaryDetail.fiftyTwoWeekHigh.fmt ?? "",
       marketCap: response.data.summaryDetail.marketCap.fmt ?? "",
-      avgVolume: response.data.price.averageDailyVolume3Month.fmt ?? "",
+      average3MonthVolume:
+        response.data.price.averageDailyVolume3Month.fmt ?? "",
       trailingPE: response.data.summaryDetail.trailingPE.fmt ?? "",
       dividendYield: response.data.summaryDetail.dividendYield.fmt ?? "",
       primaryExchange: response.data.price.exchangeName ?? "",
@@ -334,7 +303,7 @@ Promise<string[]> => {
       count: "5",
     },
     headers: {
-      "X-RapidAPI-Key": `${YH_KEY2}`,
+      "X-RapidAPI-Key": `${YH_KEY}`,
       "X-RapidAPI-Host": `${YH_URL2}`,
     },
   };
@@ -429,7 +398,7 @@ export const getTrending = async (queryClient: QueryClient) => {
     url: "https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/get-trending-tickers",
     params: { region: "US" },
     headers: {
-      "X-RapidAPI-Key": `${YH_KEY2}`,
+      "X-RapidAPI-Key": `${YH_KEY}`,
       "X-RapidAPI-Host": `${YH_URL}`,
     },
   };

@@ -7,11 +7,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import NewPortfolioModal from "../../modals/AddPortfolioModal";
 import "./Portfolio.css";
-import { Skeleton } from "@mui/material"; 
+import { Skeleton } from "@mui/material";
 
 import { useQueryClient } from "@tanstack/react-query";
 import { quoteType } from "../../search/types";
-import { fetchQuoteWithRetry, getQuote } from "../../search/quoteUtils";
+import { getQuote } from "../../search/quoteUtils";
 
 interface PortfolioSymbols {
   [portfolioTitle: string]: { [symbol: string]: number };
@@ -68,9 +68,8 @@ const YourPortfolios = () => {
         }
 
         // If not in the cache, make an API call
-        const quoteData = await fetchQuoteWithRetry(
-          getQuote(queryClient, symbol)
-        );
+        const quoteData = await getQuote(queryClient, symbol);
+
         //console.log(`perecnt change of ${symbol}, ${quoteData?.percentChange}`);
         // Update the cache
         setQuoteCache((prevCache) => ({
@@ -113,7 +112,7 @@ const YourPortfolios = () => {
 
   /*   console.log(portfolios, portfolioSymbols);
   console.log(user); */
-  //console.log(portfolioQuotes);
+  console.log(portfolioQuotes);
   const openModal = () => {
     if (!auth) {
       navigate("/login");

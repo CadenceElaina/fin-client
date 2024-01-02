@@ -1,6 +1,6 @@
 import { QueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { YH_KEY3, YH_URL } from "../../../constants";
+import { YH_KEY, YH_KEY1, YH_KEY3, YH_URL } from "../../../constants";
 import { newsSegmentType } from "../../../types/types";
 import { queryClient } from "../../quote-chart/quoteQueryClient";
 
@@ -47,7 +47,7 @@ export const getSymbolsNews = async (symbol: string) => {
     },
     headers: {
       "content-type": "text/plain",
-      "X-RapidAPI-Key": `${YH_KEY3}`,
+      "X-RapidAPI-Key": `${YH_KEY}`,
       "X-RapidAPI-Host": `${YH_URL}`,
     },
     data: "Pass in the value of uuids field returned right in this endpoint to load the next page, or leave empty to load first page",
@@ -111,7 +111,7 @@ export const getNews = async (queryClient: QueryClient) => {
     },
     headers: {
       "content-type": "text/plain",
-      "X-RapidAPI-Key": `${YH_KEY3}`,
+      "X-RapidAPI-Key": `${YH_KEY}`,
       "X-RapidAPI-Host": `${YH_URL}`,
     },
     data: "Pass in the value of uuids field returned right in this endpoint to load the next page, or leave empty to load first page",

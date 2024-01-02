@@ -20,7 +20,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               <NewsProvider>
                 <App />
               </NewsProvider>
-              <ReactQueryDevtools />
+              {/*      <ReactQueryDevtools /> */}
             </QueryClientProvider>
           </WelcomeBackProvider>
         </WatchlistsProvider>

@@ -5,7 +5,7 @@ interface HeaderProps {
   label: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ /* showBackArrow ,*/ label }) => {
+const Header: React.FC<HeaderProps> = ({ label }) => {
   return (
     <div>
       <h1>{label}</h1>

@@ -17,6 +17,9 @@
   text-decoration: none;
   box-shadow: 0 5px 5px black;
 }
+.trends-container {
+  margin-top: 50px;
+}
 .trends-buttons:hover {
   background-color: #f0f0f0;
 }
