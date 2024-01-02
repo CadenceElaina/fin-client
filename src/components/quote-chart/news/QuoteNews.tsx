@@ -37,13 +37,10 @@ const QuoteNews = () => {
   if (isError) {
     return <div>Error loading news data.</div>;
   }
-  console.log(newsData);
+  //console.log(newsData);
 
   return (
     <div className="quote-news-container">
-      <div role="heading" className="quote-news-heading">
-        Top news related to {`${symbol}`}
-      </div>
       <div>
         <QuoteArticles articles={newsData || []} symbol={symbol} />
       </div>

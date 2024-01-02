@@ -7,9 +7,14 @@ import { Skeleton } from "@mui/material";
 const QuoteArticles: React.FC<articleProps> = ({ articles, symbol }) => {
   /*   const [isLoading, setIsLoading] = useState(true); */
   console.log(articles);
-  const filteredArticles = articles
+  let filteredArticles = articles
     .filter((article) => article.relatedSymbol === symbol)
     .slice(0, 10); // Limit to 10 articles;
+  let useHeading = true;
+  if (filteredArticles.length === 0) {
+    filteredArticles = articles.slice(0, 5);
+    useHeading = !useHeading;
+  }
   const navigate = useNavigate();
   const loadingSkeleton = (
     <div className="story-container">
@@ -45,8 +50,12 @@ const QuoteArticles: React.FC<articleProps> = ({ articles, symbol }) => {
   const handleSymbolClick = (symbol: string) => {
     navigate(`/quote/${symbol}`);
   };
+  // console.log(articles, filteredArticles);
   return (
     <div>
+      <div role="heading" className="quote-news-heading">
+        Top news {useHeading ? `related to ${symbol}` : ""}
+      </div>
       {filteredArticles.length < 1
         ? // Display loading skeletons when articles are not loaded
           Array.from({ length: 3 }).map((_, index) => (

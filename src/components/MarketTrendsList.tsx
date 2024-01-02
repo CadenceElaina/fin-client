@@ -7,7 +7,7 @@ import CustomButton from "./CustomButton";
 import { Link } from "react-router-dom";
 import { MdArrowForwardIos } from "react-icons/md";
 import { useQueryClient } from "@tanstack/react-query";
-import { getMoversSymbols, getQuote } from "./search/quoteUtils";
+import { getMoversSymbols, getQuote, getTrending } from "./search/quoteUtils";
 import { quoteType, utils } from "./search/types";
 import { transformQuotesToData } from "./market-trends/utils";
 
@@ -18,6 +18,9 @@ const MarketTrendsList = () => {
     name: "market-trends",
   };
   const [symbols, setSymbols] = useState<string[]>([]);
+  const [firstMount, setFirstMount] = useState<boolean>(true);
+  const [currTrend, setCurrTrend] = useState<string>("most-active");
+  const [trendingData, setTrendingData] = useState([]);
   /* const mostActiveConfig: RowConfig = {
     fields: ["symbol", "name", "price", "priceChange", "percentChange"],
     addIcon: true,
@@ -73,11 +76,32 @@ const MarketTrendsList = () => {
   }, [queryClient]);
 
   useEffect(() => {
-    if (symbols.length > 0) {
+    if (symbols.length > 0 && firstMount) {
+      //Not in view on page load not priority
+      //Too many api calls / second exceeds api rate limit
+      const timeoutId = setTimeout(() => {
+        fetchQuotesForSymbols();
+        setFirstMount(false);
+      }, 2000);
+      return () => clearTimeout(timeoutId);
+    } else if (symbols.length > 0) {
       fetchQuotesForSymbols();
     }
   }, [symbols, queryClient]);
-
+  useEffect(() => {
+    if (currTrend === "trending") {
+      const fetchTrendingData = async () => {
+        try {
+          const data = await getTrending(queryClient);
+          setTrendingData(data.slice(0, 5));
+        } catch (error) {
+          console.error("Error fetching trending data:", error);
+        }
+      };
+      fetchTrendingData();
+    }
+  }, [currTrend]);
+  console.log(transformQuotesToData(mostActiveQuotes));
   return (
     <>
       <div role="heading" className="home-market-trends-heading">
@@ -88,13 +112,13 @@ const MarketTrendsList = () => {
           label="Most Active"
           secondary
           icon={<RiBarChart2Fill />}
-          onClick={() => console.log("")}
+          onClick={() => setCurrTrend("most-active")}
         />
         <CustomButton
           label="Trending"
           secondary
           icon={<ImFire />}
-          onClick={() => console.log("")}
+          onClick={() => setCurrTrend("trending")}
         />
       </div>
       <div>
@@ -104,12 +128,22 @@ const MarketTrendsList = () => {
         </Link>
       </div>
       <div className="market-trends-list">
-        <Table
-          data={transformQuotesToData(mostActiveQuotes)}
-          config={marketTrendsConfig}
-          full={true}
-          icon={true}
-        />
+        {currTrend === "most-active" && (
+          <Table
+            data={transformQuotesToData(mostActiveQuotes)}
+            config={marketTrendsConfig}
+            full={true}
+            icon={true}
+          />
+        )}
+        {currTrend === "trending" && (
+          <Table
+            data={trendingData}
+            config={marketTrendsConfig}
+            full={true}
+            icon={true}
+          />
+        )}
       </div>
     </>
   );

@@ -87,7 +87,7 @@ const Watchlist = () => {
         const cachedQuote = quoteCache[symbol];
 
         if (cachedQuote) {
-          console.log('got cached quote Watchlist.tsx ', cachedQuote)
+          console.log("got cached quote Watchlist.tsx ", cachedQuote);
           return {
             symbol,
             name: cachedQuote?.name,
@@ -134,18 +134,14 @@ const Watchlist = () => {
   };
 
   useEffect(() => {
-    // Fetch quotes for each portfolio
     const fetchQuotes = async () => {
       try {
         setIsLoading(true);
-
-        // Fetch quotes for each portfolio
         await Promise.all(
           portfolios.map(async (portfolio) => {
             await fetchPortfolioQuotes(portfolio.title);
           })
         );
-
         // Fetch watchlist quotes
         await fetchWatchlistQuotes();
       } catch (error) {
@@ -155,14 +151,14 @@ const Watchlist = () => {
         setIsLoading(false);
       }
     };
-
     // Execute the fetchQuotes function
-    fetchQuotes();
+    if (auth) {
+      fetchQuotes();
+    }
   }, [portfolios]);
 
   const fetchWatchlistQuotes = async () => {
     const symbols: string[] = [];
-
     // Get all unique symbols from watchlists
     watchlists.forEach((watchlist) => {
       if (watchlist.securities) {
@@ -239,7 +235,7 @@ const Watchlist = () => {
 
   useEffect(() => {
     // Check if portfolioQuotes has been fetched
-    if (Object.keys(portfolioQuotes).length > 0) {
+    if (Object.keys(portfolioQuotes).length > 0 && auth) {
       // Fetch watchlist quotes
       fetchWatchlistQuotes();
     }
@@ -261,7 +257,7 @@ const Watchlist = () => {
         price: number;
         percentChange: number;
         priceChange: number;
-        quantity: number; // Set quantity to be explicitly of type number
+        quantity: number;
       }[] = Object.entries(watchlistQuotes).flatMap(([symbol, quotes]) =>
         quotes.map((quote) => ({
           symbol,
@@ -269,7 +265,6 @@ const Watchlist = () => {
           quantity: quote.quantity || 0,
         }))
       );
-
       // Combine portfolioQuotes and formattedWatchlistQuotes into a single array
       const allQuotes = Object.values(portfolioQuotes)
         .flat()
@@ -302,8 +297,7 @@ const Watchlist = () => {
     watchlistQuotes,
     watchlistsAndPortfoliosQuotes
   );
-  //if we have portfolios and / or watchlists then return 5 securities with the largest change
-  //otherwise if no lists and/or not signed in we show you may be interested in list
+
   return (
     <>
       {auth && (

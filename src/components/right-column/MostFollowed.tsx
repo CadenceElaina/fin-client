@@ -81,6 +81,7 @@ const MostFollowed = () => {
   };
 
   useEffect(() => {
+    console.log("useEffect mostfollowed runs");
     // Count the occurrences of each symbol and calculate the total followers for each security in watchlists
     const symbolFollowers: { [symbol: string]: number } = {};
 
