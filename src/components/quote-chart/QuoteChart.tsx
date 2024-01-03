@@ -13,7 +13,7 @@ import {
   ComposedChart,
 } from "recharts";
 import { useQuery } from "@tanstack/react-query";
-import { SA_KEY, SA_URL } from "../../constants";
+import { SA_KEY, SA_KEY1, SA_URL } from "../../constants";
 import axios from "axios";
 import { formatTime, formatXAxis } from "./QuoteChartUtils";
 import { queryClient } from "./quoteQueryClient";
@@ -54,7 +54,7 @@ const QuoteChart: React.FC<{
         period: `${period}`,
       },
       headers: {
-        "X-RapidAPI-Key": `${SA_KEY}`,
+        "X-RapidAPI-Key": `${SA_KEY1}`,
         "X-RapidAPI-Host": `${SA_URL}`,
       },
     };

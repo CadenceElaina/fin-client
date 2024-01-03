@@ -31,7 +31,59 @@ const Quote: React.FC<QuoteProps> = () => {
   const queryClient = useQueryClient();
   const location = useLocation();
   const { searchInput, showDropdown } = location.state || {};
-  const symbol = location.pathname.split("/").pop();
+  const { state } = location;
+  const symbol = state[1] ? `${state[1]}` : "";
+
+  const symbolState = state[1] || "";
+  let symbolForChart = "";
+  switch (symbolState) {
+    case "^DJI":
+      symbolForChart = "DJI";
+      break;
+    case "^GSPC":
+      symbolForChart = "SP500";
+      break;
+    case "^IXIC":
+      symbolForChart = "COMP.IND";
+      break;
+    case "^RUT":
+      symbolForChart = "IWM";
+      break;
+    case "^VIX":
+      symbolForChart = "VIX";
+      break;
+    case "^GDAXI":
+      symbolForChart = "DAX";
+      break;
+    case "^FTSE":
+      symbolForChart = "UKX";
+      break;
+    case "^IBEX":
+      symbolForChart = "IBEX:IND";
+      break;
+    case "^N225":
+      symbolForChart = "NKY:IND";
+      break;
+    case "^HSI":
+      symbolForChart = "HSI";
+      break;
+    case "^BSEN":
+      symbolForChart = "SENSEX";
+      break;
+    case "BTC-USD":
+      symbolForChart = "BTC-USD";
+      break;
+    case "ETH-USD":
+      symbolForChart = "ETH-USD";
+      break;
+    case "BAT-USD":
+      symbolForChart = "BAT-USD";
+      break;
+    default:
+      console.log("quote.tsx default switch value");
+      symbolForChart = "";
+  }
+
   console.log(symbol);
   // State to track the selected time interval
   const [selectedInterval, setSelectedInterval] = useState("1D");
@@ -52,7 +104,8 @@ const Quote: React.FC<QuoteProps> = () => {
     isError: isQuotePageDataError,
   } = useQuery({
     queryKey: ["quotePageData", symbol],
-    queryFn: () => getQuotePageData(queryClient, symbol || ""),
+    queryFn: () =>
+      getQuotePageData(queryClient, symbol || "", state[0] || false),
     enabled: Boolean(symbol), // Only enable the query when symbol is available
   });
 
@@ -122,6 +175,126 @@ const Quote: React.FC<QuoteProps> = () => {
     quoteSidebarAboutData,
     quoteFinancialData
   );
+
+  // If it's a direct link from an index card, update the symbol from the state
+  if (state && state[0] === true) {
+    // ... (rest of the component remains unchanged)
+    console.log(quoteData);
+    return (
+      <div>
+        <Layout>
+          <div className="quote-top-container">
+            <div className="quote-links">
+              <Link to={"/"}>HOME</Link>
+              <FaAngleRight className="quote-arrow" />
+              <div>{symbol}</div>
+              <div className="quote-links-item"> • </div>
+              <div className="quote-primary-exchange">
+                {quoteSidebarData?.primaryExchange}
+              </div>
+            </div>
+            <div role="heading" className="quote-name">
+              {quoteData?.name}
+            </div>
+          </div>
+          <div className="quote-container">
+            <div className="quote-main-column">
+              <div className="quote-price-container">
+                {/* Price, Percent Change, Price Change, Today/Interval on the same row */}
+                <div className="quote-price-changes">
+                  <div
+                    className={
+                      quoteData?.percentChange !== undefined &&
+                      quoteData?.percentChange >= 0
+                        ? "quote-price-positive"
+                        : "quote-price-negative"
+                    }
+                  >
+                    {quoteData?.price}
+                  </div>
+                  <div
+                    className={
+                      quoteData?.percentChange !== undefined &&
+                      quoteData.percentChange >= 0
+                        ? "quote-percent-change-positive"
+                        : "quote-percent-change-negative"
+                    }
+                  >
+                    {quoteData?.percentChange !== undefined &&
+                    quoteData.percentChange >= 0 ? (
+                      <FaArrowUp />
+                    ) : (
+                      <FaArrowDown />
+                    )}
+
+                    {quoteData?.percentChange !== undefined
+                      ? `${(quoteData.percentChange * 100).toFixed(2)}%`
+                      : ""}
+                  </div>
+                  <div
+                    className={
+                      quoteData?.priceChange !== undefined &&
+                      quoteData.priceChange >= 0
+                        ? "quote-price-change-positive"
+                        : "quote-price-change-negative"
+                    }
+                  >
+                    {quoteData?.priceChange !== undefined
+                      ? quoteData.priceChange > 0
+                        ? `+${quoteData.priceChange}`
+                        : quoteData.priceChange
+                      : ""}
+                  </div>
+                  <div
+                    className={
+                      selectedInterval === "1D" &&
+                      quoteData?.percentChange !== undefined &&
+                      quoteData.percentChange >= 0
+                        ? "quote-price-interval-positive"
+                        : "quote-price-interval-negative"
+                    }
+                  >
+                    {selectedInterval === "1D" ? "Today" : selectedInterval}
+                  </div>
+                </div>
+
+                {/* Market status, exchange, and disclaimer on a separate row */}
+                <div className="quote-price-subheading">
+                  <div>({marketStatus})</div>{" "}
+                  <div className="quote-links-item"> • </div>{" "}
+                  <div>{quoteSidebarData?.primaryExchange}</div>{" "}
+                  <div>
+                    <Link to={"/disclaimer"}>Disclaimer</Link>
+                  </div>
+                </div>
+              </div>
+
+              <div className="button-group">
+                {["1D", "5D", "1M", "6M", "YTD", "1Y", "5Y", "MAX"].map(
+                  (interval) => (
+                    <button
+                      key={interval}
+                      className={selectedInterval === interval ? "active" : ""}
+                      onClick={() => handleIntervalChange(interval)}
+                    >
+                      {interval}
+                    </button>
+                  )
+                )}
+              </div>
+
+              {/* Chart component with the selected interval */}
+              <QuoteChart
+                interval={selectedInterval}
+                symbol={symbolForChart || ""}
+                previousClosePrice={""}
+              />
+            </div>
+          </div>
+        </Layout>
+      </div>
+    );
+  }
 
   return (
     <div>

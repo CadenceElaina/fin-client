@@ -33,7 +33,7 @@ export interface QuotePageSidebarData {
   dayRange: string;
   fiftyTwoWeekHigh: string;
   marketCap: string;
-  avgVolume: string;
+  average3MonthVolume: string;
   trailingPE: string;
   dividendYield: string;
   primaryExchange: string;

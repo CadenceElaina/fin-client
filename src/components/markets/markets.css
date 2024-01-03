@@ -43,19 +43,21 @@
 .markets-article {
   padding: 1rem;
   flex: 1;
+  max-width: 32%;
   margin-left: 4px;
   font-size: 0.9rem;
 }
 .markets-article-link {
   flex: 1;
-  color: rgb(24, 90, 188);
   text-decoration: none;
   font-weight: 600;
   margin-bottom: 2px;
 }
-
-.markets-article-link:hover {
+.markets-article-link a {
   color: rgba(28, 116, 233, 0.8);
+}
+.markets-article-link a:hover {
+  color: rgb(24, 90, 188);
 }
 
 .index-cards-container {
@@ -81,9 +83,19 @@
   background-color: #fff;
   border-radius: 8px;
   padding: 6px;
-  border: 1px solid rgb(218, 220, 224);
+  border: 1px solid rgb(0, 0, 0);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   white-space: nowrap;
+}
+.currencies:hover {
+  cursor: default !important;
+}
+.index-card-content:hover {
+  background-color: rgba(246, 246, 246, 0.95);
+  cursor: pointer;
+}
+.index-card-link {
+  text-decoration: none;
 }
 
 .index-card-icon {

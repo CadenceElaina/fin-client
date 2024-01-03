@@ -230,7 +230,8 @@ export const getQuote = async (
 
 export const getQuotePageData = async (
   queryClient: QueryClient,
-  symbol: string
+  symbol: string,
+  isIndex?: boolean
 ): Promise<QuotePageData | null> => {
   const options = {
     method: "GET",
@@ -244,7 +245,10 @@ export const getQuotePageData = async (
 
   try {
     // Try to get cached data
-    const cachedQuote = queryClient.getQueryData(["quotePageData", symbol]);
+    const cachedQuote = queryClient.getQueryData([
+      "quotePageData",
+      symbol,
+    ]) as QuotePageData;
 
     if (cachedQuote) {
       /*      const newCachedQuote = utils.checkCachedQuoteType(cachedQuote); */
@@ -256,7 +260,50 @@ export const getQuotePageData = async (
     console.log("quoteUtils.ts quotePageData - new api request -", symbol);
     await new Promise((resolve) => setTimeout(resolve, 500)); // 500ms delay
     const response = await axios.request(options);
+    if (isIndex) {
+      const temp = response.data.quoteType.symbol;
+      const quoteData: quoteType = {
+        symbol: temp.toLowerCase(),
+        price: response.data.price.regularMarketPrice.raw ?? "",
+        name: response.data.price.shortName ?? "",
+        priceChange: response.data.price.regularMarketChange.fmt ?? "",
+        percentChange: response.data.price.regularMarketChangePercent.raw ?? "",
+      };
+      const quoteSidebarData: QuotePageSidebarData = {
+        previousClose: "",
+        dayRange: "",
+        fiftyTwoWeekHigh: "",
+        marketCap: "",
+        average3MonthVolume: "",
+        trailingPE: "",
+        dividendYield: "",
+        primaryExchange: "",
+      };
+      const quoteSidebarAboutData: QuotePageSidebarAboutData = {
+        summary: "",
+        website: "",
+        headquarters: "",
+        employees: "",
+      };
 
+      const quoteFinancialData: QuotePageFinancialData = {
+        annualRevenue: "",
+        netIncome: "",
+        netProfitMargin: "",
+        ebitda: "",
+      };
+
+      // Cache the quote data
+      const quotePageData: QuotePageData = {
+        quoteData,
+        quoteSidebarData,
+        quoteSidebarAboutData,
+        quoteFinancialData,
+      };
+      queryClient.setQueryData(["quotePageData", symbol], quotePageData);
+      console.log(quotePageData);
+      return quotePageData;
+    }
     if (!response.data.quoteType || !response.data.price) {
       throw new Error("Incomplete or missing data in the API response");
     }
