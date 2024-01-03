@@ -16,36 +16,6 @@ import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { getQuote } from "../search/quoteUtils";
 
-const data = [
-  {
-    id: 100,
-    symbol: "SPY",
-    name: "SP 500 ETF",
-    followers: "3.71M",
-    price: 440,
-    priceChange: 4.4,
-    percentChange: 2.3,
-  },
-  {
-    id: 200,
-    symbol: "MSFT",
-    name: "Microsoft",
-    followers: "2.16M",
-    price: 360,
-    priceChange: -1.4,
-    percentChange: -0.7,
-  },
-  {
-    id: 300,
-    symbol: "AAPL",
-    name: "Apple Inc.",
-    followers: "4.56M",
-    price: 140,
-    priceChange: 2.2,
-    percentChange: 1.5,
-  },
-];
-//
 const MostFollowed = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
@@ -81,6 +51,8 @@ const MostFollowed = () => {
   };
 
   useEffect(() => {
+    let isMounted = true;
+
     console.log("useEffect mostfollowed runs");
     // Count the occurrences of each symbol and calculate the total followers for each security in watchlists
     const symbolFollowers: { [symbol: string]: number } = {};
@@ -93,7 +65,7 @@ const MostFollowed = () => {
         }
       );
     });
-    // console.log(symbolFollowers);
+    console.log(symbolFollowers);
     // Sort symbols based on their total followers in descending order
     const sortedSymbols = Object.entries(symbolFollowers).sort(
       ([symbolA, followersA], [symbolB, followersB]) => followersB - followersA
@@ -103,29 +75,16 @@ const MostFollowed = () => {
     const newTop5Securities: MostFollowedSecurities[] = sortedSymbols
       .slice(0, 5)
       .map(([symbol]) => {
-        const foundSecurity = data.find((s) => s.symbol === symbol);
-
-        if (foundSecurity) {
-          return {
-            symbol,
-            name: foundSecurity.name,
-            followers: symbolFollowers[symbol],
-            // Include other necessary details like price, percentChange
-          };
-        }
-
         return {
           symbol,
           name: "Unknown",
           followers: symbolFollowers[symbol],
-          // Include other necessary details like price, percentChange
         };
       });
-    //console.log(newTop5Securities);
-    // Update the state with the new top 5 securities
+    console.log(newTop5Securities);
     const fetchQuotes = async () => {
       try {
-        setIsLoading(true); // Set loading state to true before fetching data
+        setIsLoading(true);
         // console.log("fetching quotes for top5 followed ");
         // Fetch quotes for each symbol in top5Securities
         const updatedTop5Securities = await Promise.all(
@@ -150,8 +109,11 @@ const MostFollowed = () => {
             };
           })
         );
-        //     console.log(updatedTop5Securities);
+        console.log(updatedTop5Securities);
         //  console.log(top5Quotes);
+        if (isMounted) {
+          setTop5Securities(updatedTop5Securities);
+        }
         setTop5Securities(updatedTop5Securities);
       } catch (error) {
         console.error("Error fetching quotes:", error);
@@ -181,7 +143,7 @@ const MostFollowed = () => {
   };
 
   // console.log(user);
-  // console.log(watchlists, top5Securities);
+  console.log(watchlists, top5Securities);
   const convertedTop5Securities: Data[] = top5Securities.map((security) => ({
     id: security.symbol,
     symbol: security.symbol,
@@ -191,7 +153,7 @@ const MostFollowed = () => {
     priceChange: Number(security.priceChange) || 0,
     percentChange: Number(security.percentChange) || 0,
   }));
-  //console.log(convertedTop5Securities);
+  console.log(convertedTop5Securities);
 
   return (
     <div className="most-followed-container">

@@ -127,7 +127,8 @@ export const getPreviousClose = async (
 };
 export const getQuote = async (
   queryClient: QueryClient,
-  symbol: string
+  symbol: string,
+  retryCount: number = 0
 ): Promise<quoteType | null> => {
   const options = {
     method: "GET",
@@ -138,7 +139,57 @@ export const getQuote = async (
       "X-RapidAPI-Host": `${YH_URL}`,
     },
   };
+  try {
+    // Try to get cached data
+    const cachedQuote = queryClient.getQueryData(["quote", symbol]);
 
+    if (cachedQuote) {
+      const newCachedQuote = utils.checkCachedQuoteType(cachedQuote);
+      console.log("quoteUtils.ts - got cached quote:", cachedQuote);
+      return newCachedQuote;
+    }
+
+    // If not cached, make an API call
+    console.log("quoteUtils.ts - new api request -", symbol);
+    await new Promise((resolve) => setTimeout(resolve, 500)); // 500ms delay
+    const response = await axios.request(options);
+
+    if (!response.data.quoteType || !response.data.price) {
+      throw new Error("Incomplete or missing data in the API response");
+    }
+
+    const temp = response.data.quoteType.symbol;
+    const quoteData: quoteType = {
+      symbol: temp.toLowerCase(),
+      price: response.data.price.regularMarketPrice.raw ?? "",
+      name: response.data.price.shortName ?? "",
+      priceChange: response.data.price.regularMarketChange.fmt ?? "",
+      percentChange: response.data.price.regularMarketChangePercent.raw ?? "",
+    };
+
+    // Cache the quote data
+    queryClient.setQueryData(["quote", symbol], quoteData);
+    console.log(quoteData);
+    return quoteData;
+  } catch (error) {
+    console.error(error);
+
+    if (
+      axios.isAxiosError(error) &&
+      error.response?.status === 429 &&
+      retryCount < 2
+    ) {
+      // Retry the API call after waiting for a reasonable amount of time
+      const delay = 750;
+      console.log(`Retrying after ${delay / 1000} seconds...`);
+      await new Promise((resolve) => setTimeout(resolve, delay));
+      return getQuote(queryClient, symbol, retryCount + 1);
+    }
+
+    return null;
+  }
+};
+/* 
   try {
     // Try to get cached data
     const cachedQuote = queryClient.getQueryData(["quote", symbol]);
@@ -175,7 +226,7 @@ export const getQuote = async (
     console.error(error);
     return null;
   }
-};
+}; */
 
 export const getQuotePageData = async (
   queryClient: QueryClient,
@@ -273,26 +324,11 @@ export const getQuotePageData = async (
   }
 };
 
-/* interface ApiResponse {
-  quoteResponse: {
-    result: Array<{
-      symbol: string;
-      regularMarketPrice: number;
-      shortName: string;
-      regularMarketChange: number;
-      regularMarketChangePercent: number;
-    }>;
-  };
-} */
-
 export interface Symbols {
   symbols: string;
 }
 
-export const getMoversSymbols = async (
-  title: string
-): /*   queryClient: QueryClient */
-Promise<string[]> => {
+export const getMoversSymbols = async (title: string): Promise<string[]> => {
   const options = {
     method: "GET",
     url: "https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/v2/get-movers",
@@ -310,42 +346,12 @@ Promise<string[]> => {
 
   try {
     console.log("get movers runs");
-    // Try to get cached data
-    /*  const cachedQuotes: Record<string, quoteType | null> = {};
-
-    // Iterate over symbols to check cache
-    for (let i = 0; i < 5; i++) {
-      const symbol = `symbol${i}`; // Replace with the actual way you get the symbol
-      const cachedQuote = queryClient.getQueryData(["quote", symbol]);
-
-      if (cachedQuote) {
-        const newCachedQuote = utils.checkCachedQuoteType(cachedQuote);
-        console.log("quoteUtils.ts - got cached quote:", cachedQuote);
-        cachedQuotes[symbol] = newCachedQuote;
-      }
-    }
-
-    // Check if all quotes are cached
-    const allQuotesCached = Object.values(cachedQuotes).every(
-      (quote) => quote !== null
-    );
-
-    if (allQuotesCached) {
-      console.log("get movers all quotes were cached");
-      return cachedQuotes;
-    } */
 
     // If not all quotes are cached, make an API call
     console.log("quoteUtils.ts - new api request - get movers");
     const response = await axios.request<any>(options);
 
-    /*  if (!response || !response.quoteResponse || !response.quoteResponse || !response.data.quoteResponse.result) {
-      throw new Error("Incomplete or missing data in the API response");
-    } */
     console.log(response.data.finance.result[2]);
-    //const data = response.data.finance.result[2]
-    // Map over response.quoteResponse.result[]
-    /*     const newQuotes: Record<string, quoteType | null> = {}; */
     const symbols: string[] = [];
     let resultIndex;
     if (title === "active") {
@@ -359,25 +365,8 @@ Promise<string[]> => {
     response.data.finance.result[resultIndex].quotes.map(
       (q: any, i: number) => {
         symbols.push(q.symbol); // Replace with the actual way you get the symbol
-        /*   const price = q.regularMarketPrice;
-      const name = q.shortName;
-      const priceChange = q.regularMarketChange;
-      const percentChange = q.regularMarketChangePercent;
- */
-        /*  const quoteData: quoteType = {
-        symbol: symbol.toLowerCase(),
-        price,
-        name,
-        priceChange,
-        percentChange,
-      }; */
-        /*       console.log(quoteData); */
-        // Cache the quote data
-        /*   queryClient.setQueryData(["quote", symbol], quoteData);
-      newQuotes[symbol] = quoteData; */
       }
     );
-
     return symbols;
   } catch (error) {
     console.error(error);

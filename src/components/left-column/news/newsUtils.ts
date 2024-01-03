@@ -56,7 +56,7 @@ export const getSymbolsNews = async (symbol: string) => {
   try {
     console.log("new api request - getSymbolsNews");
     const response = await axios.request(options);
-    console.log(response.data.data.main.stream[0].content);
+    //console.log(response.data.data.main.stream[0].content);
     const articles = response.data.data.main.stream.map(
       (a: {
         content: {
@@ -121,7 +121,7 @@ export const getNews = async (queryClient: QueryClient) => {
     console.log("new api request - getNews");
     const response = await axios.request(options);
     /*     console.log(response.data.data.main.stream); */
-    console.log(response.data.data.main.stream[0].content);
+    //console.log(response.data.data.main.stream[0].content);
     const articles = response.data.data.main.stream.map(
       (a: {
         content: {

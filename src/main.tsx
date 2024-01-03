@@ -8,6 +8,7 @@ import { PortfoliosProvider } from "./context/PortfoliosContext.tsx";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { NewsProvider } from "./context/NewsContext.tsx";
 import { WatchlistsProvider } from "./context/WatchlistContext.tsx";
+import { IndexQuotesProvider } from "./context/IndexQuotesContext.tsx";
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -17,9 +18,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <WatchlistsProvider>
           <WelcomeBackProvider>
             <QueryClientProvider client={queryClient}>
-              <NewsProvider>
-                <App />
-              </NewsProvider>
+              <IndexQuotesProvider>
+                <NewsProvider>
+                  <App />
+                </NewsProvider>
+              </IndexQuotesProvider>
               {/*      <ReactQueryDevtools /> */}
             </QueryClientProvider>
           </WelcomeBackProvider>

@@ -1,4 +1,4 @@
-export enum exchange {
+export enum Exchange {
   US = "US",
   Europe = "Europe",
   Asia = "Asia",
@@ -7,7 +7,7 @@ export enum exchange {
 }
 
 export interface IndexCard {
-  exchange: exchange;
+  exchange: Exchange;
   name: string;
   symbol: string;
   percentChange: number;
@@ -17,5 +17,5 @@ export interface IndexCard {
 
 export interface IndexCardProps {
   cards: IndexCard[];
-  currExchange: exchange;
+  currExchange: Exchange;
 }
