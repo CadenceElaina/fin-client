@@ -2,9 +2,9 @@
   position: absolute;
   max-width: 192px;
   max-height: 189px;
-  left: 1510px;
+  /*   left: 1510px;
   top: 1030px;
-  transform: translateX(-50%);
+  transform: translateX(-50%); */
   color: #222;
   background-color: #fff; /* Background color */
   border: 1px solid #ddd; /* Border color */

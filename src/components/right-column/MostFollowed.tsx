@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Table from "../table/Table";
 import "./Right.css";
 import { Data, RowConfig } from "../table/types";
@@ -19,6 +19,11 @@ import { getQuote } from "../search/quoteUtils";
 const MostFollowed = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
+  const [modalPosition, setModalPosition] = useState<{
+    left: number;
+    top: number;
+  }>({ left: 0, top: 0 });
+  const containerRef = useRef(null);
   const [selectedSecurity, setSelectedSecurity] = useState<string>();
   const mostFollowedConfig: RowConfig = {
     fields: ["symbol", "name", "percentChange"],
@@ -34,25 +39,8 @@ const MostFollowed = () => {
   const [isLoading, setIsLoading] = useState(false);
   const queryClient = useQueryClient();
 
-  const onWatchlistChange = async (
-    watchlistId: string,
-    security: WatchlistSecurity,
-    selected: boolean
-  ) => {
-    try {
-      if (selected) {
-        await addSecurityToWatchlist(watchlistId, security);
-      } else {
-        await removeSecurityFromWatchlist(watchlistId, security);
-      }
-    } catch (error) {
-      console.error("Error updating watchlist:", error);
-    }
-  };
-
   useEffect(() => {
     let isMounted = true;
-
     console.log("useEffect mostfollowed runs");
     // Count the occurrences of each symbol and calculate the total followers for each security in watchlists
     const symbolFollowers: { [symbol: string]: number } = {};
@@ -125,6 +113,17 @@ const MostFollowed = () => {
       fetchQuotes();
     }
   }, [watchlists]);
+  useEffect(() => {
+    const containerElement = containerRef.current;
+
+    if (containerElement) {
+      const { x, y, width, height } = containerElement.getBoundingClientRect();
+      console.log("X:", x, "Y:", y);
+
+      // Pass the position information to the WatchlistModal
+      setModalPosition({ left: x + width, top: y + height });
+    }
+  }, [watchlists]);
 
   const onIconClick = (symbol: string) => {
     //  console.log(user);
@@ -156,7 +155,7 @@ const MostFollowed = () => {
   console.log(convertedTop5Securities);
 
   return (
-    <div className="most-followed-container">
+    <div className="most-followed-container" ref={containerRef}>
       <div role="heading" className="most-followed-heading">
         Most followed on Finhub
       </div>
@@ -174,6 +173,11 @@ const MostFollowed = () => {
           watchlists={watchlists}
           onClose={() => setShowModal(false)}
           selectedSecurity={selectedSecurity}
+          style={{
+            position: "absolute",
+            left: modalPosition.left,
+            top: modalPosition.top,
+          }}
         />
       )}
     </div>

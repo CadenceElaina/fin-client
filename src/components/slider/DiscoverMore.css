@@ -27,7 +27,13 @@
   transition: transform 0.2s;
   border-radius: 12px;
 }
-
+.card a {
+  text-decoration: none;
+  color: #1a73e8;
+}
+.card a:hover {
+  text-decoration: underline;
+}
 .card:hover {
   box-shadow: 0 0 5px rgb(154, 160, 166);
 }

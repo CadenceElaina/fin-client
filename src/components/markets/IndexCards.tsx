@@ -5,14 +5,6 @@ import { Link } from "react-router-dom";
 
 const IndexCards: React.FC<IndexCardProps> = ({ cards, currExchange }) => {
   const isIndex = true;
-  console.log(
-    cards
-      .filter((card: IndexCard) => card.exchange === currExchange)
-      .map((card: IndexCard) => {
-        const symbol = `^${card.symbol.slice(1)}`;
-        console.log(`/quote/${symbol}`);
-      })
-  );
 
   return (
     <div className="index-cards-inner">
@@ -24,7 +16,7 @@ const IndexCards: React.FC<IndexCardProps> = ({ cards, currExchange }) => {
           if (symbol.charAt(0) === "^") {
             symbol = symbol.replace("^", "");
           }
-          console.log("Current Exchange:", currExchange);
+          /*           console.log("Current Exchange:", currExchange); */
           // Check if the current exchange is Exchange.Currencies
           if (currExchange === Exchange.Currencies) {
             return (

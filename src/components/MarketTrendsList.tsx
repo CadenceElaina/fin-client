@@ -10,6 +10,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { getMoversSymbols, getQuote, getTrending } from "./search/quoteUtils";
 import { quoteType, utils } from "./search/types";
 import { transformQuotesToData } from "./market-trends/utils";
+import { Skeleton } from "@mui/material";
 
 const MarketTrendsList = () => {
   const marketTrendsConfig: RowConfig = {
@@ -26,6 +27,7 @@ const MarketTrendsList = () => {
     addIcon: true,
   }; */
   const queryClient = useQueryClient();
+  const [loading, setLoading] = useState<boolean>(false);
   const [mostActiveQuotes, setMostActiveQuotes] = useState<
     Record<string, quoteType | null>
   >({});
@@ -41,6 +43,7 @@ const MarketTrendsList = () => {
   };
 
   const fetchQuotesForSymbols = async () => {
+    setLoading(true);
     const quotePromises = symbols.map(async (symbol) => {
       // Check the cache first
       const cachedQuote = queryClient.getQueryData(["quote", symbol]);
@@ -67,7 +70,7 @@ const MarketTrendsList = () => {
     symbols.forEach((symbol, index) => {
       symbolQuoteMap[symbol] = quotes[index];
     });
-
+    setLoading(false);
     setMostActiveQuotes(symbolQuoteMap);
   };
 
@@ -90,6 +93,7 @@ const MarketTrendsList = () => {
   }, [symbols, queryClient]);
   useEffect(() => {
     if (currTrend === "trending") {
+      setLoading(true);
       const fetchTrendingData = async () => {
         try {
           const data = await getTrending(queryClient);
@@ -99,36 +103,64 @@ const MarketTrendsList = () => {
         }
       };
       fetchTrendingData();
+      setLoading(false);
     }
   }, [currTrend]);
-  console.log(transformQuotesToData(mostActiveQuotes));
+  console.log(transformQuotesToData(mostActiveQuotes)); //
   return (
     <>
       <div role="heading" className="home-market-trends-heading">
         Market trends
       </div>
-      <div className="home-market-trends-buttons">
-        <CustomButton
-          label="Most Active"
-          secondary
-          icon={<RiBarChart2Fill />}
-          onClick={() => setCurrTrend("most-active")}
-        />
-        <CustomButton
-          label="Trending"
-          secondary
-          icon={<ImFire />}
-          onClick={() => setCurrTrend("trending")}
-        />
-      </div>
-      <div>
-        <Link to={"/market-trends/active"}>
-          More
-          <MdArrowForwardIos />
-        </Link>
+      <div className="home-market-trends-buttons-container">
+        <div className="home-market-trends-buttons">
+          <CustomButton
+            label="Most Active"
+            secondary
+            icon={<RiBarChart2Fill />}
+            onClick={() => setCurrTrend("most-active")}
+          />
+          <CustomButton
+            label="Trending"
+            secondary
+            icon={<ImFire />}
+            onClick={() => setCurrTrend("trending")}
+          />
+        </div>
+        <div className="home-market-trends-buttons-more">
+          <Link to={"/market-trends/active"}>
+            <div>More</div>
+            <div>
+              <MdArrowForwardIos />
+            </div>
+          </Link>
+        </div>
       </div>
       <div className="market-trends-list">
-        {currTrend === "most-active" && (
+        {loading && (
+          <div>
+            {/* Add Skeletons here while waiting for data to load */}
+            <Skeleton
+              variant="text"
+              width={80}
+              height={20}
+              sx={{ bgcolor: "rgba(255, 255, 255, 0.1)" }}
+            />
+            <Skeleton
+              variant="text"
+              width="100%"
+              height={30}
+              sx={{ bgcolor: "rgba(255, 255, 255, 0.1)" }}
+            />
+            <Skeleton
+              variant="rectangular"
+              width="100%"
+              height={150}
+              sx={{ bgcolor: "rgba(255, 255, 255, 0.1)" }}
+            />
+          </div>
+        )}
+        {!loading && currTrend === "most-active" && (
           <Table
             data={transformQuotesToData(mostActiveQuotes)}
             config={marketTrendsConfig}
@@ -136,7 +168,7 @@ const MarketTrendsList = () => {
             icon={true}
           />
         )}
-        {currTrend === "trending" && (
+        {!loading && currTrend === "trending" && (
           <Table
             data={trendingData}
             config={marketTrendsConfig}

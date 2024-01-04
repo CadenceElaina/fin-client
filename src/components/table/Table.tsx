@@ -318,7 +318,7 @@ const Table: React.FC<TableProps> = ({
             ) : (
               // Render add icon and show dropdown for user's watchlists
               <IoMdAddCircleOutline
-                onClick={() => onIconClick && onIconClick(item.symbol, user)}
+                onClick={() => onIconClick && onIconClick(item.symbol)}
                 size={24}
               />
             )}

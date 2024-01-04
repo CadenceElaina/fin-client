@@ -9,13 +9,15 @@ import { useNavigate } from "react-router-dom";
 interface WatchlistModalProps {
   watchlists: Watchlist[];
   onClose: () => void;
-  selectedSecurity: string; // Assuming this is the symbol of the selected security
+  selectedSecurity: string;
+  style?: React.CSSProperties;
 }
 
 const WatchlistModal: React.FC<WatchlistModalProps> = ({
   watchlists,
   onClose,
   selectedSecurity,
+  style,
 }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -106,7 +108,7 @@ const WatchlistModal: React.FC<WatchlistModalProps> = ({
   };
 
   return (
-    <div className="watchlist-modal">
+    <div className="watchlist-modal" style={style}>
       {usersWatchlists.length > 1 ? (
         <>
           <h2>Select Watchlists</h2>

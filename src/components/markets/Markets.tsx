@@ -31,7 +31,7 @@ const Markets = () => {
   const symbolsASIA = ["^N225", "^HSI", "^BSESN"];
   const symbolsCUR = ["EURUSD=X", "JPY=X", "GBPUSD=X", "CAD=X"];
   const symbolsCRYPTO = ["BTC-USD", "ETH-USD", "BAT-USD"];
-
+  queryClient.setQueryDefaults(["quote"], { gcTime: 1000 * 60 * 15 });
   const fetchSymbolQuotes = async () => {
     let symbols;
 
