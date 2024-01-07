@@ -1,7 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+/* import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { SA_KEY, SA_URL } from "../constants";
-import axios from "axios";
 
 const fetchChartData = async (symbol: string, period: string) => {
   const options = {
@@ -32,4 +31,4 @@ const useChartData = (symbol: string, interval: string) => {
   );
 };
 
-export default useChartData;
+export default useChartData; */

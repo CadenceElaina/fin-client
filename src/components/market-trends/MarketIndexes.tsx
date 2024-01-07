@@ -1,5 +1,4 @@
-// MarketIndexes.tsx
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import MarketTrendsButtons from "./MarketTrendsButtons";
 import Layout from "../layout/Layout";
 import Footer from "../Footer";

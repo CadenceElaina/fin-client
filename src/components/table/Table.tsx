@@ -1,7 +1,7 @@
 import * as React from "react";
 import { FaArrowUp, FaArrowDown, FaCheckCircle } from "react-icons/fa";
 import "./Table.css";
-import { IoMdAddCircleOutline, IoMdRemoveCircleOutline } from "react-icons/io";
+import { IoMdAddCircleOutline } from "react-icons/io";
 import { TableProps, AllowedFields } from "./types";
 import { Link, useNavigate } from "react-router-dom";
 import { useWatchlists } from "../../context/WatchlistContext";
@@ -38,16 +38,16 @@ const Table: React.FC<TableProps> = ({
   data,
   config,
   full,
-  icon,
+  /*   icon, */
   onIconClick,
 }) => {
-  const { watchlists, addSecurityToWatchlist, removeSecurityFromWatchlist } =
-    useWatchlists();
+  const { watchlists } = useWatchlists();
   const { user } = useAuth();
   const navigate = useNavigate();
   /*   console.log(data, config); */
   const handleClick = (symbol: string) => {
-    navigate(`/quote/${symbol}`);
+    const newState = [false, symbol];
+    navigate(`/quote/${symbol}`, { state: newState });
   };
   const usersWatchlists = watchlists.filter((w) => w.author === user?.name);
   return (

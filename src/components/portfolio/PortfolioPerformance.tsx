@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { usePortfolios } from "../../context/PortfoliosContext";
 import Portfolio from "./Portfolio";
 import Table from "../table/Table";
 import { RowConfig } from "../table/types";
@@ -157,7 +156,8 @@ const PortfolioPerformance: React.FC<PortfolioPerformanceProps> = ({
     totalPriceChange: -2.2,
   };
   /*   console.log(portfolio?.title, portfolio.portfolioValue); */
-  const convertPortfolioValueToNumbers = (portfolioValue) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const convertPortfolioValueToNumbers = (portfolioValue: any[]) => {
     return portfolioValue.map((entry) => ({
       date: entry.date,
       value: parseFloat(entry.value),

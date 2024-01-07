@@ -4,13 +4,13 @@ interface PortfolioSymbols {
   [portfolioTitle: string]: { [symbol: string]: number };
 }
 
-interface Security {
+/* interface Security {
   symbol: string;
   quantity: number;
   price: number;
   percentChange: number;
 }
-
+ */
 export const generatePortfolioSymbols = (
   portfolios: Portfolio[]
 ): PortfolioSymbols => {

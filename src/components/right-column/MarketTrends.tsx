@@ -1,4 +1,3 @@
-import React from "react";
 import CustomButton from "../CustomButton";
 import "./Right.css";
 import { useNavigate } from "react-router-dom";

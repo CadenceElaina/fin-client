@@ -53,6 +53,7 @@ const remove = async (id: string) => {
   return response.data;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const updatePortfolioValue = async (portfolioId: string, data: any) => {
   const response = await axios.put(`${baseUrl}/${portfolioId}`, data);
   return response; // Return the entire response object
@@ -66,44 +67,3 @@ export default {
   remove,
   updatePortfolioValue,
 };
-/*
-
-const getAll = async () => {
-  const response = await axios.get(baseUrl);
-  return response.data;
-};
-*/
-
-/* const likeBlog = async (id, portfolio) => {
-  const response = await axios.put(`${baseUrl}/${id}`, portfolio);
-  return response.data;
-}; */
-/* 
-const addComment = async (id, comment) => {
-  const response = await axios.post(`${baseUrl}/${id}/comments`, { comment });
-  return response.data;
-}; */
-/* const addSecurity = async (id, security) => {
-  const response = await axios.post(`${baseUrl}/${id}/comments`, { security });
-  return response.data;
-};
-
-const remove = async (id) => {
-  const config = {
-    headers: { Authorization: token },
-  };
-
-  const response = await axios.delete(`${baseUrl}/${id}`, config);
-  return response.data;
-};
-
-
-export default {
-  setToken,
-  getAll,
-  create,
-
-  remove,
-  addSecurity,
-};
- */

@@ -7,6 +7,7 @@ import Avatar from "@mui/material/Avatar/Avatar";
 import Sidebar from "./Sidebar";
 import CustomButton from "../CustomButton";
 import "./Layout.css";
+import { useNotification } from "../../context/NotificationContext";
 
 const getUserInitials = (name: string | undefined): string => {
   if (!name) return "";
@@ -18,6 +19,7 @@ const getUserInitials = (name: string | undefined): string => {
   }
 };
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { addNotification } = useNotification();
   const { user, signOut } = useAuth();
   const auth = !!user;
 
@@ -49,7 +51,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     navigate("/");
     localStorage.clear();
     await signOut();
-    window.location.reload();
+    addNotification(`${user?.username} successfully signed out!`, "success");
   };
   return (
     <div className={`layout-container ${open ? "open" : ""}`}>

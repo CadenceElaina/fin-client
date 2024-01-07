@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { IconType } from "react-icons";
+/* import { IconType } from "react-icons"; */
 
 interface ButtonProps {
   active?: boolean;

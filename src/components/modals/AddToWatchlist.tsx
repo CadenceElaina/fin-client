@@ -36,7 +36,7 @@ const AddToWatchlistModal: React.FC<AddToWatchlistModalProps> = ({
     onSave(symbol);
     onClose();
   };
-
+//
   return (
     <div className={`addToPortfolio-container ${isOpen ? "open" : ""}`}>
       <div className="addToPortfolio-content">

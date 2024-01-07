@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  LineChart,
   Line,
   XAxis,
   YAxis,
@@ -13,12 +12,22 @@ import {
   ComposedChart,
 } from "recharts";
 import { useQuery } from "@tanstack/react-query";
-import { SA_KEY, SA_KEY1, SA_URL } from "../../constants";
+import { SA_KEY1, SA_URL } from "../../constants";
 import axios from "axios";
 import { formatTime, formatXAxis } from "./QuoteChartUtils";
 import { queryClient } from "./quoteQueryClient";
-import { getPreviousClose } from "../../components/search/quoteUtils";
 import "./QuoteChart.css";
+
+type ChartData = {
+  time: string;
+  close: number;
+  formattedXAxis: string;
+};
+
+interface Values {
+  close: number; // Adjust the type accordingly
+  // Add other properties if necessary
+}
 
 const QuoteChart: React.FC<{
   interval: string;
@@ -65,7 +74,7 @@ const QuoteChart: React.FC<{
       console.log(response);
 
       const chartData = Object.entries(response.data.attributes).map(
-        ([timestamp, values]) => {
+        ([timestamp, values]: [string, Values]) => {
           const time = new Date(timestamp);
           // Format time for tooltip and x-axis
           const formattedTime = formatTime(time, interval);
@@ -109,7 +118,7 @@ const QuoteChart: React.FC<{
   const uniqueDaysSet = new Set();
   const uniqueYearsSet = new Set();
 
-  const chartData = data.chartData.map((entry, index) => {
+  const chartData = (data.chartData as ChartData[]).map((entry) => {
     if (interval === "5Y" || interval === "MAX") {
       const year = entry.formattedXAxis;
       uniqueYearsSet.add(year);
@@ -167,7 +176,7 @@ const QuoteChart: React.FC<{
           <XAxis
             dataKey="formattedXAxis"
             tick={{ fontSize: 12 }}
-            ticks={uniqueDaysArray}
+            ticks={uniqueDaysArray as (string | number)[]}
           />
           <YAxis
             scale="linear"
@@ -178,7 +187,7 @@ const QuoteChart: React.FC<{
             }
           />
           <Tooltip
-            content={({ payload, label }) => {
+            content={({ payload }) => {
               /*   console.log(payload); */
               if (!payload || payload.length === 0 || !payload[0].payload) {
                 return null;

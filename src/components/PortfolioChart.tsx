@@ -2,9 +2,10 @@ import React from "react";
 import { Chart } from "react-google-charts";
 interface PortfolioChartProps {
   chartName: string;
-  data: Array<{ date: string; value: string }>;
+  data: Array<{ date: string; value: string | number }>;
 }
-const PortfolioChart: React.FC<PortfolioChartProps> = ({ chartName, data }) => {
+
+const PortfolioChart: React.FC<PortfolioChartProps> = ({ data }) => {
   const chartData = [
     ["Date", "Value"],
     ...data.map((entry) => [entry.date, entry.value]),

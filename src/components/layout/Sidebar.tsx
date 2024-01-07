@@ -50,7 +50,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
     {
       icon: BsListUl,
       label: "watchlist",
-      href: "/watchlist",
+      href: "/portfolio",
       auth: auth,
     },
     {
@@ -130,6 +130,8 @@ const Sidebar: React.FC<SidebarProps> = () => {
   console.log(portfolios, watchlists);
   const usersPortfolios = portfolios.filter((p) => p.author === user?.name);
   const usersWatchlists = watchlists.filter((w) => w.author === user?.name);
+  const exceedsWatchlistLimit = watchlists.length >= 3;
+  const exceedsPortfoliosLimit = portfolios.length >= 3;
   return (
     <>
       {portfolioModal && (
@@ -163,12 +165,14 @@ const Sidebar: React.FC<SidebarProps> = () => {
         <li className="sidebar-heading">
           <div className="sidebar-heading-label">Portfolios</div>
           <div className="sidebar-heading-icon">
-            <div className="inner-icon">
-              <IoMdAddCircleOutline
-                size={24}
-                onClick={() => addList("portfolio")}
-              />
-            </div>
+            {!exceedsPortfoliosLimit && (
+              <div className="inner-icon">
+                <IoMdAddCircleOutline
+                  size={24}
+                  onClick={() => addList("portfolio")}
+                />
+              </div>
+            )}
           </div>
         </li>
         {user &&
@@ -186,12 +190,14 @@ const Sidebar: React.FC<SidebarProps> = () => {
         <li className="sidebar-heading">
           <div className="sidebar-heading-label">Watchlists</div>
           <div className="sidebar-heading-icon">
-            <div className="inner-icon">
-              <IoMdAddCircleOutline
-                size={24}
-                onClick={() => addList("watchlist")}
-              />
-            </div>
+            {!exceedsWatchlistLimit && (
+              <div className="inner-icon">
+                <IoMdAddCircleOutline
+                  size={24}
+                  onClick={() => addList("watchlist")}
+                />
+              </div>
+            )}
           </div>
         </li>
         {user &&

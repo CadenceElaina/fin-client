@@ -37,7 +37,7 @@ import Trending from "./components/market-trends/Trending";
 import Register from "./pages/Register";
 
 function App() {
-  const { user, signOut, updateUserToken } = useAuth();
+  const { signOut, updateUserToken } = useAuth();
   const [isSessionTimeoutModalOpen, setSessionTimeoutModalOpen] =
     useState(false);
 

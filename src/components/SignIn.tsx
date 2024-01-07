@@ -1,26 +1,16 @@
-import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import loginService from "../services/login";
 import portfolioService from "../services/portfolios";
 import watchlistService from "../services/watchlist";
-import PositionedSnackbar from "./PositionedSnackbar";
 import "../App.css";
 import { FaUncharted } from "react-icons/fa";
+import { useNotification } from "../context/NotificationContext";
 
 export default function SignIn() {
+  const { addNotification } = useNotification();
   const navigate = useNavigate();
   const { signIn } = useAuth();
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    type: "info",
-  });
-
-  const handleSnackbarClose = () => {
-    setSnackbar({ ...snackbar, open: false });
-  };
-
   const handleSubmit = async (event: {
     preventDefault: () => void;
     currentTarget: HTMLFormElement | undefined;
@@ -53,19 +43,11 @@ export default function SignIn() {
       signIn(user);
       portfolioService.setToken(user.token);
       watchlistService.setToken(user.token);
-      navigate("/");
       console.log(user);
-      setSnackbar({
-        open: true,
-        message: `${username} successfully signed in!`,
-        type: "success",
-      });
+      addNotification(`${username} successfully signed in!`, "success");
+      navigate("/");
     } catch (exception) {
-      setSnackbar({
-        open: true,
-        message: "Wrong credentials!",
-        type: "error",
-      });
+      addNotification("Wrong credentials!", "error");
     }
   };
 
@@ -108,14 +90,6 @@ export default function SignIn() {
               <Link to={"/"}>Forgot password?</Link>
               <Link to={"/register"}>Create account</Link>
             </div>
-            {snackbar.open && (
-              <PositionedSnackbar
-                message={snackbar.message}
-                type={snackbar.type}
-                isOpen={snackbar.open}
-                onClose={handleSnackbarClose}
-              />
-            )}
           </div>
         </div>
       </div>

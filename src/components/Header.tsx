@@ -1,5 +1,3 @@
-import React from "react";
-
 interface HeaderProps {
   showBackArrow?: boolean;
   label: string;

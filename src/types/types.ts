@@ -1,8 +1,11 @@
+import { ReactNode } from "react";
+
 /* import { User } from "../context/AuthContext"; */
 export interface User {
   token: string;
   username: string;
   name?: string;
+  portfolios?: Portfolio[];
 }
 
 export interface credentials {
@@ -21,6 +24,7 @@ export interface Security {
   purchasePrice: number;
 }
 export interface WatchlistSecurity {
+  [x: string]: ReactNode;
   selected?: boolean;
   symbol: string;
   name?: string;

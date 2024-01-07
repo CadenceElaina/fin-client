@@ -9,13 +9,13 @@ interface newWatchlist {
   user?: string;
 }
 
-interface Security {
+/* interface Security {
   symbol: string;
   quantity: number;
   purchaseDate: string;
   purchasePrice: number;
 }
-
+ */
 const setToken = (newToken: string) => {
   token = `Bearer ${newToken}`;
 };

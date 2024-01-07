@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import usersService from "../services/users";
@@ -8,23 +8,16 @@ import watchlistService from "../services/watchlist";
 /* import PositionedSnackbar from "../PositionedSnackbar"; */
 import "../App.css";
 import { FaUncharted } from "react-icons/fa";
+import { useNotification } from "../context/NotificationContext";
 
 export default function SignIn() {
+  const { addNotification } = useNotification();
   const navigate = useNavigate();
   const { signIn } = useAuth();
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    type: "info",
-  });
-
-  const handleSnackbarClose = () => {
-    setSnackbar({ ...snackbar, open: false });
-  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    const data = new FormData(event.currentTarget as HTMLFormElement);
 
     try {
       const cred = {
@@ -62,19 +55,14 @@ export default function SignIn() {
       signIn(user);
       portfolioService.setToken(user.token);
       watchlistService.setToken(user.token);
+      addNotification(
+        `${newUser.username} successfully registered!`,
+        "success"
+      );
       navigate("/");
       console.log(user);
-      setSnackbar({
-        open: true,
-        message: `${nameStr} successfully registered and signed in!`,
-        type: "success",
-      });
     } catch (exception) {
-      setSnackbar({
-        open: true,
-        message: "Error during registration or login",
-        type: "error",
-      });
+      addNotification("Error registering!", "error");
     }
   };
   return (
@@ -115,22 +103,11 @@ export default function SignIn() {
                 autoComplete="new-password"
                 required
               />
-
-              {/*          <input type="email" name="email" autoComplete="email" required /> */}
-
               <button type="submit">Register</button>
             </form>
             <div className="links-container">
               <Link to={"/login"}>Have an account? Sign in</Link>
             </div>
-            {/*    {snackbar.open && (
-              <PositionedSnackbar
-                message={snackbar.message}
-                type={snackbar.type}
-                isOpen={snackbar.open}
-                onClose={handleSnackbarClose}
-              />
-            )} */}
           </div>
         </div>
       </div>

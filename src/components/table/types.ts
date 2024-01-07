@@ -1,7 +1,7 @@
 export interface Data {
   id?: number | string;
   symbol: string;
-  name: string;
+  name?: string;
   price: number;
   priceChange: number;
   percentChange: number;

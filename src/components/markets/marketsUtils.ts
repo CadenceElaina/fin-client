@@ -5,7 +5,7 @@ export const formatApiResponse = (
   apiResponse: Record<string, quoteType | null>,
   exchange: Exchange
 ): IndexCard[] => {
-  return Object.entries(apiResponse).map(([symbol, quote], i) => {
+  return Object.entries(apiResponse).map(([symbol, quote]) => {
     if (quote === null) {
       // Handle null values as needed
       return {

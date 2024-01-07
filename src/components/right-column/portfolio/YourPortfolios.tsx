@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { FaChartBar } from "react-icons/fa";
 import { usePortfolios } from "../../../context/PortfoliosContext";
 import CustomButton from "../../CustomButton";
@@ -25,7 +25,7 @@ const YourPortfolios = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const portfolioSymbols: PortfolioSymbols = {};
-
+  console.log(user);
   // Populate the object with symbols and quantities
   portfolios.forEach((portfolio) => {
     const symbolsWithQuantities =
@@ -96,22 +96,16 @@ const YourPortfolios = () => {
 
   useEffect(() => {
     // Fetch quotes for each portfolio
-
-    console.log("useEffect triggered YourPortfolios.tsx");
-    portfolios.forEach((portfolio) => {
-      console.log(`Fetching quotes for portfolio: ${portfolio.title}`);
-      fetchPortfolioQuotes(portfolio.title);
-      setIsLoading(false);
-    });
+    if (user && usersPortfolios.length > 0) {
+      console.log("useEffect triggered YourPortfolios.tsx");
+      portfolios.forEach((portfolio) => {
+        console.log(`Fetching quotes for portfolio: ${portfolio.title}`);
+        fetchPortfolioQuotes(portfolio.title);
+        setIsLoading(false);
+      });
+    }
   }, [portfolios]);
-  // [portfolios, quoteCache] - worked previously (because I hadnt reached the api call limit?) - but currently calls infintely
-  // ...
 
-  //const symbol = "AAPL"; // Replace with the desired symbol
-  //const quoteData = await getQuote(queryClient, symbol);
-
-  /*   console.log(portfolios, portfolioSymbols);
-  console.log(user); */
   console.log(portfolioQuotes);
   const openModal = () => {
     if (!auth) {
@@ -155,7 +149,11 @@ const YourPortfolios = () => {
   const Tooltip = () => (
     <div className="tooltip">You may not have more than 3 portfolios</div>
   );
-  const totalPortfolioValue = portfolios.reduce((acc, portfolio) => {
+
+  /*   console.log(portfolios); */
+  const usersPortfolios = portfolios.filter((p) => p.author === user?.name);
+  /*   console.log(usersPortfolios.length); */
+  const totalPortfolioValue = usersPortfolios.reduce((acc, portfolio) => {
     const securities = portfolioQuotes[portfolio.title] || [];
     const portfolioValue = securities.reduce((valueAcc, security) => {
       return valueAcc + security.price * security.quantity;
@@ -163,8 +161,6 @@ const YourPortfolios = () => {
 
     return acc + portfolioValue;
   }, 0);
-  console.log(portfolios);
-  const usersPortfolios = portfolios.filter((p) => p.author === user?.name);
   return (
     <div className="add-portfolio-container">
       <div className="add-portfolio-header">
@@ -175,7 +171,7 @@ const YourPortfolios = () => {
         <div className="add-portfolio-text">Your portfolios</div>
       </div>
       <div className="portfolio-value">
-        {isLoading ? (
+        {isLoading && usersPortfolios.length > 0 ? (
           <Skeleton
             variant="text"
             width={100}
@@ -283,13 +279,12 @@ const YourPortfolios = () => {
               onClick={openModal}
               fullWidth
               large
-              disabled // Add the disabled attribute here
+              disabled
             />
             <Tooltip />
           </>
         )}
       </div>
-      {/* Render the modal conditionally */}
       {isModalOpen && (
         <NewPortfolioModal onCancel={closeModal} onSave={handleSavePortfolio} />
       )}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import Table from "./table/Table";
 import { RowConfig } from "./table/types";
 import { ImFire } from "react-icons/im";

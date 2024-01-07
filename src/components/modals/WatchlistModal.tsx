@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { WatchlistSecurity, Watchlist } from "../../types/types";
 import "./WatchlistModal.css";
 import watchlistService from "../../services/watchlist";
 import { useWatchlists } from "../../context/WatchlistContext";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useNotification } from "../../context/NotificationContext";
 
 interface WatchlistModalProps {
   watchlists: Watchlist[];
@@ -20,8 +21,10 @@ const WatchlistModal: React.FC<WatchlistModalProps> = ({
   style,
 }) => {
   const navigate = useNavigate();
+  const { addNotification } = useNotification();
   const { user } = useAuth();
   const usersWatchlists = watchlists.filter((w) => w.author === user?.name);
+  console.log(usersWatchlists);
   const [selectedWatchlists, setSelectedWatchlists] = useState<string[]>(
     usersWatchlists
       .filter((watchlist) =>
@@ -30,7 +33,7 @@ const WatchlistModal: React.FC<WatchlistModalProps> = ({
       .map((watchlist) => watchlist.id)
   );
   const { setWatchlists } = useWatchlists();
-
+  // console.log(selectedWatchlists);
   const updateWatchlists = async () => {
     const securitiesToAdd: {
       watchlistId: string;
@@ -75,6 +78,12 @@ const WatchlistModal: React.FC<WatchlistModalProps> = ({
     for (const { watchlistId, security } of securitiesToAdd) {
       try {
         await watchlistService.addToWatchlist(watchlistId, security);
+        addNotification(
+          `${security.symbol} added to ${
+            watchlists.find((w) => w.id === watchlistId)?.title
+          }!`,
+          "info"
+        );
         console.log(
           `Added ${security.symbol} to ${
             watchlists.find((w) => w.id === watchlistId)?.title
@@ -91,6 +100,12 @@ const WatchlistModal: React.FC<WatchlistModalProps> = ({
         await watchlistService.removeSecurityFromWatchlist(
           watchlistId,
           security
+        );
+        addNotification(
+          `${security.symbol} removed from ${
+            watchlists.find((w) => w.id === watchlistId)?.title
+          }!`,
+          "info"
         );
         console.log(
           `Removed ${security.symbol} from ${
@@ -109,7 +124,7 @@ const WatchlistModal: React.FC<WatchlistModalProps> = ({
 
   return (
     <div className="watchlist-modal" style={style}>
-      {usersWatchlists.length > 1 ? (
+      {usersWatchlists.length >= 1 ? (
         <>
           <h2>Select Watchlists</h2>
           {usersWatchlists.map((watchlist) => (

@@ -1,6 +1,6 @@
 import { QueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { YH_KEY, YH_KEY1, YH_KEY3, YH_URL } from "../../../constants";
+import { YH_KEY, /*  YH_KEY1, YH_KEY3, */ YH_URL } from "../../../constants";
 import { newsSegmentType } from "../../../types/types";
 import { queryClient } from "../../quote-chart/quoteQueryClient";
 

@@ -1,11 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { getNews } from "../components/left-column/news/newsUtils";
-import {
-  article,
-  newsSegmentEnum,
-  newsSegmentType,
-} from "../components/left-column/news/types";
+/* import Articles from "../components/left-column/news/Articles";
+import Article from "../components/market-trends/news/Article"; */
+import { article } from "../types/types";
 
 interface NewsContextProps {
   newsData: article[];

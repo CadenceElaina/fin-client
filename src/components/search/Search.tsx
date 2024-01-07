@@ -345,12 +345,14 @@ const Search = () => {
   };
 
   const handleClickQuote = (quote: string) => {
+    const newState = [false, quote];
     localStorage.setItem(
       "searchState",
       JSON.stringify({ searchInput, showDropdown })
     );
     //console.log("local", localStorage);
-    navigate(`quote/${quote}`);
+    //quote
+    navigate(`quote/${quote}`, { state: newState });
   };
 
   const renderQuoteResults = () => {

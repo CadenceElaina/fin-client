@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { Exchange, IndexCard } from "./types";
 import IndexCards from "./IndexCards";
 import "./Markets.css";
@@ -12,7 +12,7 @@ import { transformQuotesToData } from "../market-trends/utils";
 import { useIndexQuotes } from "../../context/IndexQuotesContext";
 
 const Markets = () => {
-  const { indexQuotesData, updateIndexQuotesData } = useIndexQuotes();
+  const { updateIndexQuotesData } = useIndexQuotes();
   const queryClient = useQueryClient();
   const [symbolQuotes, setSymbolQuotes] = useState<IndexCard[]>([]);
   const [currExchange, setCurrExchange] = useState(Exchange.US);
@@ -23,7 +23,6 @@ const Markets = () => {
     { length: Math.min(numRandomArticles, newsData.length) },
     () => Math.floor(Math.random() * newsData.length)
   );
-  let symbols = [];
   // Get the selected random articles from newsData
   const randomArticles = randomIndexes.map((index) => newsData[index]);
   const symbolsUS = ["^DJI", "^GSPC", "^IXIC", "^RUT", "^VIX"];
@@ -54,7 +53,7 @@ const Markets = () => {
       default:
         symbols = symbolsUS;
     }
-
+    //
     const quotePromises = symbols.map(async (symbol) => {
       // Check the cache first
       const cachedQuote = queryClient.getQueryData(["quote", symbol]);
@@ -97,6 +96,7 @@ const Markets = () => {
     };
 
     fetchData(); // Fetch and format data
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currExchange]);
 
   console.log(symbolQuotes);

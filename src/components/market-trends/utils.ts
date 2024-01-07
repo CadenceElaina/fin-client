@@ -32,7 +32,10 @@ export const transformQuotesToDataWithQuantities = (
 ): Data[] => {
   return Object.entries(quotes).map(([symbol, quote], i) => {
     const percentChange = (quote?.percentChange || 0) * 100; // Convert to percentage
-    const security = portfolio?.securities.find((s) => s.symbol === symbol);
+    let security;
+    if (portfolio && portfolio.securities) {
+      security = portfolio?.securities.find((s) => s.symbol === symbol);
+    }
     const quantity = security?.quantity || 0;
 
     return {

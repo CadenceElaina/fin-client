@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { newsSegmentType } from "../../../types/types";
 import CustomButton from "../../CustomButton";
 import Articles from "./Articles";
 import { useNews } from "../../../context/NewsContext";
-import { Skeleton } from "@mui/material";
 
 const News = () => {
   const [currNewsSegment, setCurrNewsSegment] =

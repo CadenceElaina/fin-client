@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import QuoteArticles from "./QuoteArticles";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getSymbolsNews } from "../../left-column/news/newsUtils"; // Replace with the actual path
@@ -24,9 +24,10 @@ const QuoteNews = () => {
   useEffect(() => {
     // Prefetch news data for better user experience
     if (symbol) {
-      queryClient.prefetchQuery(["symbolNews", symbol], () =>
-        getSymbolsNews(symbol)
-      );
+      queryClient.prefetchQuery({
+        queryKey: ["symbolNews", symbol],
+        queryFn: () => getSymbolsNews(symbol),
+      });
     }
   }, [queryClient, symbol]);
 

@@ -12,11 +12,11 @@ import {
 import {
   YH_KEY,
   YH_URL,
-  YH_KEY1,
+  /*   YH_KEY1,
   YH_KEY2,
-  YH_URL1,
+  YH_URL1, */
   YH_URL2,
-  YH_KEY3,
+  /*   YH_KEY3, */
 } from "../../constants";
 
 const stateAbbreviations: { [key: string]: string } = {
@@ -396,6 +396,7 @@ export const getMoversSymbols = async (title: string): Promise<string[]> => {
 
     // If not all quotes are cached, make an API call
     console.log("quoteUtils.ts - new api request - get movers");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const response = await axios.request<any>(options);
 
     console.log(response.data.finance.result[2]);
@@ -410,7 +411,8 @@ export const getMoversSymbols = async (title: string): Promise<string[]> => {
       resultIndex = 0;
     }
     response.data.finance.result[resultIndex].quotes.map(
-      (q: any, i: number) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (q: any) => {
         symbols.push(q.symbol); // Replace with the actual way you get the symbol
       }
     );
@@ -443,6 +445,7 @@ export const getTrending = async (queryClient: QueryClient) => {
     console.log("new api request - getTrending");
     const response = await axios.request(options);
     const trendingQuotes = response.data.finance.result[0].quotes.map(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (q: any) => ({
         symbol: q.symbol,
         name: q.shortName,

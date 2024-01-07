@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useLocation, Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
 import QuoteChart from "../../components/quote-chart/QuoteChart";
 import "./Quote.css";
@@ -12,7 +12,7 @@ import {
   FaArrowUp,
 } from "react-icons/fa";
 import QuoteNews from "../../components/quote-chart/news/QuoteNews";
-import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getQuotePageData } from "../../components/search/quoteUtils";
 import { IoAddSharp } from "react-icons/io5";
 import { CiShare2 } from "react-icons/ci";
@@ -25,65 +25,64 @@ interface QuoteProps {
 }
 
 const Quote: React.FC<QuoteProps> = () => {
-  /*   const { symbol } = useParams();
-  console.log(symbol); */
   const [marketStatus, setMarketStatus] = useState<string>("Closed");
   const queryClient = useQueryClient();
   const location = useLocation();
-  const { searchInput, showDropdown } = location.state || {};
   const { state } = location;
+  console.log(state, state[1], state[0]);
   const symbol = state[1] ? `${state[1]}` : "";
 
   const symbolState = state[1] || "";
   let symbolForChart = "";
-  switch (symbolState) {
-    case "^DJI":
-      symbolForChart = "DJI";
-      break;
-    case "^GSPC":
-      symbolForChart = "SP500";
-      break;
-    case "^IXIC":
-      symbolForChart = "COMP.IND";
-      break;
-    case "^RUT":
-      symbolForChart = "IWM";
-      break;
-    case "^VIX":
-      symbolForChart = "VIX";
-      break;
-    case "^GDAXI":
-      symbolForChart = "DAX";
-      break;
-    case "^FTSE":
-      symbolForChart = "UKX";
-      break;
-    case "^IBEX":
-      symbolForChart = "IBEX:IND";
-      break;
-    case "^N225":
-      symbolForChart = "NKY:IND";
-      break;
-    case "^HSI":
-      symbolForChart = "HSI";
-      break;
-    case "^BSEN":
-      symbolForChart = "SENSEX";
-      break;
-    case "BTC-USD":
-      symbolForChart = "BTC-USD";
-      break;
-    case "ETH-USD":
-      symbolForChart = "ETH-USD";
-      break;
-    case "BAT-USD":
-      symbolForChart = "BAT-USD";
-      break;
-    default:
-      console.log("quote.tsx default switch value");
-      symbolForChart = "";
+  if (state[0] === true) {
+    switch (symbolState) {
+      case "^DJI":
+        symbolForChart = "DJI";
+        break;
+      case "^GSPC":
+        symbolForChart = "SP500";
+        break;
+      case "^IXIC":
+        symbolForChart = "COMP.IND";
+        break;
+      case "^RUT":
+        symbolForChart = "IWM";
+        break;
+      case "^VIX":
+        symbolForChart = "VIX";
+        break;
+      case "^GDAXI":
+        symbolForChart = "DAX";
+        break;
+      case "^FTSE":
+        symbolForChart = "UKX";
+        break;
+      case "^IBEX":
+        symbolForChart = "IBEX:IND";
+        break;
+      case "^N225":
+        symbolForChart = "NKY:IND";
+        break;
+      case "^HSI":
+        symbolForChart = "HSI";
+        break;
+      case "^BSEN":
+        symbolForChart = "SENSEX";
+        break;
+      case "BTC-USD":
+        symbolForChart = "BTC-USD";
+        break;
+      case "ETH-USD":
+        symbolForChart = "ETH-USD";
+        break;
+      case "BAT-USD":
+        symbolForChart = "BAT-USD";
+        break;
+      default:
+        console.log("quote.tsx default switch value");
+        symbolForChart = "";
+    }
   }
-
   console.log(symbol);
   // State to track the selected time interval
   const [selectedInterval, setSelectedInterval] = useState("1D");
@@ -98,11 +97,7 @@ const Quote: React.FC<QuoteProps> = () => {
     setSelectedInterval(interval);
   };
 
-  const {
-    data: quotePageData,
-    isLoading: isQuotePageDataLoading,
-    isError: isQuotePageDataError,
-  } = useQuery({
+  const { data: quotePageData } = useQuery({
     queryKey: ["quotePageData", symbol],
     queryFn: () =>
       getQuotePageData(queryClient, symbol || "", state[0] || false),
@@ -198,7 +193,7 @@ const Quote: React.FC<QuoteProps> = () => {
             </div>
           </div>
           <div className="quote-container">
-            <div className="quote-main-column">
+            <div className="">
               <div className="quote-price-container">
                 {/* Price, Percent Change, Price Change, Today/Interval on the same row */}
                 <div className="quote-price-changes">
@@ -210,7 +205,7 @@ const Quote: React.FC<QuoteProps> = () => {
                         : "quote-price-negative"
                     }
                   >
-                    {quoteData?.price}
+                    ${quoteData?.price}
                   </div>
                   <div
                     className={
@@ -326,7 +321,7 @@ const Quote: React.FC<QuoteProps> = () => {
                       : "quote-price-negative"
                   }
                 >
-                  {quoteData?.price}
+                  ${quoteData?.price}
                 </div>
                 <div
                   className={
@@ -403,7 +398,7 @@ const Quote: React.FC<QuoteProps> = () => {
             <QuoteChart
               interval={selectedInterval}
               symbol={symbol || ""}
-              previousClosePrice={quoteSidebarData?.previousClose}
+              previousClosePrice={quoteSidebarData?.previousClose || ""}
             />
             <div className="quote-news">
               {" "}

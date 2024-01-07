@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  FaList,
-  FaChartLine,
-  FaPlus,
-  FaEllipsisV,
-  FaAngleRight,
-} from "react-icons/fa";
+import { FaList, FaChartLine, FaPlus, FaAngleRight } from "react-icons/fa";
 import Layout from "../layout/Layout";
 import "./Portfolio.css";
 import { usePortfolios } from "../../context/PortfoliosContext";
@@ -19,6 +13,8 @@ import PortfolioContent from "./PortfolioContent";
 import WatchlistContent from "./WatchlistContent";
 import AddToWatchlistModal from "../modals/AddToWatchlist";
 import { WatchlistSecurity, Watchlist } from "../../types/types";
+import { useNotification } from "../../context/NotificationContext";
+import Notification from "../Notification";
 
 interface Security {
   symbol: string;
@@ -36,6 +32,7 @@ interface Portfolio {
 }
 
 const Portfolio = () => {
+  const { addNotification } = useNotification();
   const [activeTab, setActiveTab] = useState<string>("");
   const [activeListType, setActiveListType] = useState<string>("portfolios");
   const [activeWatchlist, setActiveWatchlist] = useState<Watchlist>();
@@ -49,20 +46,17 @@ const Portfolio = () => {
     useState<boolean>(false);
   const { portfolios, removePortfolio, addSecurityToPortfolio } =
     usePortfolios();
-  const {
-    watchlists,
-    removeWatchlists,
-    addSecurityToWatchlist,
-    appendWatchlist,
-  } = useWatchlists();
-  const addToWatchlistDisabled = watchlists.length > 3;
+  const { watchlists, addSecurityToWatchlist, appendWatchlist } =
+    useWatchlists();
+
   const { user } = useAuth();
   const { id } = useParams();
   const navigate = useNavigate();
   const usersPortfolios = portfolios.filter((p) => p.author === user?.name);
   const usersWatchlists = watchlists.filter((w) => w.author === user?.name);
-  const firstWatchlist = usersWatchlists[0] || [];
-  const firstPortfolio = usersPortfolios[0] || [];
+  const addToWatchlistDisabled = usersWatchlists.length > 3;
+  const firstWatchlist = usersWatchlists[0];
+  const firstPortfolio = usersPortfolios[0];
 
   useEffect(() => {
     // Find the portfolio with the matching id and set activePortfolio
@@ -113,11 +107,19 @@ const Portfolio = () => {
   const addToList = async (newSecurity: Security) => {
     if (activePortfolio && activeListType === "portfolios") {
       addSecurityToPortfolio(activePortfolio.id, newSecurity);
+      addNotification(
+        `${newSecurity.symbol} added to ${activePortfolio.title}!`,
+        "success"
+      );
     }
   };
   const addToWatchlist = async (newSecurity: WatchlistSecurity) => {
     if (activeListType === "watchlists" && activeWatchlist) {
       addSecurityToWatchlist(activeWatchlist.id, newSecurity);
+      addNotification(
+        `${newSecurity.symbol} added to ${activeWatchlist.title}!`,
+        "success"
+      );
     }
   };
 
@@ -138,7 +140,7 @@ const Portfolio = () => {
       title: response.title,
       author: response.author,
     });
-
+    addNotification(`${newWatchlist.title} added!`, "success");
     onCloseWatchlist();
   };
 
@@ -155,8 +157,8 @@ const Portfolio = () => {
       navigate(`/portfolio/${firstPortfolio.id}`);
     }
   };
-  console.log(activeWatchlist);
-  console.log(watchlists, watchlists.length, activeTab);
+  /*   console.log(activeWatchlist);
+  console.log(watchlists, watchlists.length, activeTab); */
   //console.log(addToPortfolioModalIsOpen);
   // console.log(activePortfolio);
   /*   console.log("Portfolios:", portfolios); */
@@ -167,6 +169,7 @@ const Portfolio = () => {
 
   return (
     <Layout>
+      <Notification />
       {addToPortfolioModalIsOpen && (
         <AddToPortfolioModal
           isOpen={addToPortfolioModalIsOpen}

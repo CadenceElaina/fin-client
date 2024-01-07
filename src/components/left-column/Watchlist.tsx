@@ -1,38 +1,26 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Table from "../table/Table";
 import "../../App.css";
-import { RowConfig } from "../table/types";
+import { Data, RowConfig } from "../table/types";
 import { useWatchlists } from "../../context/WatchlistContext";
 import { /* fetchQuoteWithRetry */ getQuote } from "../search/quoteUtils";
 import { quoteType } from "../search/types";
 import { useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 import { usePortfolios } from "../../context/PortfoliosContext";
 import { useAuth } from "../../context/AuthContext";
 import { Skeleton, Typography } from "@mui/material";
-import { Quote, QuotesMap } from "../../types/types";
+
 interface PortfolioSymbols {
   [portfolioTitle: string]: { [symbol: string]: number };
 }
 const Watchlist = () => {
-  const { portfolios, appendPortfolio } = usePortfolios();
+  const { portfolios } = usePortfolios();
   const { watchlists } = useWatchlists();
   const { user } = useAuth();
   const auth = !!user;
-  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [watchlistsAndPortfoliosQuotes, setWatchlistsAndPortfoliosQuotes] =
-    useState<
-      | {
-          percentChange: number;
-          symbol?: string | undefined;
-          price?: number | undefined;
-          priceChange?: number | undefined;
-          quantity?: number | undefined;
-        }[]
-      | undefined
-    >();
+    useState<Data[]>([]);
   const portfolioSymbols: PortfolioSymbols = {};
 
   // Populate the object with symbols and quantities
@@ -218,6 +206,7 @@ const Watchlist = () => {
 
     const quotes = await Promise.all(quotesPromises);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const quotesMap: Record<string, any[]> = {};
     quotes.forEach((quote) => {
       if (quote) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Table from "../table/Table";
 import "./Right.css";
 import { Data, RowConfig } from "../table/types";
@@ -6,10 +6,8 @@ import { useAuth } from "../../context/AuthContext";
 import { useWatchlists } from "../../context/WatchlistContext";
 import {
   MostFollowedSecurities,
-  Watchlists,
   Watchlist,
   MostFollowedSecurityWithoutDetails,
-  WatchlistSecurity,
 } from "../../types/types";
 import WatchlistModal from "../modals/WatchlistModal";
 import { useNavigate } from "react-router-dom";
@@ -30,17 +28,17 @@ const MostFollowed = () => {
     addIcon: true,
     name: "most-followed",
   };
-  const { watchlists, addSecurityToWatchlist, removeSecurityFromWatchlist } =
-    useWatchlists();
+  const { watchlists } = useWatchlists();
   const { user } = useAuth();
   const [top5Securities, setTop5Securities] = useState<
     MostFollowedSecurities[]
   >([]);
-  const [isLoading, setIsLoading] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [, setIsLoading] = useState(false);
   const queryClient = useQueryClient();
-
+  //console.log(watchlists);
   useEffect(() => {
-    let isMounted = true;
+    const isMounted = true;
     console.log("useEffect mostfollowed runs");
     // Count the occurrences of each symbol and calculate the total followers for each security in watchlists
     const symbolFollowers: { [symbol: string]: number } = {};
@@ -56,7 +54,8 @@ const MostFollowed = () => {
     console.log(symbolFollowers);
     // Sort symbols based on their total followers in descending order
     const sortedSymbols = Object.entries(symbolFollowers).sort(
-      ([symbolA, followersA], [symbolB, followersB]) => followersB - followersA
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      ([, followersA], [, followersB]) => followersB - followersA
     );
 
     // Select the top 5 symbols with followers
@@ -69,7 +68,7 @@ const MostFollowed = () => {
           followers: symbolFollowers[symbol],
         };
       });
-    console.log(newTop5Securities);
+    //   console.log(newTop5Securities);
     const fetchQuotes = async () => {
       try {
         setIsLoading(true);
@@ -97,7 +96,7 @@ const MostFollowed = () => {
             };
           })
         );
-        console.log(updatedTop5Securities);
+        // console.log(updatedTop5Securities);
         //  console.log(top5Quotes);
         if (isMounted) {
           setTop5Securities(updatedTop5Securities);
@@ -112,6 +111,7 @@ const MostFollowed = () => {
     if (newTop5Securities) {
       fetchQuotes();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchlists]);
   useEffect(() => {
     const containerElement = containerRef.current;
@@ -142,17 +142,17 @@ const MostFollowed = () => {
   };
 
   // console.log(user);
-  console.log(watchlists, top5Securities);
+  // console.log(watchlists, top5Securities);
   const convertedTop5Securities: Data[] = top5Securities.map((security) => ({
     id: security.symbol,
     symbol: security.symbol,
     name: security.name,
-    followers: security.followers.toString(),
+    followers: security.followers.toString() + "M following",
     price: security.price || 0,
     priceChange: Number(security.priceChange) || 0,
     percentChange: Number(security.percentChange) || 0,
   }));
-  console.log(convertedTop5Securities);
+  // console.log(convertedTop5Securities);
 
   return (
     <div className="most-followed-container" ref={containerRef}>
